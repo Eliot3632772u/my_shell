@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lex.c                                              :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-15 09:16:57 by irabhi            #+#    #+#             */
-/*   Updated: 2025-01-15 09:16:57 by irabhi           ###   ########.fr       */
+/*   Created: 2024-10-22 09:31:30 by irabhi            #+#    #+#             */
+/*   Updated: 2024-10-22 09:31:30 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		lex(t_token **token, char *line)
+char	*ft_strchr(const char *s, int c)
 {
-	int		i;
-
-	i = 0;
-	while (*(line + i))
+	while ((char)c != *s)
 	{
-		while (is_spaces(line[i]))
-			i++;
-		if (is_special(line[i]))
-			handel_special(token, line, &i);
-		else if (is_quote(line[i]))
-			handel_quote(token, line, &i);
-	}	
+		if (!*s)
+			return (0);
+		s++;
+	}
+	return ((char *)s);
 }
