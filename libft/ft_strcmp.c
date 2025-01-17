@@ -1,41 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lex_utils.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-15 12:00:03 by irabhi            #+#    #+#             */
-/*   Updated: 2025-01-15 12:00:03 by irabhi           ###   ########.fr       */
+/*   Created: 2025-01-17 12:38:59 by irabhi            #+#    #+#             */
+/*   Updated: 2025-01-17 12:38:59 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	is_spaces(char c)
+int	ft_strcmp(char *s1, char *s2)
 {
-	if (c >= 9 && c <= 13 || c == 32)
-		return (1);
-	return (0);
-}
+	int		i;
 
-int	is_special(char c)
-{
-	if (ft_strchr("><&|$*", c))
+	if (!s1 || !s2)
 		return (1);
-	return (0);
-}
-
-int	is_quote(char c)
-{
-	if (c == '\'' || c == '"')
-		return (1);
-	return (0);
-}
-
-int	is_spr(char c)
-{
-	if (is_spaces(c) || c == '"' || c == '\'' || c == '$')
-		return (1);
-	return (0);
+	i = 0;
+	while (s1[i] == s2[i] && s1[i])
+		i++;
+	return (s1[i] - s2[i]);
 }

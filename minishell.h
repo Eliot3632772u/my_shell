@@ -49,6 +49,7 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);
+int		ft_strcmp(char *s1, char *s2);
 
 /*
 * UTILS
@@ -62,5 +63,6 @@ int		push_front(t_env **env, char *name, char *value);
 */
 int		is_spaces(char c);
 int		is_special(char c);
+int		is_spr(char c);
 
 #endif
