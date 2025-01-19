@@ -1,35 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   isalpha.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 08:14:28 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/01 08:14:29 by yrafai           ###   ########.fr       */
+/*   Created: 2024/10/22 00:27:15 by yrafai            #+#    #+#             */
+/*   Updated: 2024/10/22 16:19:07 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+static int	ft_uppercase(int c)
 {
-	char	*str;
-	size_t	s_len;
-	size_t	i;
+	return (c >= 'A' && c <= 'Z');
+}
 
-	s_len = ft_strlen(s);
-	str = (char *)malloc((s_len + 1) * sizeof(char));
-	if (!str)
-	{
-		return (NULL);
-	}
-	i = 0;
-	while (i < s_len)
-	{
-		str[i] = s[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
+static int	ft_lowercase(int c)
+{
+	return (c >= 'a' && c <= 'z');
+}
+
+int	ft_isalpha(int c)
+{
+	return (ft_uppercase(c) || ft_lowercase(c));
 }

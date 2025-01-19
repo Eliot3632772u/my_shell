@@ -1,29 +1,53 @@
-SRC = main.c utils/push_front.c utils/free.c libft/ft_putendl_fd.c \
-	libft/ft_putstr_fd.c libft/ft_split.c libft/ft_strdup.c libft/ft_strlen.c \
-	libft/ft_putchar_fd.c libft/ft_strlcpy.c libft/ft_strjoin.c libft/ft_substr.c
+CC          := cc
+CFLAGS      := -Wall -Wextra -Werror
+LDFLAGS     := -Llibft -lft
 
-SRC_O = ${SRC:.c=.o}
+# OS-specific settings for readline
+UNAME_S     := $(shell uname -s)
+ifeq ($(UNAME_S), Darwin)  # macOS
+    READLINE_FLAGS := -lreadline
+else                       # Linux
+    READLINE_FLAGS := -lreadline -lncurses
+endif
 
-FLAGS = -Wall -Wextra -Werror
+SRC_DIR     := src
+INCLUDE_DIR := includes
+BUILTIN_DIR := $(SRC_DIR)/builtin
+EXECUTOR_DIR:= $(SRC_DIR)/executor
+LEXER_DIR   := $(SRC_DIR)/lexer
+PARSER_DIR  := $(SRC_DIR)/parser
+MAIN_DIR    := $(SRC_DIR)/main
+LIBFT_DIR   := libft
 
-BIN = minishell
+SRC_FILES   := $(wildcard $(MAIN_DIR)/*.c) \
+               $(wildcard $(LEXER_DIR)/*.c) \
+               $(wildcard $(PARSER_DIR)/*.c) \
+               $(wildcard $(BUILTIN_DIR)/*.c) \
+               $(wildcard $(EXECUTOR_DIR)/*.c)
+OBJ_FILES   := $(SRC_FILES:.c=.o)
 
-FLAGS_L = -I$(HOME)/.brew/opt/readline/include
+NAME        := minishell
 
-READLINE = -L$(HOME)/.brew/opt/readline/lib
+all: $(NAME)
 
-all: ${BIN}
+$(NAME): $(OBJ_FILES)
+	@$(MAKE) -C $(LIBFT_DIR)
+	@$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBFT_DIR) $(OBJ_FILES) $(LDFLAGS) $(READLINE_FLAGS) -o $(NAME)
+	@echo "Built $(NAME) successfully!"
 
-${BIN}: ${SRC_O}
-	cc -g -fsanitize=address ${READLINE} -l readline ${SRC_O} -o ${BIN}
-
-%.o: %.c minishell.h
-	cc ${FLAGS} ${FLAGS_L} -c $< -o $@
+%.o: %.c
+	@$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBFT_DIR) -c $< -o $@
 
 clean:
-	rm -f ${SRC_O}
+	@rm -f $(OBJ_FILES)
+	@$(MAKE) clean -C $(LIBFT_DIR)
+	@echo "Cleaned object files."
 
 fclean: clean
-	rm -f ${BIN}
+	@rm -f $(NAME)
+	@$(MAKE) fclean -C $(LIBFT_DIR)
+	@echo "Removed $(NAME)."
 
 re: fclean all
+
+.PHONY: all clean fclean re

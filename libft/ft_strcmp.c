@@ -1,25 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-17 12:38:59 by irabhi            #+#    #+#             */
-/*   Updated: 2025-01-17 12:38:59 by irabhi           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
-#include "../minishell.h"
-
-int	ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, const char *s2)
 {
-	int		i;
+	int	i;
 
-	if (!s1 || !s2)
-		return (1);
 	i = 0;
-	while (s1[i] == s2[i] && s1[i])
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
 		i++;
-	return (s1[i] - s2[i]);
+	}
+	return (0);
 }
