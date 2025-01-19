@@ -38,10 +38,9 @@ int main(int argc, char **argv, char **envp)
             // Here the parser will be integrated
             // i'll implement basic command handling
             shell.input = input;
-            // Execute command (we'll implement this next)
+            // Execute command (i'll implement this next)
             // execute_command(shell.cmd, &shell);
         }
-        free(input);
     }
 
     cleanup_shell(&shell);

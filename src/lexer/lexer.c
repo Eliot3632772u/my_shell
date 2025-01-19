@@ -46,6 +46,7 @@ static void add_token(t_token **head, t_token *new_token)
 t_token *tokenize_input(char *input)
 {
     t_token *head = NULL;
+    t_token_type type = TOKEN_NONE;
     char *start;
     int i = 0;
 
@@ -60,7 +61,6 @@ t_token *tokenize_input(char *input)
         // Handle operators
         if (ft_is_operator(input[i]))
         {
-            t_token_type type;
             if (input[i] == '|')
                 type = TOKEN_PIPE;
             else if (input[i] == '<')
