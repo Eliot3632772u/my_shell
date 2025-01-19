@@ -36,7 +36,8 @@ typedef enum e_token_type
     TOKEN_REDIRECT_OUT,
     TOKEN_REDIRECT_APPEND,
     TOKEN_HEREDOC,
-    TOKEN_EOF
+    TOKEN_EOF,
+    TOKEN_NONE // just a none type (instead of null)
 } t_token_type;
 
 /* Token structure */
