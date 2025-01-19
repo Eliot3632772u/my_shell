@@ -3,22 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-10-22 09:31:30 by irabhi            #+#    #+#             */
-/*   Updated: 2024-10-22 09:31:30 by irabhi           ###   ########.fr       */
+/*   Created: 2024/10/28 23:21:25 by yrafai            #+#    #+#             */
+/*   Updated: 2024/10/28 23:41:56 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
 char	*ft_strchr(const char *s, int c)
 {
-	while ((char)c != *s)
+	char	*ptr;
+
+	ptr = (char *)s;
+	c = (unsigned char)c;
+	while (*ptr)
 	{
-		if (!*s)
-			return (0);
-		s++;
+		if (*ptr == c)
+		{
+			return (ptr);
+		}
+		ptr++;
 	}
-	return ((char *)s);
+	if (c == '\0')
+		return (ptr);
+	return (NULL);
 }

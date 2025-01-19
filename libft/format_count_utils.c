@@ -1,35 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_count_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 08:14:28 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/01 08:14:29 by yrafai           ###   ########.fr       */
+/*   Created: 2024/12/01 09:30:02 by yrafai            #+#    #+#             */
+/*   Updated: 2024/12/01 09:30:03 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+int	count_hex(size_t number)
 {
-	char	*str;
-	size_t	s_len;
-	size_t	i;
+	int	count;
 
-	s_len = ft_strlen(s);
-	str = (char *)malloc((s_len + 1) * sizeof(char));
-	if (!str)
+	count = 0;
+	if (number == 0)
+		return (1);
+	while (number)
 	{
-		return (NULL);
+		number /= 16;
+		count++;
 	}
-	i = 0;
-	while (i < s_len)
+	return (count);
+}
+
+int	count_decimal(long number)
+{
+	int	count;
+
+	count = 0;
+	if (number == 0)
+		count++;
+	while (number != 0)
 	{
-		str[i] = s[i];
-		i++;
+		number /= 10;
+		count++;
 	}
-	str[i] = '\0';
-	return (str);
+	return (count);
 }

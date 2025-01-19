@@ -1,18 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_cmd.c                                         :+:      :+:    :+:   */
+/*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-13 11:13:16 by irabhi            #+#    #+#             */
-/*   Updated: 2025-01-13 11:13:16 by irabhi           ###   ########.fr       */
+/*   Created: 2024/11/17 21:51:45 by yrafai            #+#    #+#             */
+/*   Updated: 2024/11/17 21:51:55 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-void	init_cmd(t_cmd	**cmd, char *readline)
+void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-
+	if (!lst || !del)
+		return ;
+	(*del)(lst->content);
+	free(lst);
+	lst = NULL;
 }

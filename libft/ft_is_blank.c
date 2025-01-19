@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_is_blank.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 08:14:28 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/01 08:14:29 by yrafai           ###   ########.fr       */
+/*   Created: 2024/12/01 09:33:38 by yrafai            #+#    #+#             */
+/*   Updated: 2024/12/01 09:33:39 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 
-char	*ft_strdup(const char *s)
+int	ft_is_blank(char *str)
 {
-	char	*str;
-	size_t	s_len;
-	size_t	i;
+	int	i;
 
-	s_len = ft_strlen(s);
-	str = (char *)malloc((s_len + 1) * sizeof(char));
-	if (!str)
-	{
-		return (NULL);
-	}
 	i = 0;
-	while (i < s_len)
+	while (str[i])
 	{
-		str[i] = s[i];
+		if (!ft_isspace(str[i]))
+			return (0);
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	return (1);
 }

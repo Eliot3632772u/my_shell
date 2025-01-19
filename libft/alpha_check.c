@@ -1,35 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   alpha_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 08:14:28 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/01 08:14:29 by yrafai           ###   ########.fr       */
+/*   Created: 2025/01/07 05:57:27 by yrafai            #+#    #+#             */
+/*   Updated: 2025/01/07 05:57:30 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+void	alpha_check(char **argv)
 {
-	char	*str;
-	size_t	s_len;
-	size_t	i;
+	int	i;
+	int	j;
 
-	s_len = ft_strlen(s);
-	str = (char *)malloc((s_len + 1) * sizeof(char));
-	if (!str)
+	i = 1;
+	while (argv[i])
 	{
-		return (NULL);
-	}
-	i = 0;
-	while (i < s_len)
-	{
-		str[i] = s[i];
+		j = 0;
+		while ((argv[i][j]) != '\0')
+		{
+			if (ft_isalpha(argv[i][j]))
+				ft_error_msg();
+			j++;
+		}
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
 }

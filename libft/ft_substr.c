@@ -3,33 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-10-22 09:29:53 by irabhi            #+#    #+#             */
-/*   Updated: 2024-10-22 09:29:53 by irabhi           ###   ########.fr       */
+/*   Created: 2024/11/02 21:55:03 by yrafai            #+#    #+#             */
+/*   Updated: 2024/11/02 21:55:29 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*sub;
-	size_t	slen;
-	size_t	actual_len;
+	char	*substr;
+	size_t	size;
 
 	if (!s)
-		return (0);
-	slen = ft_strlen(s);
-	if (start >= slen)
+		return (NULL);
+	if (ft_strlen(s) <= start)
 		return (ft_strdup(""));
-	if (slen - start < len)
-		actual_len = slen - start;
-	else
-		actual_len = len;
-	sub = (char *)malloc(sizeof(char) * actual_len + 1);
-	if (!sub)
-		return (0);
-	ft_strlcpy(sub, s + start, actual_len + 1);
-	return (sub);
+	size = ft_strlen(s + start);
+	if (size < len)
+	{
+		len = size;
+	}
+	substr = (char *)malloc((len + 1) * sizeof(char));
+	if (!substr)
+		return (NULL);
+	ft_strlcpy(substr, s + start, len + 1);
+	return (substr);
 }

@@ -1,35 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 08:14:28 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/01 08:14:29 by yrafai           ###   ########.fr       */
+/*   Created: 2024/12/27 13:22:57 by yrafai            #+#    #+#             */
+/*   Updated: 2024/12/27 13:23:10 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+void	*clean(char **ptr)
 {
-	char	*str;
-	size_t	s_len;
-	size_t	i;
+	if (*ptr)
+		free(*ptr);
+	*ptr = NULL;
+	return (NULL);
+}
 
-	s_len = ft_strlen(s);
-	str = (char *)malloc((s_len + 1) * sizeof(char));
-	if (!str)
-	{
-		return (NULL);
-	}
+void	clean_2(char **ptr)
+{
+	int	i;
+
 	i = 0;
-	while (i < s_len)
+	if (!ptr)
+		return ;
+	while (ptr[i])
 	{
-		str[i] = s[i];
+		free(ptr[i]);
+		ptr[i] = NULL;
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	free(ptr);
+	ptr = NULL;
+}
+
+void	ft_free(t_list **lst)
+{
+	t_list	*tmp;
+
+	if (!lst)
+		return ;
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		(*lst)->number = 0;
+		free(*lst);
+		*lst = tmp;
+	}
 }

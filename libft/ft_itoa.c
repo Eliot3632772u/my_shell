@@ -1,35 +1,55 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 08:14:28 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/01 08:14:29 by yrafai           ###   ########.fr       */
+/*   Created: 2024/11/07 02:22:47 by yrafai            #+#    #+#             */
+/*   Updated: 2024/11/07 04:35:31 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+static int	ft_get_len(int n)
 {
-	char	*str;
-	size_t	s_len;
-	size_t	i;
+	int	len;
 
-	s_len = ft_strlen(s);
-	str = (char *)malloc((s_len + 1) * sizeof(char));
+	len = 0;
+	if (n <= 0)
+		len++;
+	while (n)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
+}
+
+char	*ft_itoa(int n)
+{
+	long	num;
+	int		len;
+	char	*str;
+
+	num = (long)n;
+	len = ft_get_len(n);
+	str = (char *)malloc(len + 1);
 	if (!str)
-	{
 		return (NULL);
-	}
-	i = 0;
-	while (i < s_len)
+	str[len] = '\0';
+	if (num < 0)
 	{
-		str[i] = s[i];
-		i++;
+		str[0] = '-';
+		num = -num;
 	}
-	str[i] = '\0';
+	while (len > 0 && num != 0)
+	{
+		str[--len] = (num % 10) + '0';
+		num /= 10;
+	}
+	if (n == 0)
+		str[0] = '0';
 	return (str);
 }
