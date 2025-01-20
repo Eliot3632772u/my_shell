@@ -10,11 +10,13 @@ static void init_shell(t_shell *shell, char **envp)
     shell->last_status = 0;
     shell->running = 1;
     shell->env_array = NULL;
+    shell->error = 0;
 }
 
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
+    t_token *token;
     char *input;
     (void)argc;
     (void)argv;
@@ -23,6 +25,7 @@ int main(int argc, char **argv, char **envp)
     init_shell(&shell, envp);
     setup_signals();
 
+    token = NULL;
     // Main shell loop
     while (shell.running)
     {
@@ -37,6 +40,7 @@ int main(int argc, char **argv, char **envp)
             add_history(input);
             // Here the parser will be integrated
             // i'll implement basic command handling
+            lex(&token, input, &shell);
             shell.input = input;
             // Execute command (i'll implement this next)
             // execute_command(shell.cmd, &shell);

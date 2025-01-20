@@ -18,79 +18,96 @@
 
 # define SUCCESS 0
 # define ERROR 1
+# define STD_ERR 2
 
 /* Error messages */
 # define ERR_MEMORY "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
 # define ERR_FORK "Fork failed"
 # define ERR_CMD "Command not found"
+# define ERR_QUOTE "Syntax error: unclosed quote"
 
 // ------------------------------- PARSER AND LEXER ------------------------------------------------
 
 /* Token types for parser */
 typedef enum e_token_type
 {
-    TOKEN_WORD,
-    TOKEN_PIPE,
-    TOKEN_REDIRECT_IN,
-    TOKEN_REDIRECT_OUT,
-    TOKEN_REDIRECT_APPEND,
-    TOKEN_HEREDOC,
-    TOKEN_EOF,
-    TOKEN_NONE // just a none type (instead of null)
+    WORD,
+    PIPE,
+    REDIRECT_IN,
+    REDIRECT_OUT,
+    APPEND,
+    HEREDOC,
+    T_EOF,
+    T_AND,
+    T_OR,
+    WILD,
+    VARIABL,
+    NONE // just a none type (instead of null)
 } t_token_type;
 
 /* Token structure */
-typedef struct s_token
+typedef struct      s_token
 {
-    t_token_type type;
-    char *value;
-    struct s_token *next;
-} t_token;
+    t_token_type    type;
+    char            *value;
+    struct s_token  *next;
+    struct s_token  *prev;
+}                   t_token;
 
 /* Parser structures */
-typedef struct s_redirect
+typedef struct          s_redirect
 {
-    int type;           /* < , > , >> , << */
-    char *file;         /* Filename or delimiter for heredoc */
-    struct s_redirect *next;
-} t_redirect;
+    int                 type;           /* < , > , >> , << */
+    char                *file;         /* Filename or delimiter for heredoc */
+    struct s_redirect   *next;
+}                       t_redirect;
 
 // Your parser will return a t_command structure:
-typedef struct s_command
+typedef struct          s_command
 {
-    char **args;        // Command and arguments
-    t_redirect *redirects;  // Redirections
-    int pipe_read;      // Pipe read end
-    int pipe_write;     // Pipe write end
-    struct s_command *next; // Next piped command
+    char                **args;        // Command and arguments
+    t_redirect          *redirects;  // Redirections
+    int                 pipe_read;      // Pipe read end
+    int                 pipe_write;     // Pipe write end
+    struct s_command    *next; // Next piped command
 } t_command;
 
 // your functions here
 // (this functions by me, to give you a starting point, you still can implement your own one)
-t_token *tokenize_input(char *input);
-t_command *parse_tokens(t_token *tokens);
-void free_tokens(t_token *tokens);
+//t_token *tokenize_input(char *input);
+//t_command *parse_tokens(t_token *tokens);
+//void free_tokens(t_token *tokens);
 
+void    lex(t_token *token, char *input, t_shell *shell);
+
+/*lexer utiles*/
+int	    is_spaces(char c);
+int	    is_quote(char c);
+int     check_special_case(t_shell *shell, char ***input, char **str);
+void	handle_quote(t_token **token, char **input, t_shell *shell, char quote);
+void	add_char(char **str, char *c);
+void	tokenize(t_token **token, char *valu, t_token_type type);
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
 /* Environment structure */
-typedef struct s_env
+typedef struct      s_env
 {
-    char *key;
-    char *value;
-    struct s_env *next;
-} t_env;
+    char            *key;
+    char            *value;
+    struct s_env    *next;
+}                   t_env;
 
 /* Shell state structure */
-typedef struct s_shell
+typedef struct      s_shell
 {
-    t_env *env;         /* Environment variables */
-    t_command *cmd;     /* Current command being executed */
-    char *input;        /* Current input line */
-    int last_status;    /* Exit status of last command */
-    int running;        /* Shell running status */
-    char **env_array;   /* Environment as string array */
+    t_env           *env;         /* Environment variables */
+    t_command       *cmd;     /* Current command being executed */
+    char            *input;        /* Current input line */
+    int             last_status;    /* Exit status of last command */
+    int             running;        /* Shell running status */
+    int             error;  /* handling errors */
+    char            **env_array;   /* Environment as string array */
 } t_shell;
 
 /* Global signal handler variable */
