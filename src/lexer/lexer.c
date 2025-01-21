@@ -95,5 +95,11 @@ void    lex(t_token **token, char *input, t_shell *shell)
             input++;
         if (is_quote(*input))
             handle_quote(token, &input, shell, *input);
+        if (is_special(*input))
+            handle_special(shell, token, &input);
+        
+        if (shell->error)
+            break ;
+        
     }
 }

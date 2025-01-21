@@ -1,21 +1,24 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-void	add_char(char **str, char *c)
+void	add_char(t_shell *shell, char **str, char *c)
 {
 	char	*tmp;
 	if (c == NULL)
-		handle_error(); // todo
+		handle_error(shell, NULL, *str, ERR_MEMORY);
 	if (*str == NULL)
 	{
 		*str = ft_strdup(c);
 		if (!(*str))
-			handle_error(); // todo 
+		{
+			free(c);
+			handle_error(shell, NULL, *str, ERR_MEMORY);
+		}
 		return ;
 	}
 	tmp = *str;
 	*str = ft_strjoin(*str, c);
 	if (!(*str))
-		handle_error();
+		handle_error(shell, NULL, tmp, ERR_MEMORY);
 	free(tmp);
 	free(c);
 }
@@ -50,6 +53,7 @@ int	join_env_var(char **str, char *env_value)
 		return (1);
 	free(*str);
 	*str = s;
+	return (0);
 }
 
 void	expand_var(t_shell *shell, char **str, char ***input, char quote)
@@ -61,19 +65,19 @@ void	expand_var(t_shell *shell, char **str, char ***input, char quote)
 		return ;
 	i = 0;
 	tmp = **input;
-	while (***input && ft_isalnum(***input))
+	while (***input && (ft_isalnum(***input) || ***input == '_'))
 	{
 		(**input)++;
 		i++;
 	}
 	tmp = ft_substr(tmp, 0, i);
 	if (!tmp)
-		handle_error(); // todo
+		handle_error(shell, NULL, *str, ERR_MEMORY);
 	tmp = search_env(shell->env, tmp);
 	if (tmp)
 	{
 		if (join_env_var(str, tmp))
-			handle_error(); // todo
+			handle_error(shell, NULL, *str, ERR_MEMORY);
 	}
 }
 
@@ -90,16 +94,17 @@ void	handle_quote(t_token **token, char **input, t_shell *shell, char quote)
 		else
 		{
 			tmp = ft_substr(*input, 0, 1);
-			add_char(&str, tmp);
-			*input++;
+			add_char(shell, &str, tmp);
+			(*input)++;
 		}
 	}
 	if (**input != quote)
 	{
-		free(str);
-		ft_putendl_fd(ERR_QUOTE, STD_ERR);
-		shell->error = 2;
+		lex_err(str, shell);
 		return ;
 	}
-	tokenize(token, str, WORD);
+	if (shell->is_exit_status)
+		tokenize(shell, token, str, EXIT_STATUS_VAR);
+	else
+		tokenize(shell, token, str, WORD);
 }

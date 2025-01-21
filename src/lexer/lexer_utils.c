@@ -13,3 +13,19 @@ int	is_quote(char c)
 		return (1);
 	return (0);
 }
+
+int	is_special(char c)
+{
+	int		i;
+	char 	*special ;
+
+	special = "<>|$&()?";
+	i = 0;
+	while (special[i])
+	{
+		if (special[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}

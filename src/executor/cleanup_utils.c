@@ -1,7 +1,22 @@
 #include "../../includes/minishell.h"
 
+void    free_tokens(t_token *tokens)
+{
+    t_token *tmp;
+    
+    if (!tokens)
+        return ;
+    while (tokens)
+    {
+        tmp = tokens->next;
+        free(tokens->value);
+        free(tokens);
+        tokens = tmp;
+    }
+}
+
 // Frees all nodes in the environment linked list
-void free_env(t_env *env)
+void    free_env(t_env *env)
 {
     t_env *temp;
 
@@ -16,7 +31,7 @@ void free_env(t_env *env)
 }
 
 // Frees all strings in a string array and the array itself
-void free_string_array(char **array)
+void    free_string_array(char **array)
 {
     int i;
 
@@ -29,7 +44,7 @@ void free_string_array(char **array)
 }
 
 // Cleans up all dynamically allocated resources used by the shell
-void cleanup_shell(t_shell *shell)
+void    cleanup_shell(t_shell *shell)
 {
     if (shell->env)
         free_env(shell->env);

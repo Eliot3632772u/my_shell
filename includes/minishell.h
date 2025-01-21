@@ -42,6 +42,7 @@ typedef enum e_token_type
     T_AND,
     T_OR,
     WILD,
+    EXIT_STATUS_VAR,
     VARIABL,
     NONE // just a none type (instead of null)
 } t_token_type;
@@ -50,6 +51,7 @@ typedef enum e_token_type
 typedef struct      s_token
 {
     t_token_type    type;
+    void            *type_struct;
     char            *value;
     struct s_token  *next;
     struct s_token  *prev;
@@ -86,8 +88,11 @@ int	    is_spaces(char c);
 int	    is_quote(char c);
 int     check_special_case(t_shell *shell, char ***input, char **str);
 void	handle_quote(t_token **token, char **input, t_shell *shell, char quote);
-void	add_char(char **str, char *c);
-void	tokenize(t_token **token, char *valu, t_token_type type);
+void	add_char(t_shell *shell, char **str, char *c);
+void	tokenize(t_shell *shell, t_token **token, char *valu, t_token_type type);
+void	handle_error(t_shell *shell, t_token *tokens, char *str, char *error);
+void	lex_err(char *str, t_shell *shell);
+void    free_tokens(t_token *tokens);
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
 /* Environment structure */
@@ -107,6 +112,7 @@ typedef struct      s_shell
     int             last_status;    /* Exit status of last command */
     int             running;        /* Shell running status */
     int             error;  /* handling errors */
+    int             is_exit_status;
     char            **env_array;   /* Environment as string array */
 } t_shell;
 
