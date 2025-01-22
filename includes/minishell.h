@@ -39,11 +39,14 @@ typedef enum e_token_type
     APPEND,
     HEREDOC,
     T_EOF,
-    T_AND,
-    T_OR,
-    WILD,
-    EXIT_STATUS_VAR,
-    VARIABL,
+    T_AND, /* && */
+    T_OR,/* || */
+    WILD,/* wildcard *.c */
+    WILD_VAR, /* wildcard with var expantion *.c"hello $HOME" */
+    O_P,/* open parentheses --> ( */
+    C_P,/* closing parentheses --> ) */
+    EXIT_STATUS,/* $? */
+    VARIABL, /* $HOME */
     NONE // just a none type (instead of null)
 } t_token_type;
 
@@ -88,11 +91,19 @@ int	    is_spaces(char c);
 int	    is_quote(char c);
 int     check_special_case(t_shell *shell, char ***input, char **str);
 void	handle_quote(t_token **token, char **input, t_shell *shell, char quote);
-void	add_char(t_shell *shell, char **str, char *c);
+void	add_char(t_shell *shell, t_token **token, char **str, char *c);
 void	tokenize(t_shell *shell, t_token **token, char *valu, t_token_type type);
 void	handle_error(t_shell *shell, t_token *tokens, char *str, char *error);
 void	lex_err(char *str, t_shell *shell);
 void    free_tokens(t_token *tokens);
+void	handle_special(t_shell *shell, t_token **token, char **input, char **str);
+int	    is_delem(char c);
+void	insert_str(t_shell *shell, t_token **token, char **input, char *start);
+void	token_pipe(t_shell *shell, t_token **token, char **input);
+void	token_redirect(t_shell *shell, t_token **token, char **input);
+void	token_p(t_shell *shell, t_token **token, char **input);
+void	token_wilde(t_shell *shell, t_token **token, char **input);
+
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
 /* Environment structure */
@@ -112,7 +123,9 @@ typedef struct      s_shell
     int             last_status;    /* Exit status of last command */
     int             running;        /* Shell running status */
     int             error;  /* handling errors */
-    int             is_exit_status;
+    //int             is_DOLLAR; /* check inside the double quotes if there is a dollar sign to expand in excution*/
+    t_token_type    type;
+    char            *buffer;
     char            **env_array;   /* Environment as string array */
 } t_shell;
 

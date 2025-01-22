@@ -11,7 +11,7 @@ static void init_shell(t_shell *shell, char **envp)
     shell->running = 1;
     shell->env_array = NULL;
     shell->error = 0;
-    shell->is_exit_status = 0;
+    //shell->is_DOLLAR = 0;
 }
 
 int main(int argc, char **argv, char **envp)

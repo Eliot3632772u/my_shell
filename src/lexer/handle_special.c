@@ -1,106 +1,97 @@
 #include "../../includes/minishell.h"
+//int	collect_word(t_shell *shell, char **input, char *flag)
+//{
+//	char	quote;
+//	char	*str;
 
-void	token_redirect(t_shell *shell, t_token **token, char **input)
-{
-	if (**input == '>')
-	{
-		if (*(*input + 1) == '>')
-		{
-			tokenize(shell, token, ft_strdup(">>"), APPEND);
-			(*input)++;
-		}
-		else
-			tokenize(shell, token, ft_strdup(">"), REDIRECT_OUT);
-		(*input)++;
-	}
-	else if (**input == '<')
-	{
-		if (*(*input + 1) == '<')
-		{
-			tokenize(shell, token, ft_strdup("<<"), HEREDOC);
-			(*input)++;
-		}
-		else
-			tokenize(shell, token, ft_strdup("<"), REDIRECT_IN);
-		(*input)++;
-	}
-}
-void	token_pipe(t_shell *shell, t_token **token, char **input)
-{
-	if (*(input + 1) == '|')
-	{
-		tokenize(shell, token, ft_strdup("||"), T_OR);
-		(*input)++;
-	}
-	else
-		tokenize(shell, token, ft_strdup("|"), PIPE);
-	(*input)++;
-}
+//	while (**input && !is_delem(**input))
+//	{
+//		if (**input == '\'' || **input == '"')
+//		{
+//			quote = **input;
+//			if (**input == '$' && quote == '"')
+//				*flag = 1;
+//			(*input)++;
+//			while (**input && **input != quote) // to fix, it doesn't handle &"hello""aaa" --> &"hello""aaa
+//				(*input)++;
+//			if (**input != quote)
+//			{
+//				lex_err(NULL, shell);
+//				return (1);
+//			}
+//		}
+//		else
+//			(*input)++;
+//	}
+//	return (0);
+//}
 
-void	token_and(t_shell *shell, t_token *token, char **input)
+void	token_and(t_shell *shell, t_token **token, char **input, char **str)
 {
+	char	flag;
+	char	*start;
+
+	flag = 0;
 	if (*(input + 1) == '&')
 	{
 		tokenize(shell, token, ft_strdup("&&"), T_AND);
-		(*input)++;
+		(*input) += 2;
 	}
 	else
-		tokenize(shell, token, ft_strdup("&"), WORD);
-	(*input)++;
-}
-
-char	*find_var(t_shell *shell, char *to_find)
-{
-	t_env	*env;
-
-	env = shell->env;
-	while (env)
 	{
-		if (ft_strcmp(env->key, to_find) == 0)
-			return (env->value);
-		env = env->next;
+		add_char(shell, token, str, ft_strdup("&"));
+		//start = (*input) + 1;
+		//if (collect_word(shell, input, &flag))
+		//	return ;
+		//if (flag)
+		//	shell->type = VARIABL;
+		//else
+		//	shell->type = WORD;
+		//insert_str(shell, token, input, start);
+		(*input)++;
 	}
-	return (NULL);
 }
 
 void	token_var(t_shell *shell, t_token **token, char **input)
 {
 	char	*var_name;
-	char	*var_value;
 	char	*start;
 
-
-	if (*(*input + 1) == '?')
+	//if (*(*input + 1) == '?')
+	//{
+	//	tokenize(shell, token, ft_strdup("$?"), EXIT_STATUS);
+	//	(*input) += 2;
+	//}
+	if (*(*input + 1) != '_' && !ft_isalnum(*(*input + 1)))
 	{
-		tokenize(shell, token, ft_strdup("$?"), EXIT_STATUS_VAR);
-		(*input) += 2;
+		tokenize(shell, token, ft_strdup("$"), WORD);
+		(*input)++;
 	}
 	else
 	{
-		(*input)++; // Skip the '$'
-        start = *input;
-        while (**input && (ft_isalnum(**input) || **input == '_')) // Valid env variable characters
-            (*input)++;
+		//(*input)++; // Skip the '$'
+		start = *input;
+		while (**input && (ft_isalnum(**input) || **input == '_'))
+			(*input)++;
 		var_name = ft_substr(start, 0, *input - start); // Get variable name
         if (!var_name)
             handle_error(shell, *token, NULL, ERR_MEMORY);
-        var_value = find_var(shell->env, var_name);// Search for the variable in the environment
-        free(var_name); // Free the variable name after search
-        if (var_value)
-            tokenize(shell, token, ft_strdup(var_value), WORD);// Tokenize the variable value if it exists
+        tokenize(shell, token, var_name, VARIABL);// Tokenize the variable value if it exists
 	}
 }
 
-void	handle_special(t_shell *shell, t_token **token, char **input)
+void	handle_special(t_shell *shell, t_token **token, char **input, char **str)
 {
 	if (**input == '<' || **input == '>')
 		token_redirect(shell, token, input);
 	else if (**input == '|')
 		token_pipe(shell, token, input);
 	else if (**input == '&')
-		token_and(shell, token, input);
+		token_and(shell, token, input, str); // to fix, check function &"hello""fuckers"
 	else if (**input == '$')
 		token_var(shell, token, input);
-	else if (**input == '*') // todo
-		token_wilde();
+	else if (**input == '*')
+		token_wilde(shell, token, input);
+	else if (**input == ')' || **input == '(')
+		toknen_p(shell, token, input);
 }

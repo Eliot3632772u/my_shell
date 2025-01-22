@@ -15,12 +15,33 @@ t_token	*new_token(char *val, t_token_type type)
 	return (new);
 }
 
+int	check_buffer(t_shell *shell, t_token **token, char *valu)
+{
+	char	*tmp;
+
+	if (shell->buffer == NULL);
+		return (0);
+	tmp = shell->buffer;
+	shell->buffer = ft_strjoin(shell->buffer, valu);
+	free(tmp);
+	free(valu);
+	if (shell->buffer == NULL)
+		handle_error(shell, *token, valu, ERR_MEMORY);
+	return (1);
+}
+
 void	tokenize(t_shell *shell, t_token **token, char *valu, t_token_type type)
 {
 	t_token	*tmp;
 
 	if (!valu)
-		handle_error(shell, *token, NULL, ERR_MEMORY);
+	{
+		valu = ft_strdup("");
+		if (!valu)
+			handle_error(shell, *token, NULL, ERR_MEMORY);  
+	}
+	if (check_buffer(shell, token, valu))
+		return ;
 	if (*token == NULL)
 	{
 		*token = new_token(valu, type);

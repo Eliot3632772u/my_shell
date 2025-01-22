@@ -19,7 +19,7 @@ int	is_special(char c)
 	int		i;
 	char 	*special ;
 
-	special = "<>|$&()?";
+	special = "<>|$&()";
 	i = 0;
 	while (special[i])
 	{
@@ -27,5 +27,15 @@ int	is_special(char c)
 			return (1);
 		i++;
 	}
+	return (0);
+}
+
+int	is_delem(char c)
+{
+	if (is_spaces(c))
+		return (1);
+	if (c == '|' || c == '&' || c == '<' ||
+		c == '>' || c == ')' || c == '(')
+		return (1);
 	return (0);
 }
