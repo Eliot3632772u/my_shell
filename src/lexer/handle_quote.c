@@ -3,6 +3,7 @@
 void	add_char(t_shell *shell, t_token **token ,char **str, char *c)
 {
 	char	*tmp;
+
 	if (c == NULL)
 		handle_error(shell, *token, *str, ERR_MEMORY);
 	if (*str == NULL)
@@ -92,9 +93,7 @@ void	handle_quote(t_token **token, char **input, t_shell *shell, char quote)
 	while (**input && **input != quote)
 	{
 		tmp = ft_substr(*input, 0, 1);
-		add_char(shell, token, &str, tmp);
-		if (!str)
-			handle_error(shell, *token, NULL, ERR_MEMORY); // &"" "hello $HOME"|    | &hello $HOME
+		add_char(shell, token, &str, tmp);  // &"" "hello $HOME"|    | &hello $HOME
 		(*input)++;
 	}
 	if (**input != quote)
@@ -102,8 +101,10 @@ void	handle_quote(t_token **token, char **input, t_shell *shell, char quote)
 		lex_err(str, shell);
 		return ;
 	}
-	if (shell->buffer)
+	if (shell->buffer && str)
 		add_char(shell, token, &(shell->buffer), str); // handle buffer when filled
+	else if (shell->buffer && !str)
+		add_char(shell, token, &(shell->buffer), ft_strdup(""));
 	else
 		tokenize(shell, token, str, WORD);
 	(*input)++;

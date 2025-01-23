@@ -30,12 +30,3 @@ int	is_special(char c)
 	return (0);
 }
 
-int	is_delem(char c)
-{
-	if (is_spaces(c))
-		return (1);
-	if (c == '|' || c == '&' || c == '<' ||
-		c == '>' || c == ')' || c == '(')
-		return (1);
-	return (0);
-}

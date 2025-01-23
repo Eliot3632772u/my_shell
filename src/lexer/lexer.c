@@ -100,18 +100,18 @@ void    lex(t_token **token, char *input, t_shell *shell)
         if (is_quote(*input))
             handle_quote(token, &input, shell, *input); // todo, handle "hello""hello"
         else if (is_special(*input))
-            handle_special(shell, token, &input, &str);  // jkj&"""hello"  --> jkj&hello
+            handle_special(shell, token, &input, &str);  // jkj&"""hello"&&"jdf""kdf"  --> jkj&hello
         else if (is_delem(*input))
         {
             if (str)
             {
-                tokenize(shell, token, str, WORD);  /* FIX LOGIC LOOP */
+                tokenize(shell, token, str, WORD);  /* FIX LOGIC LOOP */ // "dfdf"""&djfk
                 str = NULL;
             }
         }
         else
         {
-            add_char(shell, token, &str, ft_substr(input, 0, 1));  //jkj&
+            add_char(shell, token, &str, ft_substr(input, 0, 1));  //jkj&hello && jdf
             input++;
         }
         if (shell->error)

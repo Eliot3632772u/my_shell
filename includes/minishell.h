@@ -19,9 +19,9 @@
 # define SUCCESS 0
 # define ERROR 1
 # define STD_ERR 2
-
+# define ERR_MEMORY 3
 /* Error messages */
-# define ERR_MEMORY "Memory allocation failed"
+# define ERR_MEMORY_MSG "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
 # define ERR_FORK "Fork failed"
 # define ERR_CMD "Command not found"
@@ -33,6 +33,7 @@
 typedef enum e_token_type
 {
     WORD,
+    WORD_VAR,
     PIPE,
     REDIRECT_IN,
     REDIRECT_OUT,
@@ -42,10 +43,9 @@ typedef enum e_token_type
     T_AND, /* && */
     T_OR,/* || */
     WILD,/* wildcard *.c */
-    WILD_VAR, /* wildcard with var expantion *.c"hello $HOME" */
     O_P,/* open parentheses --> ( */
     C_P,/* closing parentheses --> ) */
-    EXIT_STATUS,/* $? */
+    //EXIT_STATUS,/* $? */
     VARIABL, /* $HOME */
     NONE // just a none type (instead of null)
 } t_token_type;
@@ -54,8 +54,9 @@ typedef enum e_token_type
 typedef struct      s_token
 {
     t_token_type    type;
-    void            *type_struct;
     char            *value;
+    int             concate;
+    int             expand;
     struct s_token  *next;
     struct s_token  *prev;
 }                   t_token;
@@ -84,25 +85,28 @@ typedef struct          s_command
 //t_command *parse_tokens(t_token *tokens);
 //void free_tokens(t_token *tokens);
 
-void    lex(t_token *token, char *input, t_shell *shell);
+void	lexer(t_shell *shell, t_token **token, char *input);
 
 /*lexer utiles*/
-int	    is_spaces(char c);
-int	    is_quote(char c);
-int     check_special_case(t_shell *shell, char ***input, char **str);
-void	handle_quote(t_token **token, char **input, t_shell *shell, char quote);
-void	add_char(t_shell *shell, t_token **token, char **str, char *c);
-void	tokenize(t_shell *shell, t_token **token, char *valu, t_token_type type);
-void	handle_error(t_shell *shell, t_token *tokens, char *str, char *error);
-void	lex_err(char *str, t_shell *shell);
-void    free_tokens(t_token *tokens);
-void	handle_special(t_shell *shell, t_token **token, char **input, char **str);
-int	    is_delem(char c);
-void	insert_str(t_shell *shell, t_token **token, char **input, char *start);
-void	token_pipe(t_shell *shell, t_token **token, char **input);
-void	token_redirect(t_shell *shell, t_token **token, char **input);
-void	token_p(t_shell *shell, t_token **token, char **input);
-void	token_wilde(t_shell *shell, t_token **token, char **input);
+int	    is_special(char c);
+void	handle_special(t_shell *shell, t_token **token, char **input);
+void	check_concate(t_token *token, char **input);
+void	tokenize(t_shell *sh, t_token **token, char *val, t_token_type type);
+//int	    is_quote(char c);
+//int     check_special_case(t_shell *shell, char ***input, char **str);
+//void	handle_quote(t_token **token, char **input, t_shell *shell, char quote);
+//void	add_char(t_shell *shell, t_token **token, char **str, char *c);
+//void	tokenize(t_shell *shell, t_token **token, char *valu, t_token_type type);
+//void	handle_error(t_shell *shell, t_token *tokens, char *str, char *error);
+//void	lex_err(char *str, t_shell *shell);
+//void    free_tokens(t_token *tokens);
+//void	handle_special(t_shell *shell, t_token **token, char **input, char **str);
+int	    is_delem(char **input);
+//void	insert_str(t_shell *shell, t_token **token, char **input, char *start);
+//void	token_pipe(t_shell *shell, t_token **token, char **input);
+//void	token_redirect(t_shell *shell, t_token **token, char **input);
+//void	token_p(t_shell *shell, t_token **token, char **input);
+//void	token_wilde(t_shell *shell, t_token **token, char **input);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 

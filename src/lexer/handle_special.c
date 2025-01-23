@@ -33,7 +33,13 @@ void	token_and(t_shell *shell, t_token **token, char **input, char **str)
 
 	flag = 0;
 	if (*(input + 1) == '&')
-	{
+	{	
+		if (*str)
+		{
+			tokenize(shell, token, *str, WORD);
+			free(*str);
+			*str = NULL;
+		}
 		tokenize(shell, token, ft_strdup("&&"), T_AND);
 		(*input) += 2;
 	}
