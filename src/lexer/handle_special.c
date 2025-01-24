@@ -15,7 +15,7 @@ void	token_var(t_shell *shell, t_token **token, char **input)
 	{
 		(*input)++; // Skip the '$'
 		start = *input;
-		while (**input && (ft_isalnum(**input) || **input == '_'))
+		while (**input && (ft_isalnum(**input) || **input == '_' || **input == '?'))
 			(*input)++;
 		var_name = ft_substr(start, 0, *input - start); // Get variable name
         if (!var_name)
@@ -24,7 +24,6 @@ void	token_var(t_shell *shell, t_token **token, char **input)
 			return ;
 		}
         tokenize(shell, token, var_name, VARIABL);// Tokenize the variable value
-		free(var_name);
 		check_concate(*token, input);
 	}
 }
@@ -94,6 +93,7 @@ void	token_paran(t_shell *shell, t_token **token, char **input)
 		return ;
 	}
 	tokenize(shell, token, value, type);
+	(*input)++;
 }
 void	token_pipe(t_shell *shell, t_token **token, char **input)
 {
@@ -208,6 +208,7 @@ void	handle_quotes(t_shell *shell, t_token **token, char **input)
 	value = ft_substr(start, 0, *input - start);
 	token_quote(shell, token, value, expand);
 	(*input)++;
+	check_concate(*token, input);
 }
 
 void	handle_special(t_shell *shell, t_token **token, char **input)

@@ -32,7 +32,7 @@ void	check_concate(t_token *token, char **input)
 {
 	while (token && token->next)
 		token = token->next;
-	if (**input && !is_delem(input))
+	if (**input && *(*input + 1) && !is_delem(input))
 		token->concate = 1;
 }
 /*
