@@ -20,12 +20,13 @@
 # define ERROR 1
 # define STD_ERR 2
 # define ERR_MEMORY 3
+# define ERR_QUOTE 4
 /* Error messages */
 # define ERR_MEMORY_MSG "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
 # define ERR_FORK "Fork failed"
 # define ERR_CMD "Command not found"
-# define ERR_QUOTE "Syntax error: unclosed quote"
+# define ERR_QUOTE_MSG "Syntax error: unclosed quote"
 
 // ------------------------------- PARSER AND LEXER ------------------------------------------------
 
@@ -79,6 +80,30 @@ typedef struct          s_command
     struct s_command    *next; // Next piped command
 } t_command;
 
+/* Environment structure */
+typedef struct      s_env
+{
+    char            *key;
+    char            *value;
+    struct s_env    *next;
+}                   t_env;
+
+/* Shell state structure */
+typedef struct      s_shell
+{
+    t_env           *env;         /* Environment variables */
+    t_command       *cmd;     /* Current command being executed */
+    char            *input;        /* Current input line */
+    int             last_status;    /* Exit status of last command */
+    int             running;        /* Shell running status */
+    int             error;  /* handling errors */
+    //int             is_DOLLAR; /* check inside the double quotes if there is a dollar sign to expand in excution*/
+    t_token_type    type;
+    char            *buffer;
+    char            **env_array;   /* Environment as string array */
+} t_shell;
+
+
 // your functions here
 // (this functions by me, to give you a starting point, you still can implement your own one)
 //t_token *tokenize_input(char *input);
@@ -110,28 +135,7 @@ int	    is_delem(char **input);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
-/* Environment structure */
-typedef struct      s_env
-{
-    char            *key;
-    char            *value;
-    struct s_env    *next;
-}                   t_env;
 
-/* Shell state structure */
-typedef struct      s_shell
-{
-    t_env           *env;         /* Environment variables */
-    t_command       *cmd;     /* Current command being executed */
-    char            *input;        /* Current input line */
-    int             last_status;    /* Exit status of last command */
-    int             running;        /* Shell running status */
-    int             error;  /* handling errors */
-    //int             is_DOLLAR; /* check inside the double quotes if there is a dollar sign to expand in excution*/
-    t_token_type    type;
-    char            *buffer;
-    char            **env_array;   /* Environment as string array */
-} t_shell;
 
 /* Global signal handler variable */
 extern int g_signal_received;
@@ -185,5 +189,6 @@ void free_redirect(t_redirect *redirect);
 void free_env(t_env *env);
 void cleanup_shell(t_shell *shell);
 void free_string_array(char **array);
+void free_tokens(t_token *tokens);
 
 #endif

@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 t_token	*new_token(char *val, t_token_type type)
 {
@@ -13,6 +13,7 @@ t_token	*new_token(char *val, t_token_type type)
 	new->prev = NULL;
 	new->type = type;
 	new->value = val;
+	return (new);
 }
 
 void	tokenize(t_shell *sh, t_token **token, char *val, t_token_type type)
