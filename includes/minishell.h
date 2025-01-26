@@ -65,7 +65,7 @@ typedef struct      s_token
 /* Parser structures */
 typedef struct          s_redirect
 {
-    int                 type;           /* < , > , >> , << */
+    t_token_type        type;           /* < , > , >> , << */
     char                *file;         /* Filename or delimiter for heredoc */
     struct s_redirect   *next;
 }                       t_redirect;
@@ -103,6 +103,23 @@ typedef struct      s_shell
     char            **env_array;   /* Environment as string array */
 } t_shell;
 
+typedef enum        e_ast_type
+{
+    ast_pip,
+    ast_none,
+    ast_cmd
+}                   t_ast_type;
+
+typedef struct      s_ast 
+{
+    t_ast_type      type;  // Node type (e.g., CMD, PIPE, etc.)
+    //t_command       *cmd; 
+    char            *args;
+    t_token         *tok_args; // tokens to be arguments      
+    t_redirect      *redc; // Linked list of redirections
+    struct s_ast    *left;    // Left subtree
+    struct s_ast    *right;   // Right subtree
+}                   t_ast;
 
 // your functions here
 // (this functions by me, to give you a starting point, you still can implement your own one)
@@ -110,6 +127,7 @@ typedef struct      s_shell
 //t_command *parse_tokens(t_token *tokens);
 //void free_tokens(t_token *tokens);
 
+/*Lexer*/
 void	lexer(t_shell *shell, t_token **token, char *input);
 
 /*lexer utiles*/
@@ -117,21 +135,17 @@ int	    is_special(char c);
 void	handle_special(t_shell *shell, t_token **token, char **input);
 void	check_concate(t_token *token, char **input);
 void	tokenize(t_shell *sh, t_token **token, char *val, t_token_type type);
-//int	    is_quote(char c);
-//int     check_special_case(t_shell *shell, char ***input, char **str);
-//void	handle_quote(t_token **token, char **input, t_shell *shell, char quote);
-//void	add_char(t_shell *shell, t_token **token, char **str, char *c);
-//void	tokenize(t_shell *shell, t_token **token, char *valu, t_token_type type);
-//void	handle_error(t_shell *shell, t_token *tokens, char *str, char *error);
-//void	lex_err(char *str, t_shell *shell);
-//void    free_tokens(t_token *tokens);
-//void	handle_special(t_shell *shell, t_token **token, char **input, char **str);
 int	    is_delem(char **input);
-//void	insert_str(t_shell *shell, t_token **token, char **input, char *start);
-//void	token_pipe(t_shell *shell, t_token **token, char **input);
-//void	token_redirect(t_shell *shell, t_token **token, char **input);
-//void	token_p(t_shell *shell, t_token **token, char **input);
-//void	token_wilde(t_shell *shell, t_token **token, char **input);
+
+/*Parser*/
+
+/*Parser utiles*/
+t_ast   *parse_sub(t_token **tok);
+t_ast   *parse_pipe(t_token **tok);
+t_ast   *parse_logical(t_token **tok);
+t_ast   *parse_redi(t_token **tok);
+t_ast	*parse_cmd(t_token **tok);
+t_ast   *new_cmd(t_token *token);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
