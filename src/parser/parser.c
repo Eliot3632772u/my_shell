@@ -102,19 +102,32 @@ t_ast   *new_cmd(t_token *token)
     tmp->redc = NULL;
     tmp->args = NULL;
     tmp->type = ast_cmd;
-    tmp->tok_args = token;
-    list = token;
+    tmp->tok_args = token; // handle if theres no command like echo hello > file | > file2 , after pipe it will create a cmd but with no args 
+    list = token;          // or cmd , than it will segvault DOWN
     while (list && (list->type == WORD || list->type == WORD_VAR || list->type == VARIABL || list->type == WILD))
         list = list->next;
     list = list->prev;
-    list->next->prev = NULL;
+    list->next->prev = NULL; // here
     list->next = NULL; 
     return (tmp);
 }
 
+void    add_subshell(t_ast **sub, t_token **tok)
+{
+    t_ast   *tmp;
+
+    tmp = /// todo 
+}
+
 t_ast   *parse_sub(t_token **tok)
 {
+    t_ast   *subshell;
 
+    subshell = NULL;
+    while ((*tok) && (*tok)->type != C_P)
+    {
+        add_subshell(&subshell, tok);
+    }
 }
 
 t_ast	*parse_cmd(t_token **tok)
@@ -193,6 +206,26 @@ void    add_redic(t_redirect **redic, t_token **tok)
     return ;
 }
 
+void    add_arg(t_token **tok_args, t_token **tok)
+{
+    t_token *tmp;
+
+    if (*tok_args == NULL)
+        *tok_args = *tok;
+    else 
+    {
+        tmp = *tok_args;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = *tok;
+    }
+
+    while (*tok && ((*tok)->type == WORD || (*tok)->type == WORD_VAR || (*tok)->type == VARIABL || (*tok)->type == WILD))
+            (*tok) = (*tok)->next;
+    (*tok)->prev->next = NULL; // it might segvault here
+    (*tok)->prev = NULL;
+}
+
 t_ast   *parse_redi(t_token **tok)
 {
     t_ast	*ast;
@@ -203,27 +236,98 @@ t_ast   *parse_redi(t_token **tok)
     while (*tok && ((*tok)->type == HEREDOC || (*tok)->type == APPEND || (*tok)->type == REDIRECT_IN || (*tok)->type == REDIRECT_OUT))
     {
         add_redic(&(ast->redc), tok);
+        if (!(ast->redc))
+        {
+            // handle if error coming from memory fail or unexpected token
+            return (NULL);
+        }
         while (*tok && ((*tok)->type == WORD || (*tok)->type == WORD_VAR || (*tok)->type == VARIABL || (*tok)->type == WILD))
-            add_arg(&(ast->tok_args), tok);
-    }
+            add_arg(&(ast->tok_args), tok); // todo , need to add args only if there is a cmd
+    }                                       // echo hello > file | > wc hello2 --> zsh: command not found: hello2
+    return (ast); 
 }
 
+t_ast   *new_ast(t_ast_type type)
+{
+    t_ast   *new;
+
+    new = malloc(sizeof(t_ast));
+    if (!new)
+        // handle memory failure
+        return (NULL);
+    new->args = NULL;
+    new->type = type;
+    new->redc = NULL;
+    new->tok_args = NULL;
+    new->left = NULL;
+    new->right = NULL;
+    return (new);
+}
 
 t_ast   *parse_pipe(t_token **tok)
 {
     t_ast	*ast;
+    t_ast   *root;
 
 	ast = parse_redir(tok);
 	if (!ast)
 		return (NULL);
+    while ((*tok)->type == PIPE)
+    {
+        (*tok) = (*tok)->next;
+        if (!(*tok) || (*tok)->type == PIPE || (*tok)->type == T_AND || (*tok)->type == T_OR)
+        {
+            ft_putstr_fd("bash: syntax error near unexpected token", STD_ERR);
+            ft_putendl_fd((*tok)->value, 2);
+            return (NULL); // todo 
+        }
+        root = new_ast(ast_pip);
+        if (!root)
+        {
+            //handle malloc fail
+            return (NULL);
+        }
+        root->left = ast;
+        root->right = parse_logical(tok);
+        return (root);
+    }
+    return (ast);
 }
 
 
 t_ast   *parse_logical(t_token **tok)
 {
     t_ast	*ast;
+    t_ast   *root;
+    t_ast_type  *type;
 
 	ast = parse_pipe(tok);
 	if (!ast)
 		return (NULL);
+    while ((*tok) && ((*tok)->type == T_AND || (*tok)->type == T_OR))
+    {   
+        type = ast_and;
+        if ((*tok)->type == T_OR)
+            type = ast_or;
+        (*tok) = (*tok)->next;
+        if (!(*tok) || (*tok)->type == PIPE || (*tok)->type == T_AND || (*tok)->type == T_OR)
+        {
+            ft_putstr_fd("bash: syntax error near unexpected token ", STD_ERR);
+            if (*tok)
+                ft_putendl_fd((*tok)->value, 2);
+            else
+                ft_putendl_fd("\n", 2);
+            return (NULL); // todo 
+        }
+        root = new_ast(type);
+        if (root == NULL)
+        {
+            // handle failure;
+            return (NULL);
+        }
+        root->left = ast;
+        root->right = parse_pipe(tok);
+        return (root);
+    }
+    return (ast);
 }

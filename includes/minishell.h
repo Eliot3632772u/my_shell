@@ -109,7 +109,10 @@ typedef enum        e_ast_type
 {
     ast_pip,
     ast_none,
-    ast_cmd
+    ast_cmd,
+    ast_and,
+    ast_or,
+    ast_sub,
 }                   t_ast_type;
 
 typedef struct      s_ast 
