@@ -67,7 +67,9 @@ typedef struct          s_redirect
 {
     t_token_type        type;           /* < , > , >> , << */
     char                *file;         /* Filename or delimiter for heredoc */
+    t_token             *tok_file; /* tokens that will be the file name or delemeter */
     struct s_redirect   *next;
+    struct s_redirect   *prev;
 }                       t_redirect;
 
 // Your parser will return a t_command structure:
