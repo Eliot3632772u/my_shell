@@ -145,12 +145,20 @@ int	    is_delem(char **input);
 /*Parser*/
 
 /*Parser utiles*/
-t_ast   *parse_sub(t_token **tok);
-t_ast   *parse_pipe(t_token **tok);
-t_ast   *parse_logical(t_token **tok);
-t_ast   *parse_redi(t_token **tok);
-t_ast	*parse_cmd(t_token **tok);
-t_ast   *new_cmd(t_token *token);
+t_ast       *parse_sub(t_token **tok);
+t_ast       *parse_pipe(t_token **tok);
+t_ast       *parse_logical(t_token **tok);
+t_ast       *parse_redi(t_token **tok);
+t_ast	    *parse_cmd(t_token **tok);
+t_ast       *new_cmd(t_token *token);
+t_redirect  *new_redic(t_token_type type);
+t_ast       *new_ast(t_ast_type type);
+int         add_redic(t_redirect **redic, t_token **tok);
+void        add_arg(t_token **tok_args, t_token **tok);
+t_token     *get_file_tokens(t_token **tok);
+t_ast       *unexpec_tok(t_token **tok, t_ast *ast);
+void        free_redi(t_redirect *red);
+t_ast       *free_ast(t_ast *ast);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
