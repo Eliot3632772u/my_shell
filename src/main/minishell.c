@@ -45,6 +45,82 @@ char    *f(t_token_type type)
     return (NULL);
 }
 
+
+void print_tokens(t_token *token)
+{
+    while (token)
+    {
+        printf("%s ", token->value);
+        token = token->next;
+    }
+}
+
+void print_redirects(t_redirect *red)
+{
+    while (red)
+    {
+        printf("Redirect type: %d, File: %s\n", red->type, red->tok_file ? red->tok_file->value : "(null)");
+        red = red->next;
+    }
+}
+
+void print_ast(t_ast *node, int depth)
+{
+    if (!node)
+        return;
+    
+    for (int i = 0; i < depth; i++)
+        printf("  ");
+    
+    printf("Node Type: %d\n", node->type);
+    
+    if (node->tok_args)
+    {
+        for (int i = 0; i < depth; i++)
+            printf("  ");
+        printf("Arguments: ");
+        print_tokens(node->tok_args);
+        printf("\n");
+    }
+    
+    if (node->redc)
+    {
+        for (int i = 0; i < depth; i++)
+            printf("  ");
+        printf("Redirections:\n");
+        print_redirects(node->redc);
+    }
+    
+    if (node->left)
+    {
+        for (int i = 0; i < depth; i++)
+            printf("  ");
+        printf("Left:\n");
+        print_ast(node->left, depth + 1);
+    }
+    
+    if (node->right)
+    {
+        for (int i = 0; i < depth; i++)
+            printf("  ");
+        printf("Right:\n");
+        print_ast(node->right, depth + 1);
+    }
+}
+
+int get_ast_depth(t_ast *node)
+{
+    if (!node)
+        return 0;
+    
+    int left_depth = get_ast_depth(node->left);
+    int right_depth = get_ast_depth(node->right);
+    
+    return (left_depth > right_depth ? left_depth : right_depth) + 1;
+}
+
+
+
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
@@ -83,15 +159,24 @@ int main(int argc, char **argv, char **envp)
                 shell.error = 0;
                 continue;
             }
-            while (token)
-            {
-                char *s = f(token->type);
-                printf("%s --> %s", token->value, s);
-                if (token->concate)
-                    printf("🔗🔗🔗🔗");
-                printf("\n");
-                token = token->next;
-            }
+            //while (token)
+            //{
+            //    char *s = f(token->type);
+            //    printf("%s --> %s", token->value, s);
+            //    if (token->concate)
+            //        printf("🔗🔗🔗🔗");
+            //    printf("\n");
+            //    token = token->next;
+            //}
+            t_ast *ast = parser(&token, &shell);
+            
+            //if (!ast)
+            //{
+            //    printf("\n🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴\n");
+            //    continue;
+            //}
+            print_ast(ast, get_ast_depth(ast));
+            ast = NULL;
             // Execute command (i'll implement this next)
             // execute_command(shell.cmd, &shell);
         }
@@ -100,3 +185,4 @@ int main(int argc, char **argv, char **envp)
     //cleanup_shell(&shell);
     return (0/*shell.last_status*/);
 }
+//ladsf af laskf | sfklj (())LKSDJ LD

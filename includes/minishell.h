@@ -21,6 +21,7 @@
 # define STD_ERR 2
 # define ERR_MEMORY 3
 # define ERR_QUOTE 4
+# define UNEXPECTED_TOKEN 5
 /* Error messages */
 # define ERR_MEMORY_MSG "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
@@ -107,19 +108,18 @@ typedef struct      s_shell
 
 typedef enum        e_ast_type
 {
-    ast_pip,
-    ast_none,
-    ast_cmd,
-    ast_and,
-    ast_or,
+    ast_pip, 
+    ast_none, 
+    ast_cmd, 
+    ast_and, 
+    ast_or, 
     ast_sub,
 }                   t_ast_type;
 
 typedef struct      s_ast 
 {
-    t_ast_type      type;  // Node type (e.g., CMD, PIPE, etc.)
-    //t_command       *cmd; 
-    char            *args;
+    t_ast_type      type;  // Node type (e.g., CMD, PIPE, etc.) 
+    char            **args; // cmd argument 
     t_token         *tok_args; // tokens to be arguments      
     t_redirect      *redc; // Linked list of redirections
     struct s_ast    *left;    // Left subtree
@@ -143,22 +143,24 @@ void	tokenize(t_shell *sh, t_token **token, char *val, t_token_type type);
 int	    is_delem(char **input);
 
 /*Parser*/
+t_ast   *parser(t_token **tok, t_shell *shell);
 
 /*Parser utiles*/
-t_ast       *parse_sub(t_token **tok);
-t_ast       *parse_pipe(t_token **tok);
-t_ast       *parse_logical(t_token **tok);
-t_ast       *parse_redi(t_token **tok);
-t_ast	    *parse_cmd(t_token **tok);
-t_ast       *new_cmd(t_token *token);
-t_redirect  *new_redic(t_token_type type);
-t_ast       *new_ast(t_ast_type type);
-int         add_redic(t_redirect **redic, t_token **tok);
+t_ast       *parse_sub(t_token **tok, t_shell *shell);
+t_ast       *parse_pipe(t_token **tok, t_shell *shell);
+t_ast       *parse_logical(t_token **tok, t_shell *shell);
+t_ast       *parse_redi(t_token **tok, t_shell *shell);
+t_ast	    *parse_cmd(t_token **tok, t_shell *shell);
+t_ast       *new_cmd(t_token *token, t_shell *shell);
+t_redirect  *new_redic(t_token_type type, t_shell *shell);
+t_ast       *new_ast(t_ast_type type, t_shell *shell);
+int         add_redic(t_redirect **redic, t_token **tok, t_shell *shell);
 void        add_arg(t_token **tok_args, t_token **tok);
 t_token     *get_file_tokens(t_token **tok);
 t_ast       *unexpec_tok(t_token **tok, t_ast *ast);
 void        free_redi(t_redirect *red);
 t_ast       *free_ast(t_ast *ast);
+void        free_tok_node(t_token **tok);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 
