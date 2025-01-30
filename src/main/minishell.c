@@ -159,15 +159,15 @@ int main(int argc, char **argv, char **envp)
                 shell.error = 0;
                 continue;
             }
-            //while (token)
-            //{
-            //    char *s = f(token->type);
-            //    printf("%s --> %s", token->value, s);
-            //    if (token->concate)
-            //        printf("🔗🔗🔗🔗");
-            //    printf("\n");
-            //    token = token->next;
-            //}
+            while (token)
+            {
+                char *s = f(token->type);
+                printf("%s --> %s", token->value, s);
+                if (token->concate)
+                    printf("🔗🔗🔗🔗");
+                printf("\n");
+                token = token->next;
+            }
             t_ast *ast = parser(&token, &shell);
             
             //if (!ast)
@@ -175,7 +175,7 @@ int main(int argc, char **argv, char **envp)
             //    printf("\n🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴\n");
             //    continue;
             //}
-            print_ast(ast, get_ast_depth(ast));
+            //print_ast(ast, get_ast_depth(ast));
             ast = NULL;
             // Execute command (i'll implement this next)
             // execute_command(shell.cmd, &shell);

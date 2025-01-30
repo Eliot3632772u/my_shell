@@ -12,6 +12,15 @@ int	is_delem(char **input)
 	return (0);
 }
 
+int	is_wild_special(char **input)
+{
+	if (is_delem(input))
+		return (1);
+	if (**input == '\'' || **input == '"' || **input == '$')
+		return (1);
+	return (0);
+}
+
 int	is_special(char c)
 {
 	int		i;

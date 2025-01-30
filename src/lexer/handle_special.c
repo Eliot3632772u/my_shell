@@ -61,7 +61,7 @@ void	token_wild(t_shell *shell, t_token **token, char **input)
 	char	*value;
 
 	start = *input;
-	while (**input && !is_delem(input)) // the dollar sign get ignored if alone f*$*s 
+	while (**input && !is_wild_special(input)) // the dollar sign get ignored if alone f*$*s 
 		(*input)++;											// or if no variable found f*$NOTHING*s 
 	value = ft_substr(start, 0, *input - start);			// and get expanded if found f*$HOME*s 
 	if (value == NULL)
@@ -70,6 +70,7 @@ void	token_wild(t_shell *shell, t_token **token, char **input)
 		return ;
 	}
 	tokenize(shell, token, value, WILD);
+	check_concate(*token, input);
 }
 
 void	token_paran(t_shell *shell, t_token **token, char **input)

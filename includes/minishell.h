@@ -141,6 +141,7 @@ void	handle_special(t_shell *shell, t_token **token, char **input);
 void	check_concate(t_token *token, char **input);
 void	tokenize(t_shell *sh, t_token **token, char *val, t_token_type type);
 int	    is_delem(char **input);
+int	    is_wild_special(char **input);
 
 /*Parser*/
 t_ast   *parser(t_token **tok, t_shell *shell);

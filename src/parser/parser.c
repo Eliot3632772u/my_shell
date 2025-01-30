@@ -114,7 +114,7 @@ t_ast   *parse_logical(t_token **tok, t_shell *shell)
         if (root == NULL)
             return (ast);
         root->left = ast;
-        root->right = parse_pipe(tok, shell);
+        root->right = parse_logical(tok, shell);
         return (root);
     }
     return (ast);
