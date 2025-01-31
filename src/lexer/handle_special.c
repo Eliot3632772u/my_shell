@@ -5,27 +5,27 @@ void	token_var(t_shell *shell, t_token **token, char **input)
 	char	*var_name;
 	char	*start;
 
-	if (*(*input + 1) != '_' && !ft_isalnum(*(*input + 1)) && *(*input + 1) != '?')  // test $* is it a variable or a wildcard ?
+	if (*(*input + 1) != '_' && !ft_isalnum(*(*input + 1)) && *(*input + 1) != '?') // test $* is it a variable or a wildcard ?
 	{
 		tokenize(shell, token, "$", WORD);
 		check_concate(*token, input);
 		(*input)++;
+		return ;
 	}
-	else
+	(*input)++; // Skip the '$'
+	start = *input;
+	if (**input == '?')
+		(*input)++;
+	while (**input && (ft_isalnum(**input) || **input == '_') && *start != '?')
+		(*input)++;
+	var_name = ft_substr(start, 0, *input - start); // Get variable name
+    if (!var_name)
 	{
-		(*input)++; // Skip the '$'
-		start = *input;
-		while (**input && (ft_isalnum(**input) || **input == '_' || **input == '?'))
-			(*input)++;
-		var_name = ft_substr(start, 0, *input - start); // Get variable name
-        if (!var_name)
-		{
-            shell->error = ERR_MEMORY;
-			return ;
-		}
-        tokenize(shell, token, var_name, VARIABL);// Tokenize the variable value
-		check_concate(*token, input);
+        shell->error = ERR_MEMORY;
+		return ;
 	}
+    tokenize(shell, token, var_name, VARIABL);// Tokenize the variable value
+	check_concate(*token, input);
 }
 
 void	token_and(t_shell *shell, t_token **token, char **input)
