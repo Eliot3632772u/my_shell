@@ -243,6 +243,11 @@ char	**expand(t_token *tokens, t_shell *shell)
 	while (args[i])
 	{
 		args[i] = get_args(&tokens, shell);
+		if (shell->error)
+		{
+			free_arr();
+			return (NULL);
+		}
 		i++;
 	}
 }
