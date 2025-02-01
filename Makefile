@@ -27,6 +27,7 @@ SRC_FILES   := $(wildcard $(MAIN_DIR)/*.c) \
                $(wildcard $(LEXER_DIR)/*.c) \
                $(wildcard $(BUILTIN_DIR)/*.c) \
                $(wildcard $(EXECUTOR_DIR)/*.c) \
+			   $(wildcard $(SRC_DIR)/expander/*.c) \
                $(wildcard $(PARSER_DIR)/*.c) 
 OBJ_FILES   := $(SRC_FILES:.c=.o)
 

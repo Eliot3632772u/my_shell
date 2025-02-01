@@ -31,21 +31,41 @@ void	add_file(char ***args, char *file, t_shell *shell)
 	realloc_arr(args, tmp, shell);
 }
 
-int	match(char *file, char *arg)
+int is_special_case(char *file)
 {
-	if (*arg == '*' && *(arg + 1) == '\0')
-		return (1);
-	while (*file && *arg)
-	{
-		while (*arg && *arg == '*')
-			arg++;
-		if (*arg && *file == *arg)
-			arg++;
-		file++;
-	}
-	if (*file == '\0' && *arg == '\0')
-		return (1);
-	return (0);
+    return (ft_strcmp(file, ".") == 0 || ft_strcmp(file, "..") == 0);
+}
+void	increment(char **arg, char **file)
+{
+	(*arg)++;
+	(*file)++;
+}
+
+int match(char *file, char *arg)
+{
+    char *star = NULL;
+    char *file_pos = NULL;
+
+    while (*file)
+    {
+        if (*arg == '*')
+        {
+            star = arg++;
+            file_pos = file;
+        }
+        else if (*arg == *file)
+			increment(&arg, &file);
+        else if (star)
+        {
+            arg = star + 1;
+            file = ++file_pos;
+        }
+        else
+            return (0);
+    }
+    while (*arg == '*')
+        arg++;
+    return (*arg == '\0');
 }
 
 void	unmatched_wild(char *arg, t_shell *shell)
@@ -55,7 +75,7 @@ void	unmatched_wild(char *arg, t_shell *shell)
 	shell->error = ERR_WILD;
 }
 
-void	expand_wild(char **args, char *arg, t_shell *shell)
+void	expand_wild(char ***args, char *arg, t_shell *shell)
 {
 	DIR				*dir;
 	struct dirent	*obj;
@@ -66,7 +86,7 @@ void	expand_wild(char **args, char *arg, t_shell *shell)
 	found = 0;
 	while (obj)
 	{
-		if (match(obj->d_name, arg))
+		if (!is_special_case(obj->d_name) && match(obj->d_name, arg))
 		{
 			add_file(args, obj->d_name, shell);
 			if (shell->error)

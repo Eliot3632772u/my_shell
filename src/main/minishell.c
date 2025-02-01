@@ -9,9 +9,9 @@ static void init_shell(t_shell *shell, char **envp)
     shell->input = NULL;
     shell->last_status = 0;
     shell->running = 1;
+    shell->is_wild = 0;
     shell->env_array = NULL;
     shell->error = 0;
-    //shell->is_DOLLAR = 0;
 }
 
 char    *f(t_token_type type)
@@ -119,7 +119,31 @@ int get_ast_depth(t_ast *node)
     return (left_depth > right_depth ? left_depth : right_depth) + 1;
 }
 
+void    set_varss(t_ast *ast, t_shell *shell)
+{
+    if (ast == NULL)
+        return ;
 
+    set_varss(ast->left, shell);
+    set_varss(ast->right, shell);
+    ast->args = expand(ast->tok_args, shell);
+}
+
+void    print_vars(t_ast *ast)
+{
+    if (ast == NULL)
+        return ;
+
+    print_vars(ast->left);
+    print_vars(ast->right);
+    int i = 0;
+    while (ast->args && ast->args[i])
+    {
+        printf("arg %d: %s ", i, ast->args[i]);
+        i++;
+    }
+    printf("\n");
+}
 
 int main(int argc, char **argv, char **envp)
 {
@@ -159,23 +183,29 @@ int main(int argc, char **argv, char **envp)
                 shell.error = 0;
                 continue;
             }
-            while (token)
-            {
-                char *s = f(token->type);
-                printf("%s --> %s", token->value, s);
-                if (token->concate)
-                    printf("🔗🔗🔗🔗");
-                printf("\n");
-                token = token->next;
-            }
+            //while (token)
+            //{
+            //    char *s = f(token->type);
+            //    printf("%s --> %s", token->value, s);
+            //    if (token->concate)
+            //        printf("🔗🔗🔗🔗");
+            //    printf("\n");
+            //    token = token->next;
+            //}
             t_ast *ast = parser(&token, &shell);
+
             
             //if (!ast)
             //{
             //    printf("\n🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴\n");
             //    continue;
             //}
-            //print_ast(ast, get_ast_depth(ast));
+            print_ast(ast, get_ast_depth(ast));
+            printf("\n\n\n");
+            set_varss(ast, &shell);
+            print_vars(ast);
+            shell.error = 0;
+            shell.is_wild = 0;
             ast = NULL;
             // Execute command (i'll implement this next)
             // execute_command(shell.cmd, &shell);

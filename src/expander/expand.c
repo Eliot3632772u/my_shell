@@ -37,8 +37,8 @@ void	strip_word_var(char **res, char *start, char *value, t_shell *shell)
 		shell->error = ERR_MEMORY;
 		return ;
 	}
-	tmp2 = res;
-	res = ft_strjoin(res, tmp);
+	tmp2 = *res;
+	*res = ft_strjoin(*res, tmp);
 	if (tmp2)
 		free(tmp2);
 	free(tmp);
@@ -110,6 +110,7 @@ char	**expand(t_token *tokens, t_shell *shell)
 	{
 		arg = get_args(&tokens, shell);
 		insert_arg(&args, arg, shell);
+		printf("\n-----  %d  -----\n", shell->error);
 		if (shell->error)
 		{
 			free_arr(args);

@@ -13,6 +13,16 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
+int	count_strs(char **args)
+{
+	int		i;
+
+	i = 0;
+	while(args[i])
+		i++;
+	return (i);
+}
+
 void	realloc_arr(char ***args, char *arg, t_shell *shell)
 {
 	int		i;
@@ -25,14 +35,15 @@ void	realloc_arr(char ***args, char *arg, t_shell *shell)
 		shell->error = ERR_MEMORY;
 		return ;
 	}
+	new[i + 1] = NULL;
 	i = 0;
-	while (*args[i])
+	while ((*args)[i])
 	{
-		new[i] = *args[i];
+		new[i] = (*args)[i];
 		i++;
 	}
-	new[i++] = arg;
-	new[i] = NULL;
+	new[i] = arg;
+	printf("      %s     \n\n", new[i]);
 	free(*args);
 	*args = new;
 }

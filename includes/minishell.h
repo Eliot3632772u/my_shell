@@ -175,7 +175,7 @@ void	join_variable(char **arg, char *value, t_shell *shell);
 void	join_word_var(char **arg, char *value, t_shell *shell);
 void	strip_word_var(char **res, char *start, char *value, t_shell *shell);
 char	*strip_var(char **arg, char *value, t_shell *shell);
-void	expand_wild(char **args, char *arg, t_shell *shell);
+void	expand_wild(char ***args, char *arg, t_shell *shell);
 void	unmatched_wild(char *arg, t_shell *shell);
 int	    match(char *file, char *arg);
 void	add_file(char ***args, char *file, t_shell *shell);
