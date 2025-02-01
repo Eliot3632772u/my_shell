@@ -18,9 +18,14 @@ t_ast   *parse_sub(t_token **tok, t_shell *shell)
     if (!(*tok) || (*tok)->type != C_P)
     {
         shell->error = UNEXPECTED_TOKEN;
-        return (NULL);
+        return (subshell);
     }
     free_tok_node(tok);
+    if (*tok && (*tok)->type != T_OR && (*tok)->type != T_AND)
+    {
+	    shell->error = UNEXPECTED_TOKEN;
+	    return (subshell);
+    }
     return (subshell);
 }
 
