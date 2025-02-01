@@ -1,89 +1,8 @@
 #include "../../includes/minishell.h"
 
-int	count_args(t_token *tokens)
-{
-	int		i;
-
-	i = 0;
-	while (tokens)
-	{
-		if (!tokens->concate)
-			i++;
-		tokens = tokens->next;
-	}
-	return (i);
-}
-
-void	join_word(char **arg, char *value, t_shell *shell)
-{
-	char	*tmp;
-
-	if (*arg == NULL)
-	{
-		*arg = ft_strdup(value);
-		if (*arg == NULL)
-		{
-			shell->error = ERR_MEMORY;
-			return ;
-		}
-		return ;
-	}
-	tmp = *arg;
-	*arg = ft_strjoin(*arg, value);
-	free(tmp);
-	if (*arg == NULL)
-	{
-		shell->error = ERR_MEMORY;
-		return ;
-	}
-}
-
-int	check_not_alnum(char **arg, char *value, t_shell *shell)
-{
-	char	*tmp;
-
-	if (*value != '_' && !ft_isalnum(*value))
-	{
-		if (*value == '?')
-			tmp = ft_itoa(shell->last_status);
-		else
-			tmp = ft_strdup("$");
-		if (tmp == NULL)
-		{
-			shell->error = ERR_MEMORY;
-			return (ERROR);
-		}
-		join_word(arg, tmp, shell);
-		free(tmp);
-		return (1);
-	}
-	return (0);
-}
-
-char	*find_env(char *key, t_shell *shell)
-{
-	char	*tmp;
-
-	while (shell->env)
-	{
-		if (ft_strcmp(key, shell->env->key) == 0)
-		{
-			tmp = ft_strdup(shell->env->value);
-			if (tmp == NULL)
-			{
-				shell->error = ERR_MEMORY;
-				return (NULL);
-			}
-			return (tmp);
-		}
-		shell->env = shell->env->next;
-	}
-	return (NULL);
-}
-
 char	*strip_var(char **arg, char *value, t_shell *shell)
 {
-	char	*res;                   //   "hell $PWD ddd $?$$PWD$_$BS   "
+	char	*res;
 	char	*tmp;
 	char	*start;
 
@@ -181,73 +100,21 @@ void	join_variable(char **arg, char *value, t_shell *shell)
 	free(tmp);
 }
 
-char	*join_tokens(t_token *tokens, t_shell *shell)
-{
-	char	*arg;
-
-	arg = NULL;
-	while (tokens)
-	{
-		if (tokens->type == WORD)
-			join_word(&arg, tokens->value, shell);
-		else if (tokens->type == WILD)
-			join_wild(tokens, &arg, shell);
-		else if (tokens->type == WORD_VAR)
-			join_word_var(&arg, tokens->value, shell);
-		else if (tokens->type == VARIABL)
-			join_variable(&arg, tokens->value, shell);
-		if(arg == NULL)
-		{
-			shell->error = ERR_MEMORY;
-			return (NULL);
-		}
-		tokens = tokens->next;
-	}
-	return (arg);
-}
-
-char	*get_args(t_token **tokens, t_shell *shell)
-{
-	char	*arg;
-	t_token	*tmp_token;
-
-	tmp_token = *tokens;
-	while (*tokens && (*tokens)->concate)
-		*tokens = (*tokens)->next;
-	*tokens = (*tokens)->next;
-	if (*tokens)
-	{
-		(*tokens)->prev->next = NULL;
-		(*tokens)->prev = NULL;
-	}
-	arg = join_tokens(tmp_token, shell);
-	if (arg == NULL)
-		return (NULL);
-	return (arg);
-}
-
 char	**expand(t_token *tokens, t_shell *shell)
 {
 	char	**args;
-	int		i;
+	char	*arg;
 
-	i = count_args(tokens);
-	args = malloc((i + 1) * sizeof(char *));
-	if (!args)
+	args = NULL;
+	while (tokens)
 	{
-		shell->error = ERR_MEMORY;
-		return (NULL);
-	}
-	args[i] = NULL;
-	i = 0;
-	while (args[i])
-	{
-		args[i] = get_args(&tokens, shell);
+		arg = get_args(&tokens, shell);
+		insert_arg(&args, arg, shell);
 		if (shell->error)
 		{
-			free_arr();
+			free_arr(args);
 			return (NULL);
 		}
-		i++;
 	}
+	return (args);
 }

@@ -15,6 +15,7 @@
 # include <readline/history.h>
 # include <termios.h>
 # include "../libft/libft.h"
+# include <dirent.h>
 
 # define SUCCESS 0
 # define ERROR 1
@@ -22,12 +23,14 @@
 # define ERR_MEMORY 3
 # define ERR_QUOTE 4
 # define UNEXPECTED_TOKEN 5
+# define ERR_WILD 6
 /* Error messages */
 # define ERR_MEMORY_MSG "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
 # define ERR_FORK "Fork failed"
 # define ERR_CMD "Command not found"
 # define ERR_QUOTE_MSG "Syntax error: unclosed quote"
+# define ERR_WILDCARD_MSG "minishell: no matches found:"
 
 // ------------------------------- PARSER AND LEXER ------------------------------------------------
 
@@ -100,7 +103,7 @@ typedef struct      s_shell
     int             last_status;    /* Exit status of last command */
     int             running;        /* Shell running status */
     int             error;  /* handling errors */
-    //int             is_DOLLAR; /* check inside the double quotes if there is a dollar sign to expand in excution*/
+    int             is_wild; /* check inside the double quotes if there is a dollar sign to expand in excution*/
     t_token_type    type;
     char            *buffer;
     char            **env_array;   /* Environment as string array */
@@ -163,9 +166,30 @@ void        free_redi(t_redirect *red);
 t_ast       *free_ast(t_ast *ast);
 void        free_tok_node(t_token **tok);
 
+
+/*Expander*/
+char	**expand(t_token *tokens, t_shell *shell);
+
+/*Expander utiles*/
+void	join_variable(char **arg, char *value, t_shell *shell);
+void	join_word_var(char **arg, char *value, t_shell *shell);
+void	strip_word_var(char **res, char *start, char *value, t_shell *shell);
+char	*strip_var(char **arg, char *value, t_shell *shell);
+void	expand_wild(char **args, char *arg, t_shell *shell);
+void	unmatched_wild(char *arg, t_shell *shell);
+int	    match(char *file, char *arg);
+void	add_file(char ***args, char *file, t_shell *shell);
+void	join_wild(char **arg, char *value, t_shell *shell);
+int	    check_not_alnum(char **arg, char *value, t_shell *shell);
+char	*find_env(char *key, t_shell *shell);
+char	*join_tokens(t_token *tokens, t_shell *shell, int iter);
+char	*get_args(t_token **tokens, t_shell *shell);
+void	insert_arg(char ***args, char *arg, t_shell *shell);
+void	join_word(char **arg, char *value, t_shell *shell);
+void	realloc_arr(char ***args, char *arg, t_shell *shell);
+void	free_arr(char **arr);
+
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
-
-
 
 /* Global signal handler variable */
 extern int g_signal_received;

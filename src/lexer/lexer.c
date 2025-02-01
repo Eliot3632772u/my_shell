@@ -11,6 +11,13 @@
 //	check_concate(*token, input);
 //}
 
+void	last_check_concat(t_token *token)
+{
+	while (token->next)
+		token = token->next;
+	token->concate = 0;
+}
+
 void	lexer(t_shell *shell, t_token **token, char *input)
 {
 	char	*start;
@@ -36,4 +43,5 @@ void	lexer(t_shell *shell, t_token **token, char *input)
 		if (shell->error)
 			return ;
 	}
+	last_check_concat(*token);
 }
