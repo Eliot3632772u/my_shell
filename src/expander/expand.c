@@ -81,6 +81,7 @@ void	join_variable(char **arg, char *value, t_shell *shell)
 {
 	char	*tmp;
 
+	value++; //   skip the dollar sign
 	if (ft_strcmp(value, "?") == 0)
 	{
 		tmp = ft_itoa(shell->last_status);
@@ -94,7 +95,7 @@ void	join_variable(char **arg, char *value, t_shell *shell)
 		return ;
 	}
 	tmp = find_env(value, shell);
-	if (shell->error)
+	if (shell->error || tmp == NULL)
 		return ;
 	join_word(arg, tmp, shell);
 	free(tmp);
@@ -110,12 +111,12 @@ char	**expand(t_token *tokens, t_shell *shell)
 	{
 		arg = get_args(&tokens, shell);
 		insert_arg(&args, arg, shell);
-		printf("\n-----  %d  -----\n", shell->error);
 		if (shell->error)
 		{
 			free_arr(args);
 			return (NULL);
 		}
+		shell->is_wild = 0;
 	}
 	return (args);
 }

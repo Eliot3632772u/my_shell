@@ -5,6 +5,8 @@ void	free_arr(char **arr)
 	int		i;
 
 	i = 0;
+	if (!arr)
+		return ;
 	while (arr[i])
 	{
 		free(arr[i]);
@@ -43,7 +45,6 @@ void	realloc_arr(char ***args, char *arg, t_shell *shell)
 		i++;
 	}
 	new[i] = arg;
-	printf("      %s     \n\n", new[i]);
 	free(*args);
 	*args = new;
 }

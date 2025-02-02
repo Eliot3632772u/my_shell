@@ -127,6 +127,16 @@ void    set_varss(t_ast *ast, t_shell *shell)
     set_varss(ast->left, shell);
     set_varss(ast->right, shell);
     ast->args = expand(ast->tok_args, shell);
+    t_redirect *tmp;
+    if (ast->redc)
+    {
+        tmp = ast->redc;
+        while (tmp)
+        {
+            tmp->file = expand_redec(tmp->tok_file, shell);
+            tmp = tmp->next;
+        }
+    }
 }
 
 void    print_vars(t_ast *ast)
@@ -142,7 +152,19 @@ void    print_vars(t_ast *ast)
         printf("arg %d: %s ", i, ast->args[i]);
         i++;
     }
-    printf("\n");
+    printf("\n\n");
+    while (ast->redc)
+    {
+        i = 0;
+        while (ast->redc->file && ast->redc->file[i])
+        {
+            printf("redc %d:  %s  ", i, ast->redc->file[i]);
+            i++;
+        }
+        printf("     ----    ");
+        ast->redc = ast->redc->next;
+    }
+    printf("\n\n\n\n");
 }
 
 int main(int argc, char **argv, char **envp)
@@ -200,11 +222,11 @@ int main(int argc, char **argv, char **envp)
             //    printf("\n🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴\n");
             //    continue;
             //}
-            print_ast(ast, get_ast_depth(ast));
-            printf("\n\n\n");
+            //print_ast(ast, get_ast_depth(ast));
+            //printf("\n\n\n");
             set_varss(ast, &shell);
-            print_vars(ast);
-            shell.error = 0;
+            //print_vars(ast);
+            shell.error = 0;  
             shell.is_wild = 0;
             ast = NULL;
             // Execute command (i'll implement this next)

@@ -34,8 +34,6 @@ t_ast	*parse_cmd(t_token **tok, t_shell *shell)
     t_token *tmp;
     t_ast   *ast;
 
-    if ((*tok))
-        printf("cmd: %s\n", (*tok)->value);
     if ((*tok) && (*tok)->type == O_P)
         return (parse_sub(tok, shell));
     if (!(*tok) || ((*tok)->type == C_P || (*tok)->type == T_AND || (*tok)->type == T_OR || (*tok)->type == PIPE))

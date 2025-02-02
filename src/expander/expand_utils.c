@@ -59,11 +59,8 @@ char	*join_tokens(t_token *tokens, t_shell *shell, int iter)
 			join_word_var(&arg, tokens->value, shell);
 		else if (tokens->type == VARIABL)
 			join_variable(&arg, tokens->value, shell);
-		if(arg == NULL)
-		{
-			shell->error = ERR_MEMORY;
+		if(shell->error)
 			return (NULL);
-		}
 		tokens = tokens->next;
 	}
 	return (arg);
@@ -72,12 +69,14 @@ char	*join_tokens(t_token *tokens, t_shell *shell, int iter)
 char	*find_env(char *key, t_shell *shell)
 {
 	char	*tmp;
+	t_env	*tmp_env;
 
-	while (shell->env)
+	tmp_env = shell->env;
+	while (tmp_env)
 	{
-		if (ft_strcmp(key, shell->env->key) == 0)
+		if (ft_strcmp(key, tmp_env->key) == 0)
 		{
-			tmp = ft_strdup(shell->env->value);
+			tmp = ft_strdup(tmp_env->value);
 			if (tmp == NULL)
 			{
 				shell->error = ERR_MEMORY;
@@ -85,7 +84,7 @@ char	*find_env(char *key, t_shell *shell)
 			}
 			return (tmp);
 		}
-		shell->env = shell->env->next;
+		tmp_env = tmp_env->next;
 	}
 	return (NULL);
 }

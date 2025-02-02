@@ -30,7 +30,7 @@
 # define ERR_FORK "Fork failed"
 # define ERR_CMD "Command not found"
 # define ERR_QUOTE_MSG "Syntax error: unclosed quote"
-# define ERR_WILDCARD_MSG "minishell: no matches found:"
+# define ERR_WILDCARD_MSG "minishell: no matches found: "
 
 // ------------------------------- PARSER AND LEXER ------------------------------------------------
 
@@ -70,7 +70,7 @@ typedef struct      s_token
 typedef struct          s_redirect
 {
     t_token_type        type;           /* < , > , >> , << */
-    char                *file;         /* Filename or delimiter for heredoc */
+    char                **file;         /* Filename or delimiter for heredoc */
     t_token             *tok_file; /* tokens that will be the file name or delemeter */
     struct s_redirect   *next;
     struct s_redirect   *prev;
@@ -176,6 +176,7 @@ void	join_word_var(char **arg, char *value, t_shell *shell);
 void	strip_word_var(char **res, char *start, char *value, t_shell *shell);
 char	*strip_var(char **arg, char *value, t_shell *shell);
 void	expand_wild(char ***args, char *arg, t_shell *shell);
+char	**expand_redec(t_token *token, t_shell *shell);
 void	unmatched_wild(char *arg, t_shell *shell);
 int	    match(char *file, char *arg);
 void	add_file(char ***args, char *file, t_shell *shell);
