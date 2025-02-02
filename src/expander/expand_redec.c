@@ -42,13 +42,15 @@ int	count_arr(char **args)
 	return (i);
 }
 
-void	ambiguous_redir(t_shell *shell, char *arg)
+char	*ambiguous_redir(t_shell *shell, char *arg, char **args)
 {
 	shell->error = AMBIGUOUS_REDIC;
 	ft_putstr_fd("minishell: ", STD_ERR);
 	ft_putstr_fd(arg, STD_ERR);
 	ft_putendl_fd(" ambiguous redirect", STD_ERR);
 	free(arg);
+	free_arr(args);
+	return (NULL);
 }
 
 char	*expand_redec(t_token *token, t_shell *shell)
@@ -72,10 +74,8 @@ char	*expand_redec(t_token *token, t_shell *shell)
 		return (NULL);
 	}
 	if (count_arr(arg) > 1 && shell->is_wild)
-	{
-		free_arr(arg);
-		ambiguous_redir(shell, tmp);
-		return (NULL);
-	}
-	return (arg);
+		ambiguous_redir(shell, tmp, arg);
+	tmp = *arg;
+	free(arg);
+	return (tmp);
 }
