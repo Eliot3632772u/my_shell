@@ -32,7 +32,7 @@ int	count_tokens(t_token *tokens)
 	return (i);
 }
 
-char	**expand_redec(t_token *token, t_shell *shell)
+char	*expand_redec(t_token *token, t_shell *shell)
 {
 	char	**arg;
 	char	*tmp;
@@ -41,13 +41,9 @@ char	**expand_redec(t_token *token, t_shell *shell)
 	if (token->type == HEREDOC)
 	{
 		tmp = get_heredoc_delem(token, shell);
-		insert_arg(&arg, tmp, shell);
 		if (shell->error)
-		{
-			free_arr(arg);
 			return (NULL);
-		}
-		return (arg);
+		return (tmp);
 	}
 	tmp = join_tokens(token, shell, count_tokens(token));
 	insert_arg(&arg, tmp, shell);
