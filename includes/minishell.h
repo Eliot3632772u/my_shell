@@ -24,6 +24,7 @@
 # define ERR_QUOTE 4
 # define UNEXPECTED_TOKEN 5
 # define ERR_WILD 6
+# define AMBIGUOUS_REDIC 7
 /* Error messages */
 # define ERR_MEMORY_MSG "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
@@ -70,7 +71,7 @@ typedef struct      s_token
 typedef struct          s_redirect
 {
     t_token_type        type;           /* < , > , >> , << */
-    char                **file;         /* Filename or delimiter for heredoc */
+    char                *file;         /* Filename or delimiter for heredoc */
     t_token             *tok_file; /* tokens that will be the file name or delemeter */
     struct s_redirect   *next;
     struct s_redirect   *prev;
