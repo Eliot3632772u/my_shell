@@ -18,7 +18,6 @@ void	insert_arg(char ***args, char *arg, t_shell *shell)
 		return ;
 	if (shell->is_wild)
 	{
-		//check_patern(&arg);
 		expand_wild(args, arg, shell);
 		free(arg);
 		return ;

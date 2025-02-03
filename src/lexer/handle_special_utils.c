@@ -34,7 +34,7 @@ void	token_var(t_shell *shell, t_token **token, char **input)
 	type = VARIABL;
 	if (ft_strcmp(var_name, "$") == 0)
 		type = WORD;
-	if(skip_token(var_name, input, type))
+	if (skip_token(var_name, input, type))
 		return ;
 	tokenize(shell, token, var_name, type);
 	check_concate(*token, input);
