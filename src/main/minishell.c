@@ -153,16 +153,13 @@ void    print_vars(t_ast *ast)
         i++;
     }
     printf("\n\n");
-    while (ast->redc)
+    t_redirect *tmp = ast->redc;
+    while (tmp)
     {
-        i = 0;
-        while (ast->redc->file && ast->redc->file[i])
-        {
-            printf("redc %d:  %s  ", i, ast->redc->file[i]);
-            i++;
-        }
-        printf("     ----    ");
-        ast->redc = ast->redc->next;
+        if (tmp->file)
+            printf("redc %d:  %s  ", i, tmp->file);
+        printf("     ---->    ");
+        tmp = tmp->next;
     }
     printf("\n\n\n\n");
 }
@@ -205,36 +202,46 @@ int main(int argc, char **argv, char **envp)
                 shell.error = 0;
                 continue;
             }
-            //while (token)
-            //{
-            //    char *s = f(token->type);
-            //    printf("%s --> %s", token->value, s);
-            //    if (token->concate)
-            //        printf("🔗🔗🔗🔗");
-            //    printf("\n");
-            //    token = token->next;
-            //}
+            t_token *tmp = token;
+            while (tmp)
+            {
+                char *s = f(tmp->type);
+                printf("%s --> %s", tmp->value, s);
+                if (tmp->concate)
+                    printf(" 🔗🔗🔗🔗");
+                printf("\n");
+                free(s);
+                tmp = tmp->next;
+            }
+            //free_tokens(token);
+            //token = NULL;
             t_ast *ast = parser(&token, &shell);
 
             
-            //if (!ast)
-            //{
-            //    printf("\n🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴\n");
-            //    continue;
-            //}
+            if (ast == NULL)
+            {
+                printf("\n🔴🔴🔴🔴🔴🔴%d🔴🔴🔴🔴🔴\n", shell.error);
+                free_tokens(token);
+                token = NULL;
+                free(input);
+                ast = NULL;
+                continue;
+            }
             //print_ast(ast, get_ast_depth(ast));
-            //printf("\n\n\n");
+            //printf("\n\n");
             set_varss(ast, &shell);
-            //print_vars(ast);
+            print_vars(ast);
+            free_ast(ast);
+            
+            shell.input = NULL;
             shell.error = 0;  
             shell.is_wild = 0;
             ast = NULL;
             // Execute command (i'll implement this next)
             // execute_command(shell.cmd, &shell);
         }
+        free(input);
     }
-
     //cleanup_shell(&shell);
     return (0/*shell.last_status*/);
 }
-//ladsf af laskf | sfklj (())LKSDJ LD

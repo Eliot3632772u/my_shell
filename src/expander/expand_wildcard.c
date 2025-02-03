@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_wildcard.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-02-03 09:26:38 by irabhi            #+#    #+#             */
+/*   Updated: 2025-02-03 09:26:38 by irabhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	join_wild(char **arg, char *value, t_shell *shell)
@@ -9,7 +21,7 @@ void	join_wild(char **arg, char *value, t_shell *shell)
 void	add_file(char ***args, char *file, t_shell *shell)
 {
 	char	*tmp;
-	
+
 	tmp = ft_strdup(file);
 	if (*args == NULL)
 	{
@@ -31,48 +43,30 @@ void	add_file(char ***args, char *file, t_shell *shell)
 	realloc_arr(args, tmp, shell);
 }
 
-int is_special_case(char *file)
+int	match(char *file, char *arg)
 {
-    return (ft_strcmp(file, ".") == 0 || ft_strcmp(file, "..") == 0);
-}
-void	increment(char **arg, char **file)
-{
-	(*arg)++;
-	(*file)++;
-}
+	char	*star;
+	char	*file_pos;
 
-int match(char *file, char *arg)
-{
-    char *star = NULL;
-    char *file_pos = NULL;
-
-    while (*file)
-    {
-        if (*arg == '*')
-        {
-            star = arg++;
-            file_pos = file;
-        }
-        else if (*arg == *file)
+	star = NULL;
+	file_pos = NULL;
+	while (*file)
+	{
+		if (*arg == '*')
+			checkpoint(&star, &file_pos, &arg, file);
+		else if (*arg == *file)
 			increment(&arg, &file);
-        else if (star)
-        {
-            arg = star + 1;
-            file = ++file_pos;
-        }
-        else
-            return (0);
-    }
-    while (*arg == '*')
-        arg++;
-    return (*arg == '\0');
-}
-
-void	unmatched_wild(char *arg, t_shell *shell)
-{
-	ft_putstr_fd(ERR_WILDCARD_MSG, STD_ERR);
-	ft_putendl_fd(arg, STD_ERR);
-	shell->error = ERR_WILD;
+		else if (star)
+		{
+			arg = star + 1;
+			file = ++file_pos;
+		}
+		else
+			return (0);
+	}
+	while (*arg == '*')
+		arg++;
+	return (*arg == '\0');
 }
 
 void	expand_wild(char ***args, char *arg, t_shell *shell)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-02-03 09:25:29 by irabhi            #+#    #+#             */
+/*   Updated: 2025-02-03 09:25:29 by irabhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	insert_arg(char ***args, char *arg, t_shell *shell)
@@ -6,9 +18,11 @@ void	insert_arg(char ***args, char *arg, t_shell *shell)
 		return ;
 	if (shell->is_wild)
 	{
+		//check_patern(&arg);
 		expand_wild(args, arg, shell);
+		free(arg);
 		return ;
-	}	
+	}
 	else if (*args == NULL)
 	{
 		*args = malloc(2 * sizeof(char *));
@@ -59,7 +73,7 @@ char	*join_tokens(t_token *tokens, t_shell *shell, int iter)
 			join_word_var(&arg, tokens->value, shell);
 		else if (tokens->type == VARIABL)
 			join_variable(&arg, tokens->value, shell);
-		if(shell->error)
+		if (shell->error)
 			return (NULL);
 		tokens = tokens->next;
 	}
@@ -88,7 +102,6 @@ char	*find_env(char *key, t_shell *shell)
 	}
 	return (NULL);
 }
-
 
 int	check_not_alnum(char **arg, char *value, t_shell *shell)
 {

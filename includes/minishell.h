@@ -146,6 +146,13 @@ void	check_concate(t_token *token, char **input);
 void	tokenize(t_shell *sh, t_token **token, char *val, t_token_type type);
 int	    is_delem(char **input);
 int	    is_wild_special(char **input);
+void	token_var(t_shell *shell, t_token **token, char **input);
+void	token_and(t_shell *shell, t_token **token, char **input);
+void	token_wild(t_shell *shell, t_token **token, char **input);
+void	token_paran(t_shell *shell, t_token **token, char **input);
+void	token_pipe(t_shell *shell, t_token **token, char **input);
+int	    check_expand_status(char **input);
+int	    skip_token(char *var_name, char **input, t_token_type type);
 
 /*Parser*/
 t_ast   *parser(t_token **tok, t_shell *shell);
@@ -166,7 +173,10 @@ t_ast       *unexpec_tok(t_token **tok, t_ast *ast);
 void        free_redi(t_redirect *red);
 t_ast       *free_ast(t_ast *ast);
 void        free_tok_node(t_token **tok);
-
+int         check_word(t_token_type type);
+int	        check_logical(t_token_type type);
+int	        check_cmd(t_token_type type);
+int	        check_redir(t_token_type type);
 
 /*Expander*/
 char	**expand(t_token *tokens, t_shell *shell);
@@ -177,7 +187,7 @@ void	join_word_var(char **arg, char *value, t_shell *shell);
 void	strip_word_var(char **res, char *start, char *value, t_shell *shell);
 char	*strip_var(char **arg, char *value, t_shell *shell);
 void	expand_wild(char ***args, char *arg, t_shell *shell);
-char	**expand_redec(t_token *token, t_shell *shell);
+char	*expand_redec(t_token *token, t_shell *shell);
 void	unmatched_wild(char *arg, t_shell *shell);
 int	    match(char *file, char *arg);
 void	add_file(char ***args, char *file, t_shell *shell);
@@ -190,6 +200,10 @@ void	insert_arg(char ***args, char *arg, t_shell *shell);
 void	join_word(char **arg, char *value, t_shell *shell);
 void	realloc_arr(char ***args, char *arg, t_shell *shell);
 void	free_arr(char **arr);
+void	unmatched_wild(char *arg, t_shell *shell);
+void	checkpoint(char **star, char **file_pos, char **arg, char *file);
+void	increment(char **arg, char **file);
+int	    is_special_case(char *file);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 

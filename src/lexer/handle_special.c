@@ -1,126 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_special.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-02-03 09:41:34 by irabhi            #+#    #+#             */
+/*   Updated: 2025-02-03 09:41:34 by irabhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
-
-void	token_var(t_shell *shell, t_token **token, char **input)
-{
-	char			*var_name;
-	char			*start;
-	t_token_type	type;
-
-	start = (*input)++;
-	while (**input && (ft_isalnum(**input) || **input == '_' || **input == '?'))
-	{
-		if(**input == '?')
-		{
-			(*input)++;
-			break;
-		}
-		(*input)++;
-	}
-	var_name = ft_substr(start, 0, *input - start); // Get variable name
-    if (!var_name)
-	{
-        shell->error = ERR_MEMORY;
-		return ;
-	}
-	type = VARIABL;
-	if(ft_strcmp(var_name, "$") == 0)
-		type = WORD;
-    tokenize(shell, token, var_name, type);// Tokenize the variable value
-	check_concate(*token, input);
-}
-
-void	token_and(t_shell *shell, t_token **token, char **input)
-{
-	char	*value;
-
-	if (*(*input + 1) == '&')
-	{	
-		value = ft_strdup("&&");
-		if (value == NULL)
-		{
-			shell->error = ERR_MEMORY;
-			return ;
-		}
-		tokenize(shell, token, value, T_AND);
-		(*input) += 2;
-		return ;
-	}
-	value = ft_strdup("&");
-	if (value == NULL)
-	{
-		shell->error = ERR_MEMORY;
-		return ;
-	}
-	tokenize(shell, token, value, WORD);
-	check_concate(*token, input);
-	(*input)++;
-}
-
-void	token_wild(t_shell *shell, t_token **token, char **input)
-{
-	char	*start;
-	char	*value;
-
-	start = *input;
-	while (**input && !is_wild_special(input)) // the dollar sign get ignored if alone f*$*s 
-		(*input)++;											// or if no variable found f*$NOTHING*s 
-	value = ft_substr(start, 0, *input - start);			// and get expanded if found f*$HOME*s 
-	if (value == NULL)
-	{
-		shell->error = ERR_MEMORY;
-		return ;
-	}
-	tokenize(shell, token, value, WILD);
-	check_concate(*token, input);
-}
-
-void	token_paran(t_shell *shell, t_token **token, char **input)
-{
-	char			*value;
-	t_token_type	type;
-
-	if (**input == '(')
-	{
-		value = ft_strdup("(");
-		type = O_P;
-	}
-	else
-	{
-		value = ft_strdup(")");
-		type = C_P;
-	}
-	if (value == NULL)
-	{
-		shell->error = ERR_MEMORY;
-		return ;
-	}
-	tokenize(shell, token, value, type);
-	(*input)++;
-}
-void	token_pipe(t_shell *shell, t_token **token, char **input)
-{
-	char			*value;
-	t_token_type	type;
-
-	if (*(*input + 1) == '|')
-	{
-		value = ft_strdup("||");
-		type = T_OR;
-		(*input)++;
-	}
-	else
-	{
-		value = ft_strdup("|");
-		type = PIPE;
-	}
-	if (value == NULL)
-	{
-		shell->error = ERR_MEMORY;
-		return ;
-	}
-	tokenize(shell, token, value, type);
-	(*input)++;
-}
 
 void	out_token(t_shell *shell, t_token **token, char **input)
 {
@@ -206,7 +96,7 @@ void	handle_quotes(t_shell *shell, t_token **token, char **input)
 		shell->error = ERR_QUOTE;
 		ft_putendl_fd(ERR_QUOTE_MSG, STD_ERR);
 		return ;
-	}	
+	}
 	value = ft_substr(start, 0, *input - start);
 	token_quote(shell, token, value, expand);
 	(*input)++;

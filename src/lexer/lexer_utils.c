@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-02-03 09:56:44 by irabhi            #+#    #+#             */
+/*   Updated: 2025-02-03 09:56:44 by irabhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 int	is_delem(char **input)
 {
 	if (ft_isspace(**input))
 		return (1);
-	if (**input == '|' || **input == '<' ||
+	if (**input == '|' || **input == '<' || \
 		**input == '>' || **input == ')' || **input == '(')
 		return (1);
 	if (**input == '&' && *(*input + 1) == '&')
@@ -24,7 +36,7 @@ int	is_wild_special(char **input)
 int	is_special(char c)
 {
 	int		i;
-	char 	*special ;
+	char	*special;
 
 	special = "<>|$&()\"'*";
 	i = 0;
@@ -44,8 +56,3 @@ void	check_concate(t_token *token, char **input)
 	if (**input && !is_delem(input))
 		token->concate = 1;
 }
-/*
-	will get concatenated if :  only WORD, VARIABALE, WILD type tokens get concatenated
-								only call this function after making tokens with types like above
-								$"hello"  "hi""by" "hi"'by' 'by'"hi" &hello &"hoe" "hoe"& 'hi'$ 'hi'&   "hello"&$"hi"  'hoe'$&"lol"
-*/

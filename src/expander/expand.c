@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irabhi <irabhi@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-02-03 09:40:19 by irabhi            #+#    #+#             */
+/*   Updated: 2025-02-03 09:40:19 by irabhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 char	*strip_var(char **arg, char *value, t_shell *shell)
@@ -53,7 +65,6 @@ void	join_word_var(char **arg, char *value, t_shell *shell)
 {
 	char	*res;					
 	char	*start;
-	
 
 	res = NULL;
 	start = value;
@@ -81,7 +92,7 @@ void	join_variable(char **arg, char *value, t_shell *shell)
 {
 	char	*tmp;
 
-	value++; //   skip the dollar sign
+	value++;
 	if (ft_strcmp(value, "?") == 0)
 	{
 		tmp = ft_itoa(shell->last_status);
