@@ -33,11 +33,6 @@ t_ast	*parse_sub(t_token **tok, t_shell *shell)
 		return (subshell);
 	}
 	free_tok_node(tok);
-	if (*tok && !check_logical((*tok)->type) && (*tok)->type != PIPE)
-	{
-		shell->error = UNEXPECTED_TOKEN;
-		return (subshell);
-	}
 	return (subshell);
 }
 
@@ -66,9 +61,11 @@ t_ast	*parse_redi(t_token **tok, t_shell *shell)
 		return (ast);
 	while (*tok && check_redir((*tok)->type))
 	{
-		if (!(*tok)->next || !check_word((*tok)->next->type))
+		if (!(*tok)->next || !check_word((*tok)->next->type) || \
+		ast->type == ast_sub)
 		{
-			free_tok_node(tok);
+			if (ast->type != ast_sub)
+				free_tok_node(tok);
 			shell->error = UNEXPECTED_TOKEN;
 			return (ast);
 		}
