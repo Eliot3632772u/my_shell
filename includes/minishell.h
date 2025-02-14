@@ -25,6 +25,8 @@
 # define UNEXPECTED_TOKEN 5
 # define ERR_WILD 6
 # define AMBIGUOUS_REDIC 7
+# define OP_DIR_F 8
+# define RD_DIR_F 9
 /* Error messages */
 # define ERR_MEMORY_MSG "Memory allocation failed"
 # define ERR_PIPE "Pipe creation failed"
@@ -201,9 +203,9 @@ void	join_word(char **arg, char *value, t_shell *shell);
 void	realloc_arr(char ***args, char *arg, t_shell *shell);
 void	free_arr(char **arr);
 void	unmatched_wild(char *arg, t_shell *shell);
-void	checkpoint(char **star, char **file_pos, char **arg, char *file);
 void	increment(char **arg, char **file);
-int	    is_special_case(char *file);
+int	    is_special_case(char *file, char *pattern);
+int	    init_dir(struct dirent **obj, DIR **dir, t_shell *shell);
 
 // ------------------------------- EXECUTION AND BUILTIN ------------------------------------------------
 

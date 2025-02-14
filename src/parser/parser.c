@@ -18,7 +18,10 @@ t_ast	*parse_sub(t_token **tok, t_shell *shell)
 
 	subshell = NULL;
 	if (!(*tok)->next || check_cmd((*tok)->next->type))
+	{
+		free_tok_node(tok);
 		return (NULL);
+	}
 	free_tok_node(tok);
 	if ((*tok) && (*tok)->type != C_P)
 	{
@@ -27,9 +30,10 @@ t_ast	*parse_sub(t_token **tok, t_shell *shell)
 			return (NULL);
 		subshell->left = parse_logical(tok, shell);
 	}
-	if (!(*tok) || (*tok)->type != C_P)
+	if (!(*tok) || (*tok)->type != C_P || shell->error)
 	{
-		shell->error = UNEXPECTED_TOKEN;
+		if (shell->error == 0)
+			shell->error = UNEXPECTED_TOKEN;
 		return (subshell);
 	}
 	free_tok_node(tok);
@@ -88,9 +92,10 @@ t_ast	*parse_pipe(t_token **tok, t_shell *shell)
 	if ((*tok) && (*tok)->type == PIPE)
 	{
 		free_tok_node(tok);
-		if (!(*tok) || (*tok)->type == PIPE || \
-		check_logical((*tok)->type))
+		if (!(*tok) || /*(*tok)->type == PIPE || \
+		check_logical((*tok)->type)*/ check_cmd((*tok)->type))
 		{
+			// printf("here\n");
 			shell->error = UNEXPECTED_TOKEN;
 			return (ast);
 		}

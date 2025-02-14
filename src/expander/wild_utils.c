@@ -12,22 +12,17 @@
 
 #include "../../includes/minishell.h"
 
-int	is_special_case(char *file)
+int	is_special_case(char *file, char *pattern)
 {
-	return (ft_strcmp(file, ".") == 0 || ft_strcmp(file, "..") == 0);
+	if (ft_strncmp(pattern, ".", 1) == 0)
+		return (0);
+	return (ft_strncmp(file, ".", 1) == 0);
 }
 
 void	increment(char **arg, char **file)
 {
 	(*arg)++;
 	(*file)++;
-}
-
-void	checkpoint(char **star, char **file_pos, char **arg, char *file)
-{
-	*star = *arg;
-	*file_pos = file;
-	(*arg)++;
 }
 
 void	unmatched_wild(char *arg, t_shell *shell)
@@ -37,13 +32,20 @@ void	unmatched_wild(char *arg, t_shell *shell)
 	shell->error = ERR_WILD;
 }
 
-//void	check_pattern(char **arg)
-//{
-//	int		i;
-
-//	i = 0;
-//	while ((*arg)[i])
-//	{
-//		if 
-//	}
-//}
+int	init_dir(struct dirent **obj, DIR **dir, t_shell *shell)
+{
+	errno = 0;
+	*dir = opendir(".");
+	if (*dir == NULL)
+	{
+		shell->error = OP_DIR_F;
+		return (1);
+	}
+	*obj = readdir(*dir);
+	if (errno)
+	{
+		shell->error = RD_DIR_F;
+		return (1);
+	}
+	return (0);
+}

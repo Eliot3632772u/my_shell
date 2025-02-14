@@ -46,20 +46,18 @@ void	add_file(char ***args, char *file, t_shell *shell)
 int	match(char *file, char *arg)
 {
 	char	*star;
-	char	*file_pos;
 
 	star = NULL;
-	file_pos = NULL;
 	while (*file)
 	{
 		if (*arg == '*')
-			checkpoint(&star, &file_pos, &arg, file);
+			star = arg++;
 		else if (*arg == *file)
 			increment(&arg, &file);
 		else if (star)
 		{
 			arg = star + 1;
-			file = ++file_pos;
+			file++;
 		}
 		else
 			return (0);
@@ -69,28 +67,38 @@ int	match(char *file, char *arg)
 	return (*arg == '\0');
 }
 
+int	get_file(struct dirent **obj, DIR *dir, t_shell *shell)
+{
+	*obj = readdir(dir);
+	if (errno)
+	{
+		shell->error = RD_DIR_F;
+		return (1);
+	}
+	return (0);
+}
+
 void	expand_wild(char ***args, char *arg, t_shell *shell)
 {
 	DIR				*dir;
 	struct dirent	*obj;
 	int				found;
 
-	dir = opendir(".");
-	obj = readdir(dir);
+	
+	if (init_dir(&obj, &dir, shell))
+		return ;
 	found = 0;
 	while (obj)
 	{
-		if (!is_special_case(obj->d_name) && match(obj->d_name, arg))
+		if (!is_special_case(obj->d_name, arg) && match(obj->d_name, arg))
 		{
 			add_file(args, obj->d_name, shell);
 			if (shell->error)
-			{
-				closedir(dir);
-				return ;
-			}
+				return (void)closedir(dir);
 			found++;
 		}
-		obj = readdir(dir);
+		if (get_file(&obj, dir, shell))
+			return (void)closedir(dir);
 	}
 	closedir(dir);
 	if (!found)

@@ -10,9 +10,9 @@ else                       # Linux
     READLINE_FLAGS := -lreadline -lncurses
 endif
 
-FLAGS_L = -I$(HOME)/.brew/opt/readline/include
+FLAGS_L = #-I$(HOME)/.brew/opt/readline/include
 
-READLINE = -L$(HOME)/.brew/opt/readline/lib
+READLINE = #-L$(HOME)/.brew/opt/readline/lib
 
 SRC_DIR     := src
 INCLUDE_DIR := includes
@@ -26,8 +26,8 @@ LIBFT_DIR   := libft
 SRC_FILES   := $(wildcard $(MAIN_DIR)/*.c) \
                $(wildcard $(LEXER_DIR)/*.c) \
                $(wildcard $(BUILTIN_DIR)/*.c) \
-               $(wildcard $(EXECUTOR_DIR)/*.c) \
 			   $(wildcard $(SRC_DIR)/expander/*.c) \
+               $(wildcard $(EXECUTOR_DIR)/*.c) \
                $(wildcard $(PARSER_DIR)/*.c) 
 OBJ_FILES   := $(SRC_FILES:.c=.o)
 

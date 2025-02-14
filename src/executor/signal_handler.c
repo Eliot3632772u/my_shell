@@ -7,7 +7,7 @@ void handle_signal(int signo)
         g_signal_received = SIGINT;
         ft_printf("\n"); // Print a newline
         rl_on_new_line(); // Notify readline of a new line
-        rl_replace_line("", 0); // Clear the current line
+        //rl_replace_line("", 0); // Clear the current line
         rl_redisplay(); // Redisplay the prompt
     }
 }
