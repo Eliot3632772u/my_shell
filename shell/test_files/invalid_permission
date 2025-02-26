@@ -1,0 +1,11 @@
+includes
+libft
+Makefile
+minishell
+minishell.pdf
+minishell_tester
+outfiles
+src
+tester.py
+test_files
+tests

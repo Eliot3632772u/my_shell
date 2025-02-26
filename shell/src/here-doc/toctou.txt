@@ -1,0 +1,44 @@
+The TOCTOU (Time-of-check to time-of-use) vulnerability occurs when there is a gap between checking a condition and using the result of that check. During this gap, the condition may change, leading to unexpected behavior or exploitation. In the context of software vulnerabilities, this is often exploited when checking file properties (e.g., file existence, permissions) and then acting upon that check without ensuring the state hasn’t changed in the meantime.
+
+Here’s how you could exploit a TOCTOU vulnerability:
+
+Scenario: Imagine a program that checks if a file exists before performing an action (such as opening or writing to it), like this:
+
+if (access(filename, F_OK) == 0) {
+    // File exists, perform some action
+    open(filename, O_RDWR);
+}
+The program first checks if the file exists using access() and then attempts to open the file.
+
+Exploit: An attacker can exploit this TOCTOU vulnerability by quickly changing the state of the file between the time it was checked and the time it was used. For example:
+
+The attacker could replace the file with a symbolic link (symlink) pointing to a sensitive file (e.g., /etc/passwd).
+The attacker could modify the file between the check and the use.
+Example of exploiting the TOCTOU:
+
+The attacker sets up a symbolic link symlink to a sensitive file:
+
+ln -s /etc/passwd attacker_file
+Then the program checks the file:
+
+if (access("attacker_file", F_OK) == 0) {
+    // File exists, proceed
+    open("attacker_file", O_RDWR);  // This opens /etc/passwd
+}
+In between the time when the file was checked (access()) and the time it was opened (open()), the attacker can replace the target file with their own symlink, causing the program to open /etc/passwd instead of the intended file.
+
+Types of TOCTOU Exploits:
+
+Symbolic Link Attack: Replacing a file with a symbolic link to a critical system file.
+Race Condition Attack: An attacker exploits the timing between checking a file and acting upon it, such as modifying or deleting the file between the check and the action.
+How to Prevent TOCTOU Vulnerabilities
+Atomic Operations: Use system calls that perform a check and an action atomically, such as open() with the O_EXCL flag (which ensures that the file is created if it doesn't exist and fails if it does). This minimizes the gap between checking and using the resource.
+
+Locking Mechanisms: Use file locks (e.g., flock(), fcntl()) to ensure that no one can modify the file while it's being checked or used.
+
+Careful Use of access() or Similar Functions: Avoid relying on access() or similar functions for security checks (like checking file existence or permissions), because they can race with another process modifying the file. Instead, use direct operations that require file existence (like open()), as it reduces the timing window for the vulnerability.
+
+Security Policies: Ensure strict file permissions and use SELinux, AppArmor, or other security frameworks to limit what resources an attacker can access.
+
+Conclusion:
+While TOCTOU vulnerabilities are difficult to exploit in some systems due to kernel and OS mitigations, they remain a significant concern in multi-threaded, multi-process environments. Exploiting them often involves using timing attacks, such as symbolic link races, to interfere with file handling and trick the system into performing unintended actions.
