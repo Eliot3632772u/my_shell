@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   str_lists_2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 00:07:44 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/04 00:13:48 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 int	split_len(char **lst)
@@ -22,33 +34,32 @@ void	ft_stradd_back(t_str **lst, t_str *new)
 	ft_strlast(*lst)->next = new;
 }
 
-void	ft_join_last(t_str **lst, char *str, bool to_expand)
-{
-	char	*joined;
-	t_str	*str_last;
-	bool	old_to_expand;
-
-	str_last = ft_strlast(*lst);
-	if (!str_last)
-		return (ft_stradd_back(lst, new_str(str, to_expand)));
-	joined = ft_strjoin(str_last->str, str);
-	old_to_expand = str_last->wild_card;
-	free(str_last->str);
-	str_last->str = joined;
-	str_last->wild_card = old_to_expand || to_expand;
-}
-
 void	add_str_lst(char *str, t_str **lst, bool join_to_last, t_token *tok)
 {
 	bool	to_expand;
+	t_str	*node;
 
 	to_expand = (tok->type == WORD && ft_strchr(str, '*'));
 	if (tok->type == WORD && !ft_strncmp(str, "$", 2) && tok->nospace_next)
-		str = "";
+	{
+		free(str);
+		return ;
+	}
 	if (join_to_last)
 		ft_join_last(lst, str, to_expand);
 	else
-		ft_stradd_back(lst, new_str(str, to_expand));
+	{
+		node = ft_malloc(sizeof(t_str));
+		if (!node)
+		{
+			free(str);
+			return ;
+		}
+		node->str = str;
+		node->wild_card = to_expand;
+		node->next = NULL;
+		ft_stradd_back(lst, node);
+	}
 }
 
 char	**consume_argv(t_str *lst)

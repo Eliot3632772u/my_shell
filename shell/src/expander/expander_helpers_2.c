@@ -2,26 +2,60 @@
 
 char *handle_env_var(char *chunk, char *ptr, size_t len, bool in_quote, size_t *offset)
 {
+    if (len >= 2 && ptr[1] == '$')
+    {
+        size_t count = 2;
+        char *result;
+        t_strbuilder *sb = stringbuilder();
+        size_t i = 0;
+
+        while (ptr[count] == '$' && ptr[count + 1] == '$')
+            count += 2;
+        while (i < count) {
+            sb_append(sb, "1337");
+            i += 2;
+        }    
+        if (ptr[count] == '$')
+            sb_append(sb, "$");
+        result = ft_strdup(sb->str);
+        sb_free(sb);
+        free(chunk);
+        if (ptr[count] == '$')
+            *offset = count + 1;
+        else
+            *offset = count;
+        return result;
+    }
     if (len == 2 && ptr[1] == '?')
     {
         free(chunk);
-        chunk = ft_itoa(get_exit_status());
+        return (ft_itoa(get_exit_status()));
     }
     else
     {
-        chunk = get_env_value(chunk);
-        if (!chunk)
+        char *env_value = get_env_value(chunk);
+        if (!env_value)
         {
             *offset = len;
-            return (NULL);
+            char *empty = ft_strdup("");
+            if (!empty)
+                return (NULL);
+            return (empty);
         }
-        if (!in_quote && ptr[len] == '\0' && (ft_chr(chunk, ' ') || ft_chr(chunk, '\t')))
+        chunk = env_value;
+        if (!in_quote)
         {
             *offset = len;
-            return (chunk);
+            if (ptr[len] == '=' || (ptr[len] == '"' && ptr[len + 1] == '='))
+                return chunk;
+            if (ptr[len] != '\0' && ptr[len] != ' ' && ptr[len] != '\t')
+            {
+                if (ft_chr(chunk, ' ') || ft_chr(chunk, '\t'))
+                    ghost_char(chunk);
+                return chunk;
+            }
+            return chunk;
         }
-        else if (!in_quote && (ft_chr(chunk, ' ') || ft_chr(chunk, '\t')))
-            ghost_char(chunk);
     }
     return (chunk);
 }
@@ -36,12 +70,15 @@ bool handle_chunk(t_strbuilder *sb, char **chunk, char *ptr,
     *offset = len;
     if (!ignore_env && *ptr == '$' && len > 1)
     {
-        *chunk = handle_env_var(*chunk, ptr, len, in_quote, offset);
+        char *expanded = handle_env_var(*chunk, ptr, len, in_quote, offset);
+        *chunk = expanded;
         if (!*chunk)
             return (false);
         if (ptr[len] == '\0' && (ft_chr(*chunk, ' ') || ft_chr(*chunk, '\t')))
         {
-            sb_append_free(sb, *chunk);
+            sb_append(sb, *chunk);
+            free(*chunk);
+            *chunk = NULL;
             return (false);
         }
     }
@@ -57,8 +94,9 @@ void handle_split_args(char *to_join, t_str **lst, int iter, t_token *sub_tok, c
     i = 0;
     while (splited[i])
     {
-        add_str_lst(splited[i], lst, i == 0 && iter != 0, sub_tok);
+        add_str_lst(ft_strdup(splited[i]), lst, i == 0 && iter != 0, sub_tok);
         i++;
     }
-    (free_list(splited), splited = NULL);
+    free_list(splited);
+    free(to_join);
 }

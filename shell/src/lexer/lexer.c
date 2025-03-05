@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 00:53:39 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/04 00:54:30 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	get_token(char *where, t_token *tok)
@@ -7,21 +19,31 @@ void	get_token(char *where, t_token *tok)
 }
 
 bool	check_token(t_token *tok, char *cmd_line,
-		int index_space[2], t_token **tokens)
+int index_space[2], t_token **tokens)
 {
+	t_token	*new_tok;
+
 	if ((int)tok->type < 0)
 		return (tok_error(cmd_line[index_space[0]]), false);
 	if (tok->type == WHITE_SPACE)
 		return (true);
-	if (tok->len == 1 && \
-		(STR <= tok->type && tok->type <= DQSTR))
+	if (tok->len == 1 && (STR <= tok->type && tok->type <= DQSTR))
 		return (unclosed_error(cmd_line[index_space[0]]), false);
 	tok->value = ft_substr(cmd_line, index_space[0], tok->len);
 	if (!tok->value)
 		return (false);
-	add_token(tokens,
-		new_token(tok->type, tok->value, tok->len), \
-		index_space[1]);
+	new_tok = new_token(tok->type, tok->value, tok->len);
+	if (!new_tok)
+	{
+		free(tok->value);
+		return (false);
+	}
+	if (!add_token(tokens, new_tok, index_space[1]))
+	{
+		free(tok->value);
+		free(new_tok);
+		return (false);
+	}
 	return (true);
 }
 

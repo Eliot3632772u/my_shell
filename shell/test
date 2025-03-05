@@ -1,0 +1,14 @@
+declare -x a="b c d"
+declare -x b
+declare -x c
+declare -x dhh
+Minishell$ export $a"hh"
+
+declare -x a="b c d"
+declare -x b
+declare -x c
+declare -x d="hh"
+
+┌──(yoti㉿YoTi)-[~/Desktop/2nd_Minishell-42]
+└─$ export $a="hh"
+

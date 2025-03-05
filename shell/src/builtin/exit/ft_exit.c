@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:05:07 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:07:05 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 static int	handle_int(char *str_number, int len, int is_negative)
@@ -17,14 +29,27 @@ static int	handle_int(char *str_number, int len, int is_negative)
 	return (1);
 }
 
+static int	validate_numeric(char *num_start, int is_negative)
+{
+	int	i;
+
+	i = -1;
+	while (num_start[++i])
+	{
+		if (!ft_isdigit(num_start[i]))
+			return (0);
+	}
+	return (handle_int(num_start, i, is_negative));
+}
+
 static int	check_arg(char *arg)
 {
 	char	*trimmed;
 	char	*num_start;
 	int		is_negative;
-	int		i;
 
-	if (!arg || !(trimmed = ft_strtrim(arg, " \t\n\v\f\r")))
+	trimmed = ft_strtrim(arg, " \t\n\v\f\r");
+	if (!arg || !trimmed)
 		return (0);
 	num_start = trimmed;
 	is_negative = 0;
@@ -38,11 +63,7 @@ static int	check_arg(char *arg)
 		return (free(trimmed), 0);
 	while (*num_start == '0' && *(num_start + 1))
 		num_start++;
-	i = -1;
-	while (num_start[++i])  // Replace ft_str_is_digit with this loop
-		if (!ft_isdigit(num_start[i]))
-			return (free(trimmed), 0);
-	if (!handle_int(num_start, i, is_negative))
+	if (!validate_numeric(num_start, is_negative))
 		return (free(trimmed), 0);
 	free(trimmed);
 	return (1);

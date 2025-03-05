@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast_helpers.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 00:29:47 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/04 00:32:38 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	advance(t_token **current)
@@ -47,7 +59,8 @@ t_ast_redir	*tok_to_redir(t_token *redir_ptr)
 
 	mode = 0;
 	fd = 0;
-	mode |= (redir_ptr->type == HEREDOC) * (O_CREAT | O_RDWR);
+	mode |= ((redir_ptr->type == HEREDOC
+				|| redir_ptr->type == HEREDOC_TAB) * (O_CREAT | O_RDWR));
 	mode |= (redir_ptr->type == INPUT) * (O_RDONLY);
 	mode |= (redir_ptr->type == OUTPUT) * (O_CREAT | O_WRONLY | O_TRUNC);
 	mode |= (redir_ptr->type == APPEND) * (O_CREAT | O_APPEND | O_WRONLY);

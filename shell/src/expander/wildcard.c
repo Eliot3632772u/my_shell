@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcard.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 00:26:43 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/04 00:26:59 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 bool	wild_match(char *str, char *expr)
@@ -25,49 +37,58 @@ bool	wild_match(char *str, char *expr)
 	return (*str == '\0' && *expr == '\0');
 }
 
-void	wild_card(t_str **lst, t_str *expr)
+static void	process_directory(DIR *dir, t_str *expr, \
+	t_str **lst, bool is_hidden)
 {
-	DIR				*dir;
-	struct dirent	*file_entry;
-	bool			is_hidden;
+	struct dirent	*entry;
 	bool			matched;
 
-	is_hidden = expr->str[0] == '.';
-	dir = opendir(".");
 	matched = false;
-	if (!dir)
-		return ((void)closedir(dir));
-	file_entry = readdir(dir);
-	while (file_entry)
+	entry = readdir(dir);
+	while (entry)
 	{
-		if ((is_hidden || file_entry->d_name[0] != '.')
-			&& wild_match(file_entry->d_name, expr->str))
+		if ((is_hidden || entry->d_name[0] != '.')
+			&& wild_match(entry->d_name, expr->str))
 		{
-			ft_stradd_back(lst, new_str(file_entry->d_name, false));
+			ft_stradd_back(lst, new_str(entry->d_name, false));
 			matched = true;
 		}
-		file_entry = readdir(dir);
+		entry = readdir(dir);
 	}
 	if (!matched)
 		ft_stradd_back(lst, new_str(expr->str, false));
+}
+
+void	wild_card(t_str **lst, t_str *expr)
+{
+	DIR		*dir;
+	bool	is_hidden;
+
+	is_hidden = (expr->str[0] == '.');
+	dir = opendir(".");
+	if (!dir)
+		return ;
+	process_directory(dir, expr, lst, is_hidden);
 	closedir(dir);
 }
 
 t_str	*expand_wild_cards(t_str *argv_lst)
 {
 	t_str	*new_argv;
-	t_str	*tmp;
+	t_str	*current;
+	t_str	*next;
 
 	new_argv = NULL;
-	while (argv_lst)
+	current = argv_lst;
+	while (current)
 	{
-		if (argv_lst->wild_card)
-			wild_card(&new_argv, argv_lst);
+		next = current->next;
+		if (current->wild_card)
+			wild_card(&new_argv, current);
 		else
-			ft_stradd_back(&new_argv, new_str(argv_lst->str, false));
-		tmp = argv_lst;
-		argv_lst = argv_lst->next;
-		free_strnode(tmp);
+			ft_stradd_back(&new_argv, new_str(current->str, false));
+		free_strnode(current);
+		current = next;
 	}
 	return (new_argv);
 }

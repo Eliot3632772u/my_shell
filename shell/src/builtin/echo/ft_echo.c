@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:04:56 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:04:57 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 static void	print_args(int argc, char **args, int i)
@@ -20,6 +32,7 @@ int	is_option(char *str)
 		return (1);
 	return (0);
 }
+
 int	consist_of(char *line, char c)
 {
 	return (count(line, c) == ft_strlen(line));

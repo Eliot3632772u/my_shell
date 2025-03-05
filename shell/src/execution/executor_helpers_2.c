@@ -1,18 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_helpers_2.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:13:09 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:16:19 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-static bool check_file(char *file_path, int access_type)
+static bool	check_file(char *file_path, int access_type)
 {
 	if (access(file_path, access_type) != 0)
 	{
 		print_err(file_path, 0);
-	return (false);
+		return (false);
 	}
-return (true);
+	return (true);
 }
 
-bool check_if_executable(char **cmd, char *exec, char **paths, t_env *env)
+bool	check_if_executable(char **cmd, char *exec, char **paths, t_env *env)
 {
-	char **envp;
+	char	**envp;
 
 	if (access(exec, X_OK) == 0)
 	{
@@ -23,9 +35,9 @@ bool check_if_executable(char **cmd, char *exec, char **paths, t_env *env)
 	return (false);
 }
 
-bool check_absolute_path(char **cmd, t_env *env)
+bool	check_absolute_path(char **cmd, t_env *env)
 {
-	char **envp;
+	char	**envp;
 
 	if (ft_strchr(cmd[0], '/'))
 	{
@@ -46,11 +58,30 @@ bool check_absolute_path(char **cmd, t_env *env)
 	return (false);
 }
 
-char *check_file_tok(t_token *file_tok)
+static int	validate_expanded_args(t_token *file_tok, char **expanded)
 {
-	char **expanded;
-	char *file_name;
-	int len;
+	int	len;
+
+	len = split_len(expanded);
+	if (len == 0)
+	{
+		free_list(expanded);
+		set_exit_status(1);
+		return (0);
+	}
+	if (len > 1 || (*file_tok->value == '$' && len == 1 && **expanded == '\0'))
+	{
+		print_err(file_tok->value, -4);
+		free_list(expanded);
+		return (0);
+	}
+	return (1);
+}
+
+char	*check_file_tok(t_token *file_tok)
+{
+	char	**expanded;
+	char	*file_name;
 
 	file_name = NULL;
 	expanded = expand_args(file_tok);
@@ -59,19 +90,8 @@ char *check_file_tok(t_token *file_tok)
 		set_exit_status(1);
 		return (NULL);
 	}
-	len = split_len(expanded);
-	if (len == 0)
-	{
-		free_list(expanded);
-		set_exit_status(1);
+	if (!validate_expanded_args(file_tok, expanded))
 		return (NULL);
-	}
-	if (len > 1 || (*file_tok->value == '$' && len == 1 && **expanded == '\0'))
-	{
-		print_err(file_tok->value, -4);
-		free_list(expanded);
-		return (NULL);
-	}
 	file_name = ft_strdup(*expanded);
 	free_list(expanded);
 	return (file_name);

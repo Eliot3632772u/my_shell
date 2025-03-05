@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_2.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:03:03 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:03:55 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	create_env(char **envp)
@@ -6,14 +18,17 @@ void	create_env(char **envp)
 	t_env	*prev;
 	t_env	*ptr;
 
-env = get_envp_internal(NULL);
-prev = NULL;
-if (!envp || !*envp)
-{
-set_env_value(ft_strdup("PATH"), 
-ft_strdup("/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"), 1);
-return;
-}
+	env = get_envp_internal(NULL);
+	prev = NULL;
+	if (!envp || !*envp)
+	{
+		set_env_value(ft_strdup("PATH"),
+			ft_strdup(DEFAULT_PATH), 1);
+		set_env_value(ft_strdup("SHLVL"),
+			ft_strdup("1"), 1);
+		handle_shlvl();
+		return ;
+	}
 	while (*envp)
 	{
 		ptr = ft_lstnew2(get_key(*envp), get_value(*envp),

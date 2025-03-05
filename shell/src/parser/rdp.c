@@ -1,6 +1,16 @@
-#include "../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rdp.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 00:52:17 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/04 00:52:40 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// Recursive descent parser
+#include "../../includes/minishell.h"
 
 bool	parse_term(t_token **current, t_ast_cmd *sub_sh,
 	t_token **exe_lst, t_ast_redir **redir_lst)
@@ -58,7 +68,7 @@ t_ast_cmd	*parse_redir(t_token **current)
 			return (NULL);
 	}
 	while (match(*current, (t_token_type[]){
-			WORD, STR, DQSTR, OUTPUT, APPEND, INPUT, HEREDOC}, 7))
+			WORD, STR, DQSTR, OUTPUT, APPEND, INPUT, HEREDOC, HEREDOC_TAB}, 8))
 	{
 		if (!parse_term(current, sub_sh, &exe_lst, &redir_lst))
 			return (free_redir(sub_sh, redir_lst, exe_lst), NULL);

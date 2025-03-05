@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export_helpers_2.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:05:15 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:05:16 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 int	validate_arg(char *arg)
 {
 	if (!arg)
-		return (false);
+		return (0);
 	if (validate_var_name(arg))
 	{
-		printf("export: `%s': not a valid identifier\n", arg);
+		ft_putendl_fd("export: not a valid identifier", 2);
 		return (1);
 	}
 	return (0);

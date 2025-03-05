@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:12:28 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:12:29 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	free_list(char **list)
@@ -31,4 +43,3 @@ void	executor(t_ast_cmd *tree, bool forked)
 	else if (tree->type == P_SUBSH)
 		exec_subsh((t_ast_subsh *)tree, forked);
 }
- 

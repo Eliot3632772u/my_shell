@@ -1,44 +1,72 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_helpers.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 11:07:05 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/05 07:16:37 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-void handle_heredoc_line(char *line, char *delim, int fd, bool expandable)
+size_t	count_leading_tabs(char *line)
 {
-    if (line[0] != '\0')
-    {
-        if (!ft_strncmp(delim, line, ft_strlen(delim)))
-            return;
-        line = expand_env(line, false, !expandable);
-        ft_putendl_fd(line, fd);
-        add_history(line);
-        free(line);
-    }
+	size_t	i;
+
+	i = 0;
+	if (!line || !*line)
+		return (0);
+	while (line[i] && line[i] == '\t')
+		i++;
+	return (i);
 }
 
-int init_heredoc(char *delim, char **tmp_file, int *fd)
+char	*strip_leading_tabs(char *line)
 {
-    if (!delim)
-        return 0;
-    *tmp_file = ft_mktmp();
-    *fd = open(*tmp_file, O_RDWR | O_CREAT | O_EXCL, 0640);
-    if (*fd < 0)
-    {
-        print_err(*tmp_file, 0);
-        set_exit_status(1);
-        return 0;
-    }
-    return 1;
+	return (ft_strdup(line + count_leading_tabs(line)));
 }
-bool is_expandable(t_token *tok)
-{
-    t_token *ptr;
 
-    if (!tok)
-        return (1);
-    ptr = tok;
-    while (ptr)
-    {
-        if (ptr->type == DQSTR || ptr->type == STR)
-            return (0);
-        ptr = ptr->nospace_next;
-    }
-    return (1);
+bool	is_delimiter(char *line, char *delim, t_heredoc_opts opts)
+{
+	char	*processed;
+	bool	result;
+
+	if (opts.strip_tabs)
+	{
+		processed = strip_leading_tabs(line);
+		result = (ft_strlen(processed) == ft_strlen(delim)
+				&& !ft_strncmp(delim, processed, ft_strlen(delim)));
+		free(processed);
+		return (result);
+	}
+	return (ft_strlen(line) == ft_strlen(delim)
+		&& !ft_strncmp(delim, line, ft_strlen(delim)));
+}
+
+void	process_and_write_line(char *line, int fd, t_heredoc_opts opts)
+{
+	char	*processed_line;
+	char	*expanded_line;
+
+	if (opts.strip_tabs)
+		processed_line = strip_leading_tabs(line);
+	else
+		processed_line = ft_strdup(line);
+	expanded_line = expand_env(processed_line, false, !opts.expandable);
+	ft_putendl_fd(expanded_line, fd);
+	free(expanded_line);
+}
+
+bool	handle_heredoc_line(char *line, char *delim, \
+	int fd, t_heredoc_opts opts)
+{
+	if (!delim || !*delim)
+		return (line[0] == '\0');
+	if (is_delimiter(line, delim, opts))
+		return (true);
+	process_and_write_line(line, fd, opts);
+	return (false);
 }

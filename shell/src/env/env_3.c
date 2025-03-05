@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_3.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:04:19 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:04:20 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	append_to_env(t_env **env, char *key, char *value, int equal_sign)
@@ -46,6 +58,7 @@ void	concate_env(char *key, char *value)
 		ft_lstadd_back2(get_envp_internal(NULL), node);
 	}
 }
+
 void	handle_shlvl(void)
 {
 	t_env	*shlvl_node;
@@ -63,10 +76,23 @@ void	handle_shlvl(void)
 		level++;
 		if (level >= 1000)
 		{
-			ft_putendl_fd("minishell: warning: shell level (1000) too high, resetting to 1", 2);
+			ft_putendl_fd(SHLVL_WARN, 2);
 			level = 1;
 		}
 	}
 	tmp = ft_itoa(level);
 	set_env_value(ft_strdup("SHLVL"), tmp, 1);
+}
+
+char	*get_env_value(char *var)
+{
+	t_env	*node;
+
+	if (!var)
+		return (NULL);
+	node = search_in_env(get_envp(NULL), var + 1);
+	free(var);
+	if (!node || !node->value)
+		return (NULL);
+	return (ft_strdup(node->value));
 }

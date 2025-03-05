@@ -84,12 +84,12 @@ static char	*finalize(ssize_t bytes, char **remainder, char **buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder[OPEN_MAX];
+	static char	*remainder[10000];
 	char		*buffer;
 	char		*line;
 	ssize_t		bytes;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX || fd > OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX || fd > 10000)
 		return (NULL);
 	buffer = malloc((size_t)BUFFER_SIZE + 1);
 	if (!buffer)

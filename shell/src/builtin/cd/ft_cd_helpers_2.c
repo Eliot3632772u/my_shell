@@ -1,76 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd_helpers_2.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 23:04:39 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/03 23:04:40 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
-char	*join_paths(char *dirname, char *basename)
+void	update_pwd(char *curr_pwd, char *new_pwd)
 {
-	char	*path;
-	char	*tmp;
-
-	if (!dirname || !basename)
-		return (NULL);
-	tmp = ft_strjoin(dirname, "/");
-	path = ft_strjoin(tmp, basename);
-	return (free(tmp), path);
+	if (curr_pwd && curr_pwd[0] != '/')
+		free(curr_pwd);
+	pwd(new_pwd);
+	if (new_pwd)
+		free(new_pwd);
 }
 
-char	*join_dir_chunks(char *dirname, char *basename)
+int	handle_new_pwd(char *curr_pwd, char *dir)
 {
-	char	*tmp;
-	char	*path;
+	char	*new_pwd;
 
-	if (!dirname || !basename)
-		return (NULL);
-	if (!ft_strcmp(dirname, "/"))
+	new_pwd = resolve_new_pwd(curr_pwd, dir);
+	update_pwd(curr_pwd, new_pwd);
+	return (0);
+}
+
+int	change_directory(char *dir)
+{
+	char	*curr_pwd;
+	int		chdir_result;
+
+	if (!dir || !*dir)
 	{
-		if (!ft_strcmp(basename, ".."))
-			return (ft_strdup("/"));
-		tmp = ft_strdup("/");
+		ft_putstr_fd("cd: No such file or directory\n", 2);
+		return (1);
 	}
-	else
-		tmp = ft_strjoin(dirname, "/");
-	path = ft_strjoin(tmp, basename);
-	return (free(tmp), path);
-}
-
-int	has_dot_dot(char **slices)
-{
-	size_t	i;
-
-	if (!slices || !*slices)
-		return (false);
-	i = 0;
-	while (slices[i])
+	curr_pwd = pwd(NULL);
+	if (!curr_pwd)
+		curr_pwd = ft_strdup("/");
+	chdir_result = chdir(dir);
+	if (chdir_result == -1)
 	{
-		if (!ft_strcmp(slices[i++], ".."))
-			return (true);
+		perror("cd");
+		if (curr_pwd && curr_pwd[0] != '/')
+			free(curr_pwd);
+		return (1);
 	}
-	return (false);
-}
-
-void	shift_slices(char **slices)
-{
-	if (!slices && !*slices)
-		return ;
-	free(slices[0]);
-	free(slices[1]);
-	slices[0] = NULL;
-	slices[1] = NULL;
-	while (slices[2])
-	{
-		slices[0] = slices[2];
-		slices++;
-	}
-	slices[0] = slices[2];
-}
-
-char	**handle_dot_dot_path(char *joined_paths)
-{
-	char	**slices;
-
-	if (!joined_paths)
-		return (NULL);
-	slices = ft_split(joined_paths, '/');
-	free(joined_paths);
-	while (slices && has_dot_dot(slices))
-		trim_slices(slices);
-	return (slices);
+	return (handle_new_pwd(curr_pwd, dir));
 }

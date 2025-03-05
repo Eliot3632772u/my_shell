@@ -1,63 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   str_lists.c                                        :+:      :+:    :+:   */
+/*   str_lists_3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/04 00:07:03 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 00:07:22 by yrafai           ###   ########.fr       */
+/*   Created: 2025/03/04 00:13:27 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/04 00:13:55 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_str	*new_str(char *str, bool to_expand)
+static void	add_new_node(t_str **lst, char *str, bool to_expand)
 {
 	t_str	*node;
 
 	node = ft_malloc(sizeof(t_str));
 	if (!node)
-		return (NULL);
-	node->str = ft_strdup(str);
+	{
+		free(str);
+		return ;
+	}
+	node->str = str;
 	node->wild_card = to_expand;
 	node->next = NULL;
-	return (node);
+	*lst = node;
 }
 
-t_str	*ft_strlast(t_str *lst)
+void	ft_join_last(t_str **lst, char *str, bool to_expand)
 {
-	while (lst && lst->next)
-		lst = lst->next;
-	return (lst);
-}
+	t_str	*str_last;
+	char	*joined;
+	bool	old_to_expand;
 
-void	free_strnode(t_str *node)
-{
-	free(node->str);
-	free(node);
-}
-
-int	ft_strlstlen(t_str *lst)
-{
-	int	len;
-
-	len = 0;
-	while (lst)
+	str_last = ft_strlast(*lst);
+	if (!str_last)
 	{
-		len++;
-		lst = lst->next;
-	}
-	return (len);
-}
-
-void	ft_striter(t_str *lst, void (*f)(void *))
-{
-	if (!lst || !f)
+		add_new_node(lst, str, to_expand);
 		return ;
-	while (lst)
-	{
-		f(lst);
-		lst = lst->next;
 	}
+	joined = ft_strjoin(str_last->str, str);
+	old_to_expand = str_last->wild_card;
+	free(str_last->str);
+	str_last->str = joined;
+	str_last->wild_card = old_to_expand || to_expand;
+	free(str);
 }

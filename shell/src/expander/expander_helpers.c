@@ -13,7 +13,7 @@ unsigned int get_chunk_len(char *ptr, char *sp)
     else
     {
         len++;
-        if (ptr[1] == '?')
+        if (ptr[1] == '?' || ptr[1] == '*' || ptr[1] == '$')
             return (len + 1);
         if (ptr[1] && ft_isdigit(ptr[1]))
             return (len + 1);

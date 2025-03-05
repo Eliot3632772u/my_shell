@@ -470,23 +470,22 @@ def remove_fl_lines(output):
 	return ret
 
 def replace_sc(s):
-	replacements = {
-		"$": "\$",
-		"&": "\&",
-		"|": "\|",
-		"'": "\\'",
-		"*": "\*",
-		">": "\>",
-		"<": "\<",
-		"(": "\(",
-		")": "\)",
-		# "?": "\?",
-		";": "\;",
-		"#": "\#",
-	}
-	for char, replacement in replacements.items():
-		s = s.replace(char, replacement)
-	return s
+    replacements = {
+        "$": r"\$",
+        "&": r"\&",
+        "|": r"\|",
+        "'": r"\'",
+        "*": r"\*",
+        ">": r"\>",
+        "<": r"\<",
+        "(": r"\(",
+        ")": r"\)",
+        ";": r"\;",
+        "#": r"\#",
+    }
+    for char, replacement in replacements.items():
+        s = s.replace(char, replacement)
+    return s
 
 
 def rm_tests(key):
