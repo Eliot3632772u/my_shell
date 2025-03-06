@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:12:45 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:12:46 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 17:27:07 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,42 @@ int	is_dir(char *str)
 	return (res);
 }
 
+static int	is_dor_or_2dots(char **cmd)
+{
+	if (!ft_strcmp(cmd[0], "."))
+	{
+		set_exit_status(2);
+		print_err(cmd[0], -69);
+		exit(2);
+	}
+	if (!ft_strcmp(cmd[0], ".."))
+	{
+		set_exit_status(127);
+		print_err(cmd[0], -1);
+		exit(127);
+	}
+	if (is_dir(cmd[0]))
+	{
+		if (ft_strchr(cmd[0], '/'))
+		{
+			set_exit_status(126);
+			print_err(cmd[0], -69);
+			exit(126);
+		}
+		set_exit_status(127);
+		print_err(cmd[0], -1);
+		exit(127);
+	}
+	return (0);
+}
+
 int	execute_cmd(char **cmd, t_env *env)
 {
 	char			**paths;
 	char			**tmp;
 	t_strbuilder	*sb;
 
-	if (is_dir(cmd[0]))
-		return (-69);
+	is_dor_or_2dots(cmd);
 	if (check_absolute_path(cmd, env))
 		return (-1);
 	if (!find_path(env))

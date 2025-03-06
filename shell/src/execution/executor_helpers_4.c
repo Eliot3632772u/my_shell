@@ -29,7 +29,7 @@ void	wait_and_exit_status(int pid)
 	{
 		if (WTERMSIG(exit_status) == 3)
 			ft_putendl_fd("Quit (core dumped)", 2);
-		set_exit_status(128 + exit_status);
+		set_exit_status(exit_status);
 	}
 }
 

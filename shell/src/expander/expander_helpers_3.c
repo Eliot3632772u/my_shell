@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 07:21:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 07:58:46 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 19:34:10 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,9 @@ void	expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env)
 	is_first_token = true;
 	while (sub_tok)
 	{
-		is_export_val = sub_tok->value && ft_strchr(sub_tok->value, '=')
-			&& !sub_tok->nospace_next && !sub_tok->next;
+		is_export_val = (sub_tok->value
+				&& ft_strchr(sub_tok->value, '=')
+				&& !sub_tok->nospace_next && !sub_tok->next);
 		to_join = expand(sub_tok, ignore_env);
 		if (!to_join)
 			return ;
@@ -112,20 +113,4 @@ void	expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env)
 		sub_tok = sub_tok->nospace_next;
 		iter++;
 	}
-}
-
-char	**expand_args(t_token *tok_lst)
-{
-	char	**argv;
-	t_str	*argv_lst;
-
-	argv_lst = NULL;
-	while (tok_lst)
-	{
-		expand_nosp_arg(tok_lst, &argv_lst, 0);
-		tok_lst = tok_lst->next;
-	}
-	argv_lst = expand_wild_cards(argv_lst);
-	argv = consume_argv(argv_lst);
-	return (argv);
 }

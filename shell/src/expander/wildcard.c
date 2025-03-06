@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:26:43 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 00:26:59 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 19:29:09 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool	wild_match(char *str, char *expr)
 }
 
 static void	process_directory(DIR *dir, t_str *expr, \
-	t_str **lst, bool is_hidden)
+t_str **lst, bool is_hidden)
 {
 	struct dirent	*entry;
 	bool			matched;
@@ -55,7 +55,8 @@ static void	process_directory(DIR *dir, t_str *expr, \
 		}
 		entry = readdir(dir);
 	}
-	if (!matched)
+	if (!matched && !(*lst == NULL && expr->str[0] == '*'
+			&& expr->str[1] == '\0'))
 		ft_stradd_back(lst, new_str(expr->str, false));
 }
 
@@ -68,7 +69,20 @@ void	wild_card(t_str **lst, t_str *expr)
 	dir = opendir(".");
 	if (!dir)
 		return ;
-	process_directory(dir, expr, lst, is_hidden);
+	if (*lst == NULL && expr->str[0] == '*' && expr->str[1] == '\0')
+	{
+		process_directory(dir, expr, lst, is_hidden);
+		if (!*lst)
+		{
+			closedir(dir);
+			return ;
+		}
+	}
+	else
+	{
+		process_directory(dir, expr, lst, is_hidden);
+	}
+	sort_str_list(lst);
 	closedir(dir);
 }
 

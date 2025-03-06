@@ -44,6 +44,9 @@ void	ft_join_last(t_str **lst, char *str, bool to_expand)
 	old_to_expand = str_last->wild_card;
 	free(str_last->str);
 	str_last->str = joined;
-	str_last->wild_card = old_to_expand || to_expand;
+	if (old_to_expand || to_expand)
+		str_last->wild_card = true;
+	else
+		str_last->wild_card = false;
 	free(str);
 }

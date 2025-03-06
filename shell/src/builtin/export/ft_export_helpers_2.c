@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:05:15 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:05:16 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 13:43:26 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ int	validate_arg(char *arg)
 		return (0);
 	if (validate_var_name(arg))
 	{
-		ft_putendl_fd("export: not a valid identifier", 2);
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
 		return (1);
 	}
 	return (0);
@@ -42,12 +44,16 @@ int	validate_var_name(char *str)
 	char	*key;
 	size_t	split_index;
 	int		res;
+	char	*concat_sign;
 
 	if (!str || is_bad_env_name_start(str[0]))
 		return (1);
 	split_index = 0;
 	if (is_concate(str))
-		split_index = (size_t)ft_strchr(str, '+') - (size_t)str;
+	{
+		concat_sign = ft_strnstr(str, "+=", ft_strlen(str));
+		split_index = concat_sign - str;
+	}
 	else if (ft_strchr(str, '='))
 		split_index = (size_t)ft_strchr(str, '=') - (size_t)str;
 	if (split_index)

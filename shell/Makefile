@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
+#    Updated: 2025/03/06 17:57:50 by yrafai           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = minishell
 
 ifeq ($(shell uname -s), Darwin)
@@ -38,6 +50,7 @@ src/expander/expander_helpers_4.c \
 src/expander/str_lists.c \
 src/expander/str_lists_2.c \
 src/expander/str_lists_3.c \
+src/expander/str_lists_4.c \
 src/expander/wildcard.c \
 src/here-doc/heredoc.c \
 src/here-doc/heredoc_helpers.c \

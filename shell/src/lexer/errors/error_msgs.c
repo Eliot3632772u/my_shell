@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 01:07:52 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 01:07:53 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 15:39:58 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	tok_error(char err)
 {
-	set_exit_status(258);
+	set_exit_status(2);
 	write(2, "Minishell: unexpected token `", 29);
 	write(2, &err, 1);
 	write(2, "'\n", 2);
@@ -22,7 +22,7 @@ void	tok_error(char err)
 
 void	unclosed_error(char err)
 {
-	set_exit_status(258);
+	set_exit_status(2);
 	write(2, "Minishell: unclosed quote `", 27);
 	write(2, &err, 1);
 	write(2, "'\n", 2);
@@ -30,23 +30,12 @@ void	unclosed_error(char err)
 
 void	syntax_error(char *err)
 {
-	set_exit_status(258);
+	set_exit_status(2);
 	write(2, "Minishell: syntax error near unexpected token `", 47);
 	ft_putstr_fd(err, 2);
 	write(2, "'\n", 2);
 }
 
-/*
-	- msg_code == 0 => use perror instead
-	- msg_code == 255 => command not found
-	- msg_code == -69 => Is a directory
-	- msg_code == -2 => allocation error
-	- msg_code == -3 => $PATH var unset
-	- msg_code == -4 => ambiguous redirect
-	- msg_code == -5 => No such file or directory
-	- msg_code == -6 => numeric argument required
-	- msg_code == -7 => dot command not found
-*/
 int	print_err(char *preced, int msg_code)
 {
 	t_strbuilder	*sb;
