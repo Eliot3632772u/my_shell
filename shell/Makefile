@@ -33,6 +33,8 @@ src/execution/executor_helpers_5.c \
 src/expander/expander.c \
 src/expander/expander_helpers.c \
 src/expander/expander_helpers_2.c \
+src/expander/expander_helpers_3.c \
+src/expander/expander_helpers_4.c \
 src/expander/str_lists.c \
 src/expander/str_lists_2.c \
 src/expander/str_lists_3.c \

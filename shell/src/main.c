@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 11:10:29 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 08:26:53 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ bool	run(char *command_line)
 
 	if (!command_line)
 	{
-		// ft_putendl_fd("exit", 1);
+		ft_putendl_fd("exit", 1);
 		return (free(command_line), true);
 	}
 	lexer(command_line, &tokens);

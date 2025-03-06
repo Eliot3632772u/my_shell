@@ -1,102 +1,104 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_helpers_2.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/06 06:54:05 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/06 08:26:01 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-char *handle_env_var(char *chunk, char *ptr, size_t len, bool in_quote, size_t *offset)
+char	*handle_double_dollar(char *chunk, char *ptr, size_t *offset)
 {
-    if (len >= 2 && ptr[1] == '$')
-    {
-        size_t count = 2;
-        char *result;
-        t_strbuilder *sb = stringbuilder();
-        size_t i = 0;
+	size_t			count;
+	char			*result;
+	t_strbuilder	*sb;
+	size_t			i;
 
-        while (ptr[count] == '$' && ptr[count + 1] == '$')
-            count += 2;
-        while (i < count) {
-            sb_append(sb, "1337");
-            i += 2;
-        }    
-        if (ptr[count] == '$')
-            sb_append(sb, "$");
-        result = ft_strdup(sb->str);
-        sb_free(sb);
-        free(chunk);
-        if (ptr[count] == '$')
-            *offset = count + 1;
-        else
-            *offset = count;
-        return result;
-    }
-    if (len == 2 && ptr[1] == '?')
-    {
-        free(chunk);
-        return (ft_itoa(get_exit_status()));
-    }
-    else
-    {
-        char *env_value = get_env_value(chunk);
-        if (!env_value)
-        {
-            *offset = len;
-            char *empty = ft_strdup("");
-            if (!empty)
-                return (NULL);
-            return (empty);
-        }
-        chunk = env_value;
-        if (!in_quote)
-        {
-            *offset = len;
-            if (ptr[len] == '=' || (ptr[len] == '"' && ptr[len + 1] == '='))
-                return chunk;
-            if (ptr[len] != '\0' && ptr[len] != ' ' && ptr[len] != '\t')
-            {
-                if (ft_chr(chunk, ' ') || ft_chr(chunk, '\t'))
-                    ghost_char(chunk);
-                return chunk;
-            }
-            return chunk;
-        }
-    }
-    return (chunk);
+	count = 2;
+	sb = stringbuilder();
+	i = 0;
+	while (ptr[count] == '$' && ptr[count + 1] == '$')
+		count += 2;
+	while (i < count)
+	{
+		sb_append(sb, "1337");
+		i += 2;
+	}
+	if (ptr[count] == '$')
+		sb_append(sb, "$");
+	result = ft_strdup(sb->str);
+	sb_free(sb);
+	free(chunk);
+	if (ptr[count] == '$')
+		*offset = count + 1;
+	else
+		*offset = count;
+	return (result);
 }
 
-bool handle_chunk(t_strbuilder *sb, char **chunk, char *ptr, 
-    bool in_quote, bool ignore_env, size_t *offset)
+static char	*process_expanded_env_value(t_env_var *env)
 {
-    size_t len;
-
-    len = get_chunk_len(ptr, "$");
-    *chunk = ft_substr(ptr, 0, len);
-    *offset = len;
-    if (!ignore_env && *ptr == '$' && len > 1)
-    {
-        char *expanded = handle_env_var(*chunk, ptr, len, in_quote, offset);
-        *chunk = expanded;
-        if (!*chunk)
-            return (false);
-        if (ptr[len] == '\0' && (ft_chr(*chunk, ' ') || ft_chr(*chunk, '\t')))
-        {
-            sb_append(sb, *chunk);
-            free(*chunk);
-            *chunk = NULL;
-            return (false);
-        }
-    }
-    return (true);
+	if (!env->in_quote)
+	{
+		*(env->offset) = env->len;
+		if (env->ptr[env->len] == '='
+			|| (env->ptr[env->len] == '"' && env->ptr[env->len + 1] == '='))
+			return (env->chunk);
+		if (env->ptr[env->len] != '\0'
+			&& env->ptr[env->len] != ' ' && env->ptr[env->len] != '\t')
+		{
+			if (ft_strchr(env->chunk, ' ') || ft_strchr(env->chunk, '\t'))
+				ghost_char(env->chunk);
+			return (env->chunk);
+		}
+	}
+	return (env->chunk);
 }
 
-void handle_split_args(char *to_join, t_str **lst, int iter, t_token *sub_tok, char split_char)
+char	*handle_regular_env_var(t_env_var *env)
 {
-    char **splited;
-    int i;
+	char	*env_value;
 
-    splited = ft_split(to_join, split_char);
-    i = 0;
-    while (splited[i])
-    {
-        add_str_lst(ft_strdup(splited[i]), lst, i == 0 && iter != 0, sub_tok);
-        i++;
-    }
-    free_list(splited);
-    free(to_join);
+	env_value = get_env_value(env->chunk);
+	if (!env_value)
+	{
+		*(env->offset) = env->len;
+		env_value = ft_strdup("");
+		if (!env_value)
+			return (NULL);
+		return (env_value);
+	}
+	env->chunk = env_value;
+	return (process_expanded_env_value(env));
+}
+
+char	*handle_env_var(t_env_var *env)
+{
+	if (env->len >= 2 && env->ptr[1] == '$')
+		return (handle_double_dollar(env->chunk, env->ptr, env->offset));
+	if (env->len == 2 && env->ptr[1] == '?')
+		return (handle_exit_status_2(env->chunk));
+	return (handle_regular_env_var(env));
+}
+
+void	handle_split_args(t_split_args *args)
+{
+	char	**splited;
+	int		i;
+
+	splited = ft_split(args->to_join, args->split_char);
+	i = 0;
+	while (splited[i])
+	{
+		add_str_lst(ft_strdup(splited[i]), args->lst, i == 0
+			&& args->iter != 0, args->sub_tok);
+		i++;
+	}
+	free_list(splited);
+	free(args->to_join);
 }

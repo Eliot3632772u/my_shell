@@ -181,6 +181,31 @@ typedef struct s_str
     struct s_str *next;
 }             t_str;
 
+typedef struct s_env_var {
+	char *chunk;
+	char *ptr;
+	size_t len;
+	bool in_quote;
+	size_t *offset;
+} t_env_var;
+
+typedef struct s_chunk_info {
+	t_strbuilder *sb;
+	char **chunk;
+	char *ptr;
+	bool in_quote;
+	bool ignore_env;
+	size_t *offset;
+} t_chunk_info;
+
+typedef struct s_split_args {
+	char *to_join;
+	t_str **lst;
+	int iter;
+	t_token *sub_tok;
+	char split_char;
+} t_split_args;
+
 void	update_token_after_heredoc(t_token *tok, t_ast_redir *tree, t_str *s_ptr);
 char *get_processed_delimiter(t_ast_redir *tree, t_str **s_ptr);
 t_str *expand_wild_cards(t_str *argv_lst);
@@ -203,10 +228,16 @@ void ft_stradd_back(t_str **lst, t_str *new);
 void ft_join_last(t_str **lst, char *str, bool to_expand);
 void add_str_lst(char *str, t_str **lst, bool join_to_last, t_token *tok);
 char **consume_argv(t_str *lst);
-char *handle_env_var(char *chunk, char *ptr, size_t len, bool in_quote, size_t *offset);
-bool handle_chunk(t_strbuilder *sb, char **chunk, char *ptr, 
-    bool in_quote, bool ignore_env, size_t *offset);
-void handle_split_args(char *to_join, t_str **lst, int iter, t_token *sub_tok, char split_char);
+char	*handle_env_var(t_env_var *env);
+bool	handle_chunk(t_chunk_info *info);
+void	handle_split_args(t_split_args *args);
+char	*expand_tilde(char *str);
+char	*handle_double_dollar(char *chunk, char *ptr, size_t *offset);
+char	*handle_exit_status_2(char *chunk);
+char	*handle_regular_env_var(t_env_var *env);
+bool	is_dollar_quoted_str(const char *str);
+char	*handle_dollar_quoted(char *str);
+bool	is_standalone_dollar_star(const char *str);
 
 // attributs
 enum
