@@ -20,12 +20,15 @@ bool	parser(t_token *tokens, t_ast_cmd **tree)
 	if (!tokens)
 		return (false);
 	current = tokens;
+	if (!current)
+		return (false);
 	if (current->type == NEW_LINE)
 		return (free_tok_lst(tokens), true);
 	*tree = parse_cmd(&current);
-	if (!(*tree) || current->type != NEW_LINE)
+	if (!current || !(*tree) || current->type != NEW_LINE)
 	{
-		syntax_error(current->value);
+		if (current)
+			syntax_error(current->value);
 		return (free_tok_lst(tokens), false);
 	}
 	free_tok_lst(tokens);

@@ -35,7 +35,7 @@ static bool	handle_heredoc_limit(t_token **current)
 
 	if (is_heredoc && count_heredocs_in_tokens(*current) > 16)
 	{
-		ft_putstr_fd("bash: maximum here-document count exceeded\n", 2);
+		ft_putstr_fd("minishell: maximum here-document count exceeded\n", 2);
 		set_exit_status(2);
 		while (*current && (*current)->type != NEW_LINE)
 			advance(current);

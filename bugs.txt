@@ -1,6 +1,0 @@
-"" -> command not found (i'll fix it, kant khdama 7ta fixit hadi $DVSDSDFSDFDS)
-'' -> any empty string should be command not found
-cd $PWD hi -> im working on it 
-$EMPTY echo hi -> drt git stash w mshat hh
-ctrl+c in heredoc -> ctrl+d rah khdama w 3awdt drtha b readline
-lmhm ila bant lik shi bug zidha hna w n9adoha mn b3d
