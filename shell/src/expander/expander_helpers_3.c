@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 07:21:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 19:34:10 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/07 06:43:06 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	should_split_token(t_split_args *args, \
 	bool is_first_token, bool is_export_val)
 {
 	if (is_first_token && !is_export_val && args->sub_tok->to_expand
-		&& ft_chr(args->to_join, ' ') && args->sub_tok->type != DQSTR
+		&& ft_strchr(args->to_join, ' ') && args->sub_tok->type != DQSTR
 		&& args->sub_tok->type != STR)
 	{
 		args->split_char = ' ';
@@ -113,4 +113,19 @@ void	expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env)
 		sub_tok = sub_tok->nospace_next;
 		iter++;
 	}
+}
+
+bool	handle_chunk(t_chunk_info *info)
+{
+	size_t	len;
+
+	len = get_chunk_len(info->ptr, "$");
+	*(info->chunk) = ft_substr(info->ptr, 0, len);
+	*(info->offset) = len;
+	if (!info->ignore_env && *(info->ptr) == '$' && len > 1)
+	{
+		if (!expand_environment_variable(info, len))
+			return (false);
+	}
+	return (true);
 }

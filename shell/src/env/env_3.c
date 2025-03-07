@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:04:19 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:04:20 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/07 20:04:06 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ void	handle_shlvl(void)
 		level = ft_atoi(shlvl_node->value);
 		if (level < 0)
 			level = 0;
-		level++;
+		else if (level >= INT_MAX)
+			level = 0;
+		else
+			level++;
 		if (level >= 1000)
 		{
 			ft_putendl_fd(SHLVL_WARN, 2);

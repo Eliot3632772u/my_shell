@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 17:56:42 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/07 07:06:42 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <termios.h>
+# include <sys/utsname.h>
+# include <limits.h>
 
 # define GET_EXIT 0xdeadbeef
 # define TROLL 132
@@ -41,6 +43,15 @@ bin:/usr/sbin:/usr/bin:/sbin:/bin"
 // Forward declarations
 typedef struct s_cmd		t_ast_cmd;
 typedef struct s_ast_redir	t_ast_redir;
+
+# define COLOR_CYAN "\001\033[1;36m\002"
+# define COLOR_RED "\001\033[1;31m\002"
+# define COLOR_BLUE "\001\033[1;34m\002"
+# define COLOR_WHITE "\001\033[1;37m\002"
+# define COLOR_RESET "\001\033[0m\002"
+
+// Prompt function
+char			*get_prompt(void);
 
 // lexer
 
@@ -234,7 +245,6 @@ char			**expand_args(t_token *tok_lst);
 void			expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env);
 char			*expand(t_token *tok, bool ignore_env);
 char			*expand_env(char *to_expand, bool in_quote, bool ignore_env);
-char			*ft_chr(char *str, char c);
 void			ghost_char(char *str);
 unsigned int	get_chunk_len(char *ptr, char *sp);
 void			ft_striter(t_str *lst, void (*f)(void *));
@@ -261,6 +271,7 @@ bool			is_standalone_dollar_star(const char *str);
 t_str			*sort_merge(t_str *left, t_str *right);
 void			split_list(t_str *source, t_str **left, t_str **right);
 void			sort_str_list(t_str **lst);
+bool			expand_environment_variable(t_chunk_info *info, size_t len);
 
 // attributs
 enum
@@ -322,6 +333,8 @@ void			install_default_sig_handlers(void);
 
 // execution
 
+int				try_direct_path(char **cmd, t_env *env);
+int				check_dir(char **cmd);
 void			executor(t_ast_cmd *tree, bool forked);
 void			free_list(char **list);
 pid_t			ft_fork(void);

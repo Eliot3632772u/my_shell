@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:12:28 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:12:29 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/07 06:46:23 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	free_list(char **list)
 {
 	unsigned int	i;
 
+	if (!list)
+		return ;
 	i = 0;
 	while (list[i])
 		free(list[i++]);

@@ -6,16 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 06:38:47 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 08:03:53 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/06 21:24:56 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-char	*ft_chr(char *str, char c)
-{
-	return (ft_strchr(str, c));
-}
 
 bool	process_env_chunks(t_strbuilder *sb, char *to_expand, \
 	bool in_quote, bool ignore_env)

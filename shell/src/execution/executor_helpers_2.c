@@ -6,21 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:13:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:16:19 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/07 07:04:52 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-static bool	check_file(char *file_path, int access_type)
-{
-	if (access(file_path, access_type) != 0)
-	{
-		print_err(file_path, 0);
-		return (false);
-	}
-	return (true);
-}
 
 bool	check_if_executable(char **cmd, char *exec, char **paths, t_env *env)
 {
@@ -41,19 +31,22 @@ bool	check_absolute_path(char **cmd, t_env *env)
 
 	if (ft_strchr(cmd[0], '/'))
 	{
-		if (check_file(cmd[0], X_OK))
+		if (access(cmd[0], F_OK) == 0)
 		{
-			envp = consume_env(env);
-			return (execve(cmd[0], cmd, envp), free_list(envp), true);
-		}
-		if (errno == ENOTDIR)
+			if (access(cmd[0], X_OK) == 0)
+			{
+				envp = consume_env(env);
+				execve(cmd[0], cmd, envp);
+				free_list(envp);
+				exit(127);
+			}
+			set_exit_status(126);
+			print_err(cmd[0], -69);
 			exit(126);
-		else
-		{
-			if (!access(cmd[0], F_OK))
-				exit(126);
-			exit(127);
 		}
+		set_exit_status(127);
+		print_err(cmd[0], -1);
+		exit(127);
 	}
 	return (false);
 }
@@ -95,4 +88,29 @@ char	*check_file_tok(t_token *file_tok)
 	file_name = ft_strdup(*expanded);
 	free_list(expanded);
 	return (file_name);
+}
+
+int	try_direct_path(char **cmd, t_env *env)
+{
+	char	*try_path;
+
+	check_dir(cmd);
+	if (check_absolute_path(cmd, env))
+		return (-1);
+	try_path = ft_strjoin("./", cmd[0]);
+	if (access(try_path, F_OK) == 0)
+	{
+		if (access(try_path, X_OK) == 0)
+		{
+			execve(try_path, cmd, consume_env(env));
+			free(try_path);
+			return (-1);
+		}
+		free(try_path);
+		set_exit_status(126);
+		print_err(cmd[0], -69);
+		exit(126);
+	}
+	free(try_path);
+	return (0);
 }

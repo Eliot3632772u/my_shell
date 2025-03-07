@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/06 17:57:50 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/06 20:19:19 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address -I includes -I$(RL_PATH)/in
 
 OBJSDIR = objs/
 
-SRCS = src/main.c \
+SRCS = src/main/main.c \
 src/lexer/lexer.c \
 src/lexer/lexer_helpers.c \
 src/lexer/lexer_helpers_2.c \
@@ -72,7 +72,7 @@ src/env/env.c \
 src/env/env_2.c \
 src/env/env_3.c \
 src/env/env_lists.c \
-src/builtin/env/ft_env.c
+src/builtin/env/ft_env.c \
 
 OBJS = $(SRCS:%.c=$(OBJSDIR)%.o)
 
@@ -86,7 +86,7 @@ $(LIBFT):
 
 $(OBJSDIR):
 	@mkdir -p $(OBJSDIR)
-	@mkdir -p $(OBJSDIR)/src
+	@mkdir -p $(OBJSDIR)/src/main
 	@mkdir -p $(OBJSDIR)/src/lexer
 	@mkdir -p $(OBJSDIR)/src/lexer/errors
 	@mkdir -p $(OBJSDIR)/src/lexer/exit_status

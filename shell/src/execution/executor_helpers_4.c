@@ -24,12 +24,20 @@ void	wait_and_exit_status(int pid)
 	int	exit_status;
 
 	waitpid(pid, &exit_status, 0);
-	set_exit_status(WEXITSTATUS(exit_status));
-	if (WIFSIGNALED(exit_status) == 1)
+	if (WIFEXITED(exit_status))
+		set_exit_status(WEXITSTATUS(exit_status));
+	else if (WIFSIGNALED(exit_status))
 	{
-		if (WTERMSIG(exit_status) == 3)
+		if (WTERMSIG(exit_status) == SIGQUIT)
+		{
 			ft_putendl_fd("Quit (core dumped)", 2);
-		set_exit_status(exit_status);
+			set_exit_status(131);
+		}
+		else if (WTERMSIG(exit_status) == SIGINT)
+		{
+			ft_putendl_fd("", 2);
+			set_exit_status(130);
+		}
 	}
 }
 
