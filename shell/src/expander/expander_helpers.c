@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 07:07:28 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 07:34:08 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/07 22:32:13 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ghost_char(char *str)
 	while (str[i])
 	{
 		if (str[i] == ' ' || str[i] == '\t')
-			str[i] = (char)TROLL;
+			str[i] = (char)HIDDEN_SEPARATOR;
 		i++;
 	}
 }

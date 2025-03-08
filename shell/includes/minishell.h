@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/07 07:06:42 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/08 00:39:53 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,10 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <termios.h>
-# include <sys/utsname.h>
 # include <limits.h>
 
 # define GET_EXIT 0xdeadbeef
-# define TROLL 132
+# define HIDDEN_SEPARATOR 132
 # define DEFAULT_PATH "/usr/local/sbin:/usr/local/\
 bin:/usr/sbin:/usr/bin:/sbin:/bin"
 # define SHLVL_WARN "minishell: warning: shell level\
@@ -257,6 +256,7 @@ void			ft_stradd_back(t_str **lst, t_str *new);
 void			ft_join_last(t_str **lst, char *str, bool to_expand);
 void			add_str_lst(char *str, t_str **lst, bool join_to_last, \
 	t_token *tok);
+void			free_str_lst(t_str *lst);
 char			**consume_argv(t_str *lst);
 char			*handle_env_var(t_env_var *env);
 bool			handle_chunk(t_chunk_info *info);
@@ -393,5 +393,12 @@ char			*pwd(char *str);
 
 int				ft_unset(int argc, char **args, t_env **env);
 void			del_from_env(t_env **env, char *key);
+
+// prompt
+char			*get_formatted_path(void);
+char			*build_prompt_start(void);
+void			get_system_info(char *username, char *hostname);
+void			get_hostname(char *hostname);
+void			get_username(char *username);
 
 #endif

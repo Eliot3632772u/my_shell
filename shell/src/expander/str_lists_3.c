@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:13:27 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 00:13:55 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/08 00:39:28 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,18 @@ void	ft_join_last(t_str **lst, char *str, bool to_expand)
 	else
 		str_last->wild_card = false;
 	free(str);
+}
+
+void	free_str_lst(t_str *lst)
+{
+	t_str	*tmp;
+
+	while (lst)
+	{
+		tmp = lst;
+		lst = lst->next;
+		if (tmp->str)
+			free(tmp->str);
+		free(tmp);
+	}
 }

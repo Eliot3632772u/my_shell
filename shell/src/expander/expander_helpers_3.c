@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 07:21:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/07 06:43:06 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/08 00:50:40 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,33 +57,26 @@ char	*expand(t_token *tok, bool ignore_env)
 	return (expand_env(str, tok->type == DQSTR, ignore_env));
 }
 
-void	should_split_token(t_split_args *args, \
-	bool is_first_token, bool is_export_val)
+void	should_split_token(t_split_args *args, bool is_first_token,
+		bool is_export_val)
 {
-	if (is_first_token && !is_export_val && args->sub_tok->to_expand
-		&& ft_strchr(args->to_join, ' ') && args->sub_tok->type != DQSTR
-		&& args->sub_tok->type != STR)
+	bool	should_split;
+
+	(void)is_first_token;
+	should_split = (args->sub_tok->type == WORD && !is_export_val
+			&& args->sub_tok->to_expand && ft_strchr(args->to_join, ' '));
+	if (should_split)
 	{
 		args->split_char = ' ';
 		handle_split_args(args);
 	}
-	else if (ft_strchr(args->to_join, TROLL))
+	else if (ft_strchr(args->to_join, HIDDEN_SEPARATOR))
 	{
-		args->split_char = (char)TROLL;
-		handle_split_args(args);
-	}
-	else if (ft_strchr(args->to_join, ' ') && args->sub_tok->to_expand
-		&& !args->sub_tok->nospace_next && !args->sub_tok->next
-		&& !is_export_val && args->sub_tok->type != DQSTR
-		&& args->sub_tok->type != STR)
-	{
-		args->split_char = ' ';
+		args->split_char = (char)HIDDEN_SEPARATOR;
 		handle_split_args(args);
 	}
 	else
-	{
 		add_str_lst(args->to_join, args->lst, args->iter != 0, args->sub_tok);
-	}
 }
 
 void	expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env)
@@ -98,8 +91,7 @@ void	expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env)
 	is_first_token = true;
 	while (sub_tok)
 	{
-		is_export_val = (sub_tok->value
-				&& ft_strchr(sub_tok->value, '=')
+		is_export_val = (sub_tok->value && ft_strchr(sub_tok->value, '=')
 				&& !sub_tok->nospace_next && !sub_tok->next);
 		to_join = expand(sub_tok, ignore_env);
 		if (!to_join)

@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 06:54:05 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 08:26:01 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/08 00:51:19 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,19 @@ char	*handle_env_var(t_env_var *env)
 void	handle_split_args(t_split_args *args)
 {
 	char	**splited;
+	char	*dup;
 	int		i;
 
 	splited = ft_split(args->to_join, args->split_char);
+	if (!splited)
+		return ;
 	i = 0;
 	while (splited[i])
 	{
-		add_str_lst(ft_strdup(splited[i]), args->lst, i == 0
-			&& args->iter != 0, args->sub_tok);
+		dup = ft_strdup(splited[i]);
+		if (!dup)
+			break ;
+		add_str_lst(dup, args->lst, (i == 0 && args->iter != 0), args->sub_tok);
 		i++;
 	}
 	free_list(splited);

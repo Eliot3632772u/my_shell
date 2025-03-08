@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 08:25:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/07 06:43:24 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/08 00:51:12 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ static t_str	*process_command(t_token *cmd_token)
 	expand_nosp_arg(cmd_token, &argv_lst, 0);
 	if (!argv_lst)
 		return (NULL);
-	expanded_cmd = NULL;
-	ft_stradd_back(&expanded_cmd, new_str(argv_lst->str, argv_lst->wild_card));
-	free_strnode(argv_lst);
+	expanded_cmd = argv_lst;
 	return (expanded_cmd);
 }
 
