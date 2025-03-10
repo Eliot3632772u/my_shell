@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 11:19:11 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 10:40:06 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*handle_heredoc(char *delim, t_heredoc_opts opts)
 	close(fd);
 	if (interrupted)
 	{
-		free(tmp_file);
+		cleanup_heredoc_file(tmp_file);
 		return (NULL);
 	}
 	return (tmp_file);
@@ -59,7 +59,7 @@ char	*ft_mktmp(void)
 	while (++i)
 	{
 		sb = stringbuilder();
-		sb_append(sb, "/tmp/Minishell_HEREDOC_");
+		sb_append(sb, "/tmp/.Minishell_HEREDOC_");
 		sb_append_int(sb, i);
 		name = ft_strdup(sb->str);
 		sb_free(sb);

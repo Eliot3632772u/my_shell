@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/10 06:03:08 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/10 11:00:25 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include #-g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=address
 
 OBJSDIR = objs/
 
@@ -44,6 +44,7 @@ src/execution/executor_helpers_4.c \
 src/execution/executor_helpers_5.c \
 src/execution/executor_helpers_6.c \
 src/execution/executor_helpers_7.c \
+src/execution/executor_helpers_8.c \
 src/expander/expander.c \
 src/expander/expander_helpers.c \
 src/expander/expander_helpers_2.c \
@@ -59,6 +60,7 @@ src/here-doc/heredoc.c \
 src/here-doc/heredoc_helpers.c \
 src/here-doc/heredoc_helpers_2.c \
 src/here-doc/heredoc_helpers_3.c \
+src/here-doc/heredoc_helpers_4.c \
 src/signals/signal_handler.c \
 src/builtin/checker.c \
 src/builtin/cd/ft_cd.c \

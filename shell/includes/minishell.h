@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 06:06:18 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 11:06:51 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ bool			is_empty_quoted_string(char *str);
 char			*strip_quotes(char *str);
 void			handle_heredoc_signal(void);
 int				process_heredoc_tree(t_ast_cmd *tree);
+void			cleanup_heredoc_file(char *tmp_file);
+void			cleanup_all_heredoc_files(void);
 
 // ast 
 typedef enum e_node_type
@@ -370,6 +372,10 @@ void			handle_no_execute_perm(char **cmd);
 void			handle_file_not_found(char **cmd);
 void			handle_non_exec_path(char **cmd, char *try_path);
 void			handle_directory_case(char **cmd);
+int				execute_direct_path(char **cmd, t_env *env);
+int				check_expanded_length(t_token *file_tok, char **expanded);
+int				validate_expanded_token(t_token *file_tok, char **expanded);
+int				validate_expanded_args(t_token *file_tok, char **expanded);
 
 // builtins
 int				ft_cd(char *arg, t_env *env);
@@ -390,6 +396,7 @@ int				is_option(char *str);
 
 int				print_env(t_env *env);
 int				ft_env(t_env **env);
+int				ft_env_with_args(int argc, char **argv, t_env **env);
 
 int				ft_exit(int argc, char *arg);
 

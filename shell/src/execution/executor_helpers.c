@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:12:45 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 03:37:26 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 08:52:48 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	execute_cmd(char **cmd, t_env *env)
 	if (try_direct_path(cmd, env) == -1)
 		return (-1);
 	if (!find_path(env))
-		return (-3);
+		return (-1);
 	paths = ft_split(find_path(env), ':');
 	tmp = paths;
 	if (!paths)

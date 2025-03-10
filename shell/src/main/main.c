@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 06:14:27 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 10:34:10 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,11 @@ bool	run(char *command_line)
 	}
 	lexer(command_line, &tokens);
 	if (parser(tokens, &ast))
-		executor(ast, false);
+	{
+		if (g_last_signal != 420 && ft_heredoc(ast))
+			executor(ast, false);
+		cleanup_all_heredoc_files();
+	}
 	else
 	{
 		dup2(2, 0);

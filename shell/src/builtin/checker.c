@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:06:01 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:06:02 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 11:06:40 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	execute_builtin(int argc, char *command, char **args)
 	if (!ft_strcmp(command, "exit"))
 		return (ft_exit(argc, *args));
 	if (!ft_strcmp(command, "env"))
-		return (ft_env(get_envp_internal(NULL)));
+		return (ft_env_with_args(argc, args, get_envp_internal(NULL)));
 	return (69);
 }
 

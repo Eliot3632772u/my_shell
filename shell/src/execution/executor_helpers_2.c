@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:13:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 05:51:21 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 09:48:58 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	check_absolute_path(char **cmd, t_env *env)
 	return (false);
 }
 
-static int	validate_expanded_args(t_token *file_tok, char **expanded)
+int	check_expanded_length(t_token *file_tok, char **expanded)
 {
 	int	len;
 
@@ -44,10 +44,11 @@ static int	validate_expanded_args(t_token *file_tok, char **expanded)
 	if (len == 0)
 	{
 		free_list(expanded);
+		print_err(file_tok->value, -4);
 		set_exit_status(1);
 		return (0);
 	}
-	if (len > 1 || (*file_tok->value == '$' && len == 1 && **expanded == '\0'))
+	if (len > 1)
 	{
 		print_err(file_tok->value, -4);
 		free_list(expanded);
@@ -56,45 +57,23 @@ static int	validate_expanded_args(t_token *file_tok, char **expanded)
 	return (1);
 }
 
-char	*check_file_tok(t_token *file_tok)
+int	validate_expanded_token(t_token *file_tok, char **expanded)
 {
-	char	**expanded;
-	char	*file_name;
-
-	file_name = NULL;
-	expanded = expand_args(file_tok);
-	if (!expanded)
+	if (ft_strchr(file_tok->value, '$') && ft_strcmp(file_tok->value, "$") != 0)
 	{
-		set_exit_status(1);
-		return (NULL);
+		if (expanded[0][0] == '\0' || !ft_strcmp(expanded[0], file_tok->value))
+		{
+			print_err(file_tok->value, -4);
+			free_list(expanded);
+			return (0);
+		}
 	}
-	if (!validate_expanded_args(file_tok, expanded))
-		return (NULL);
-	file_name = ft_strdup(*expanded);
-	free_list(expanded);
-	return (file_name);
+	return (1);
 }
 
-int	try_direct_path(char **cmd, t_env *env)
+int	validate_expanded_args(t_token *file_tok, char **expanded)
 {
-	char		*try_path;
-	struct stat	file_stat;
-
-	check_dir(cmd);
-	if (check_absolute_path(cmd, env))
-		return (-1);
-	if (stat(cmd[0], &file_stat) == 0 && S_ISDIR(file_stat.st_mode)
-		&& !ft_strchr(cmd[0], '/'))
-		handle_dir_error(cmd);
-	if (stat(cmd[0], &file_stat) == 0 && !S_ISDIR(file_stat.st_mode)
-		&& !ft_strchr(cmd[0], '/'))
-		handle_dir_error(cmd);
-	try_path = ft_strjoin("./", cmd[0]);
-	if (access(try_path, F_OK) == 0)
-	{
-		try_local_execution(cmd, try_path, env);
-		return (-1);
-	}
-	free(try_path);
-	return (0);
+	if (!check_expanded_length(file_tok, expanded))
+		return (0);
+	return (validate_expanded_token(file_tok, expanded));
 }

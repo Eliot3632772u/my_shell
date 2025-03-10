@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:57:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/07 22:23:05 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 11:02:50 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ void	sigint_handler(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	set_exit_status(1);
+	set_exit_status(130);
 	g_last_signal = 69;
 }
 
 void	heredoc_sigint_handler(int sig)
 {
 	(void)sig;
-	set_exit_status(1);
+	set_exit_status(130);
 	g_last_signal = 420;
 	rl_free_line_state();
 	rl_cleanup_after_signal();

@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 06:01:40 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 06:02:54 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 08:55:25 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,28 @@ void	handle_directory_case(char **cmd)
 	set_exit_status(126);
 	print_err(cmd[0], -69);
 	exit(126);
+}
+
+int	execute_direct_path(char **cmd, t_env *env)
+{
+	struct stat	file_stat;
+	char		**envp;
+
+	if (stat(cmd[0], &file_stat) == 0)
+	{
+		if (S_ISDIR(file_stat.st_mode) && !ft_strchr(cmd[0], '/'))
+			handle_dir_error(cmd);
+		if (!S_ISDIR(file_stat.st_mode) && !ft_strchr(cmd[0], '/'))
+		{
+			if (access(cmd[0], X_OK) == 0)
+			{
+				envp = consume_env(env);
+				execve(cmd[0], cmd, envp);
+				free_list(envp);
+				return (-1);
+			}
+			handle_dir_error(cmd);
+		}
+	}
+	return (0);
 }
