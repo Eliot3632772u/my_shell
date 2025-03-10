@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/08 00:39:53 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 06:06:18 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
 # include <readline/history.h>
@@ -39,9 +40,13 @@ bin:/usr/sbin:/usr/bin:/sbin:/bin"
 #  define ECHOCTL 0x00000040
 # endif
 
+# ifndef O_DIRECTORY
+#  define O_DIRECTORY 00200000
+# endif
+
 // Forward declarations
-typedef struct s_cmd		t_ast_cmd;
-typedef struct s_ast_redir	t_ast_redir;
+typedef struct s_cmd			t_ast_cmd;
+typedef struct s_ast_redir		t_ast_redir;
 
 # define COLOR_CYAN "\001\033[1;36m\002"
 # define COLOR_RED "\001\033[1;31m\002"
@@ -272,6 +277,8 @@ t_str			*sort_merge(t_str *left, t_str *right);
 void			split_list(t_str *source, t_str **left, t_str **right);
 void			sort_str_list(t_str **lst);
 bool			expand_environment_variable(t_chunk_info *info, size_t len);
+char			**handle_argv_cases(t_str *argv_lst, t_str *args);
+char			**handle_empty_str_case(void);
 
 // attributs
 enum
@@ -316,8 +323,8 @@ void			handle_shlvl(void);
 
 // signals
 
-extern int					g_exit_status;
-extern int					g_last_signal;
+extern int						g_exit_status;
+extern int						g_last_signal;
 
 enum
 {
@@ -354,6 +361,15 @@ void			exec_redir(t_ast_redir *tree, bool forked);
 void			exec_exe(t_ast_exec *exe, bool forked);
 void			exec_subsh(t_ast_subsh *tree, bool forked);
 void			wait_and_exit_status(int pid);
+void			try_path_execution(char **cmd, char *try_path, t_env *env);
+int				try_direct_path(char **cmd, t_env *env);
+void			try_execute_file(char **cmd, t_env *env);
+void			handle_dir_error(char **cmd);
+void			try_local_execution(char **cmd, char *try_path, t_env *env);
+void			handle_no_execute_perm(char **cmd);
+void			handle_file_not_found(char **cmd);
+void			handle_non_exec_path(char **cmd, char *try_path);
+void			handle_directory_case(char **cmd);
 
 // builtins
 int				ft_cd(char *arg, t_env *env);

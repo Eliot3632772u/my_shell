@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:16:53 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:53:31 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 03:53:08 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static int	open_redir_file(t_ast_redir *tree, char *file_name, bool forked)
 		print_err(file_name, 0);
 		set_exit_status(1);
 		free(file_name);
-		exit_if_forked(forked);
+		if (forked && tree->direction != INPUT)
+			exit(1);
 		return (-1);
 	}
 	free(file_name);

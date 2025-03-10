@@ -6,13 +6,31 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 08:26:53 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 06:14:27 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		g_last_signal;
+int	g_last_signal;
+
+char	*get_prompt(void)
+{
+	char	*path;
+	char	*prompt;
+	char	*start;
+	char	*temp;
+
+	start = build_prompt_start();
+	path = get_formatted_path();
+	prompt = ft_strjoin(start, path);
+	free(start);
+	free(path);
+	temp = prompt;
+	prompt = ft_strjoin(temp, COLOR_CYAN "]\n└─" COLOR_WHITE "$ " COLOR_RESET);
+	free(temp);
+	return (prompt);
+}
 
 void	tty_attr(struct termios *attrs, int action)
 {
@@ -53,8 +71,8 @@ void	setup(char **envp, struct termios *attrs, ...)
 
 bool	run(char *command_line)
 {
-	t_token			*tokens;
-	t_ast_cmd		*ast;
+	t_token		*tokens;
+	t_ast_cmd	*ast;
 
 	if (!command_line)
 	{
@@ -79,6 +97,7 @@ bool	run(char *command_line)
 int	main(int _, char **__, char **envp)
 {
 	char			*command_line;
+	char			*prompt;
 	struct termios	attrs[3];
 
 	if (_ > 1)
@@ -86,7 +105,9 @@ int	main(int _, char **__, char **envp)
 	setup(envp, attrs, _, __);
 	while (true)
 	{
-		command_line = readline("Minishell$ ");
+		prompt = get_prompt();
+		command_line = readline(prompt);
+		free(prompt);
 		if (run(command_line))
 			break ;
 		g_last_signal = 0;

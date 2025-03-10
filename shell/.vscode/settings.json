@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"Makefile": "makefile",
+		"minishell.h": "c"
+	}
+}

@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:13:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/07 07:04:52 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 05:51:21 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,34 +19,19 @@ bool	check_if_executable(char **cmd, char *exec, char **paths, t_env *env)
 	if (access(exec, X_OK) == 0)
 	{
 		envp = consume_env(env);
-		if (execve(exec, cmd, envp) == -1)
-			return (free_list(envp), free_list(paths), true);
+		execve(exec, cmd, envp);
+		free_list(envp);
+		free_list(paths);
 	}
 	return (false);
 }
 
 bool	check_absolute_path(char **cmd, t_env *env)
 {
-	char	**envp;
-
 	if (ft_strchr(cmd[0], '/'))
 	{
-		if (access(cmd[0], F_OK) == 0)
-		{
-			if (access(cmd[0], X_OK) == 0)
-			{
-				envp = consume_env(env);
-				execve(cmd[0], cmd, envp);
-				free_list(envp);
-				exit(127);
-			}
-			set_exit_status(126);
-			print_err(cmd[0], -69);
-			exit(126);
-		}
-		set_exit_status(127);
-		print_err(cmd[0], -1);
-		exit(127);
+		try_execute_file(cmd, env);
+		return (true);
 	}
 	return (false);
 }
@@ -92,24 +77,23 @@ char	*check_file_tok(t_token *file_tok)
 
 int	try_direct_path(char **cmd, t_env *env)
 {
-	char	*try_path;
+	char		*try_path;
+	struct stat	file_stat;
 
 	check_dir(cmd);
 	if (check_absolute_path(cmd, env))
 		return (-1);
+	if (stat(cmd[0], &file_stat) == 0 && S_ISDIR(file_stat.st_mode)
+		&& !ft_strchr(cmd[0], '/'))
+		handle_dir_error(cmd);
+	if (stat(cmd[0], &file_stat) == 0 && !S_ISDIR(file_stat.st_mode)
+		&& !ft_strchr(cmd[0], '/'))
+		handle_dir_error(cmd);
 	try_path = ft_strjoin("./", cmd[0]);
 	if (access(try_path, F_OK) == 0)
 	{
-		if (access(try_path, X_OK) == 0)
-		{
-			execve(try_path, cmd, consume_env(env));
-			free(try_path);
-			return (-1);
-		}
-		free(try_path);
-		set_exit_status(126);
-		print_err(cmd[0], -69);
-		exit(126);
+		try_local_execution(cmd, try_path, env);
+		return (-1);
 	}
 	free(try_path);
 	return (0);

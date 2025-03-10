@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 08:25:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/08 00:51:12 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 05:46:30 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ bool	expand_environment_variable(t_chunk_info *info, size_t len)
 	*(info->chunk) = expanded;
 	if (!*(info->chunk))
 		return (false);
-	if (info->ptr[len] == '\0' && (ft_strchr(*(info->chunk), ' ')
-			|| ft_strchr(*(info->chunk), '\t')))
+	if (!info->in_quote && info->ptr[len] == '\0' && expanded
+		&& (ft_strchr(*(info->chunk), ' ') || ft_strchr(*(info->chunk), '\t')))
 	{
 		sb_append(info->sb, *(info->chunk));
 		free(*(info->chunk));
@@ -46,6 +46,14 @@ static t_str	*process_command(t_token *cmd_token)
 	expand_nosp_arg(cmd_token, &argv_lst, 0);
 	if (!argv_lst)
 		return (NULL);
+	if (cmd_token->type == DQSTR || cmd_token->type == STR)
+		return (argv_lst);
+	if (cmd_token->type == WORD && cmd_token->to_expand
+		&& (!argv_lst->str || !*argv_lst->str))
+	{
+		free_str_lst(argv_lst);
+		return (NULL);
+	}
 	expanded_cmd = argv_lst;
 	return (expanded_cmd);
 }
@@ -65,17 +73,6 @@ static t_str	*process_arguments(t_token *args_token)
 	return (args);
 }
 
-static char	**handle_wildcard_expansion(t_str *argv_lst, t_str *args)
-{
-	t_str	*final_lst;
-
-	final_lst = expand_wild_cards(argv_lst);
-	if (!final_lst)
-		return (NULL);
-	ft_strlast(final_lst)->next = args;
-	return (consume_argv(final_lst));
-}
-
 char	**expand_args(t_token *tok_lst)
 {
 	t_str	*argv_lst;
@@ -88,16 +85,12 @@ char	**expand_args(t_token *tok_lst)
 	args = process_arguments(tok_lst->next);
 	result = NULL;
 	if (argv_lst)
-	{
-		if (argv_lst->wild_card)
-			result = handle_wildcard_expansion(argv_lst, args);
-		else
-		{
-			ft_strlast(argv_lst)->next = args;
-			result = consume_argv(argv_lst);
-		}
-	}
+		result = handle_argv_cases(argv_lst, args);
 	else if (args)
 		result = consume_argv(args);
+	else if (tok_lst->type == DQSTR || tok_lst->type == STR)
+		result = handle_empty_str_case();
+	if (!result && args)
+		free_str_lst(args);
 	return (result);
 }

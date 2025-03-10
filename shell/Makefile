@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/06 20:19:19 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/10 06:03:08 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address -I includes -I$(RL_PATH)/include
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include #-g -fsanitize=address
 
 OBJSDIR = objs/
 
@@ -42,11 +42,14 @@ src/execution/executor_helpers_2.c \
 src/execution/executor_helpers_3.c \
 src/execution/executor_helpers_4.c \
 src/execution/executor_helpers_5.c \
+src/execution/executor_helpers_6.c \
+src/execution/executor_helpers_7.c \
 src/expander/expander.c \
 src/expander/expander_helpers.c \
 src/expander/expander_helpers_2.c \
 src/expander/expander_helpers_3.c \
 src/expander/expander_helpers_4.c \
+src/expander/expander_helpers_5.c \
 src/expander/str_lists.c \
 src/expander/str_lists_2.c \
 src/expander/str_lists_3.c \
@@ -73,6 +76,7 @@ src/env/env_2.c \
 src/env/env_3.c \
 src/env/env_lists.c \
 src/builtin/env/ft_env.c \
+src/main/prompt.c
 
 OBJS = $(SRCS:%.c=$(OBJSDIR)%.o)
 

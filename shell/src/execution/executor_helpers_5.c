@@ -6,13 +6,13 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:47:58 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:55:29 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/09 23:28:10 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	shift_argv(char ***argv)
+void	shift_argv(char ***argv)
 {
 	int	i;
 
@@ -32,17 +32,15 @@ static bool	sanitize_argv(char ***argv, t_ast_exec *exe)
 	t_token	*tok;
 
 	first_arg = (*argv)[0];
-	if (first_arg && (*first_arg == '\0' || ft_strchr(first_arg, ' ')))
+	tok = exe->argv_tok;
+	if (first_arg && ft_strchr(first_arg, ' ') && tok->type != STR \
+		&& tok->type != DQSTR)
 	{
 		shift_argv(argv);
 		if ((*argv)[0] == NULL)
 		{
-			tok = exe->argv_tok;
-			if (tok->type == STR || tok->type == DQSTR)
-			{
-				print_err(tok->value, -1);
-				set_exit_status(127);
-			}
+			print_err(tok->value, -1);
+			set_exit_status(127);
 			free_list(*argv);
 			return (false);
 		}

@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 01:07:52 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 15:39:58 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/10 03:38:03 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	print_err(char *preced, int msg_code)
 	else if (msg_code == -4)
 		(sb_append(sb, ": ambiguous redirect\n"), set_exit_status(1));
 	else if (msg_code == -5)
-		(sb_append(sb, ": No such file or directory\n"), set_exit_status(1));
+		(sb_append(sb, ": No such file or directory\n"), set_exit_status(127));
 	else if (msg_code == -6)
 		(sb_append(sb, ": numeric argument required\n"), set_exit_status(255));
 	if (msg_code == 0)
