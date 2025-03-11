@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:05:28 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:05:29 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 03:29:10 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,23 @@ static void	process_export_argument(char *ptr, t_env **env)
 	}
 }
 
+static int	handle_export_args(char *ptr, t_env **env)
+{
+	if (!ptr || !*ptr)
+		return (2);
+	if (validate_arg(ptr))
+		return (1);
+	if (handle_concate_case(ptr))
+		return (0);
+	process_export_argument(ptr, env);
+	return (0);
+}
+
 int	ft_export(int argc, char **argv, t_env **env)
 {
 	int		i;
 	int		res;
-	char	*ptr;
+	int		status;
 
 	if (!env)
 		return (1);
@@ -44,15 +56,11 @@ int	ft_export(int argc, char **argv, t_env **env)
 	res = 0;
 	while (i < argc)
 	{
-		ptr = argv[i++];
-		if (validate_arg(ptr))
-		{
+		status = handle_export_args(argv[i++], env);
+		if (status == 2)
+			return (print_exports(*env));
+		if (status == 1)
 			res = 1;
-			continue ;
-		}
-		if (handle_concate_case(ptr))
-			continue ;
-		process_export_argument(ptr, env);
 	}
 	return (res);
 }

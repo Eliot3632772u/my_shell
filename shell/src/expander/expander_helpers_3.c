@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 07:21:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/08 00:50:40 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 03:22:39 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,13 @@ char	*expand(t_token *tok, bool ignore_env)
 }
 
 void	should_split_token(t_split_args *args, bool is_first_token,
-		bool is_export_val)
+	bool is_export_val)
 {
 	bool	should_split;
 
 	(void)is_first_token;
-	should_split = (args->sub_tok->type == WORD && !is_export_val
+	(void)is_export_val;
+	should_split = (args->sub_tok->type == WORD
 			&& args->sub_tok->to_expand && ft_strchr(args->to_join, ' '));
 	if (should_split)
 	{

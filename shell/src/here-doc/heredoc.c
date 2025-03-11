@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 10:40:06 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 03:19:14 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,22 @@ char	*ft_mktmp(void)
 	t_strbuilder	*sb;
 	char			*name;
 	int				fd;
-	int				i;
+	pid_t			pid;
 
-	i = 0;
-	while (++i)
+	pid = getpid();
+	sb = stringbuilder();
+	sb_append(sb, "/tmp/.Minishell_HEREDOC_");
+	sb_append_int(sb, pid);
+	name = ft_strdup(sb->str);
+	sb_free(sb);
+	fd = open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
+	if (fd != -1)
 	{
-		sb = stringbuilder();
-		sb_append(sb, "/tmp/.Minishell_HEREDOC_");
-		sb_append_int(sb, i);
-		name = ft_strdup(sb->str);
-		sb_free(sb);
-		fd = open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
-		if (fd != -1)
-		{
-			unlink(name);
-			close(fd);
-			return (name);
-		}
-		free(name);
+		unlink(name);
+		close(fd);
+		return (name);
 	}
+	free(name);
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 01:05:35 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 01:06:48 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 02:31:41 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ int	token_len(t_token_type type, char *str)
 		return (1);
 	if (lengths[type] > 0)
 		return (lengths[type]);
-	if (type == HEREDOC_TAB)
-		return (3);
 	special_len = handle_special_types(type, str);
 	if (special_len > 0)
 		return (special_len);
