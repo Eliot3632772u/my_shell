@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:16:53 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 03:53:08 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 08:39:23 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	exit_if_forked(bool forked)
 {
 	if (forked)
 		exit(get_exit_status());
-	return ;
 }
 
 void	wait_and_exit_status(int pid)
@@ -41,7 +40,7 @@ void	wait_and_exit_status(int pid)
 	}
 }
 
-static int	open_redir_file(t_ast_redir *tree, char *file_name, bool forked)
+int	open_redir_file(t_ast_redir *tree, char *file_name, bool forked)
 {
 	int	fd_to_dup;
 
@@ -61,29 +60,10 @@ static int	open_redir_file(t_ast_redir *tree, char *file_name, bool forked)
 
 void	exec_redir(t_ast_redir *tree, bool forked)
 {
-	int		fd_to_dup;
-	int		fd_backup;
-	char	*file_name;
-
-	file_name = check_file_tok(tree->file_tok);
-	if (!file_name)
-		return (exit_if_forked(forked));
-	fd_to_dup = open_redir_file(tree, file_name, forked);
-	if (fd_to_dup < 0)
-		return ;
-	fd_backup = dup(tree->fd);
-	if (fd_to_dup != tree->fd)
-	{
-		dup2(fd_to_dup, tree->fd);
-		close(fd_to_dup);
-	}
-	set_exit_status(0);
-	executor(tree->cmd, forked);
-	if (fd_backup != tree->fd)
-	{
-		dup2(fd_backup, tree->fd);
-		close(fd_backup);
-	}
+	if (!forked)
+		handle_nonforked_redir(tree);
+	else
+		handle_forked_redir(tree);
 }
 
 void	exec_subsh(t_ast_subsh *tree, bool forked)
@@ -91,7 +71,7 @@ void	exec_subsh(t_ast_subsh *tree, bool forked)
 	pid_t	pid;
 	int		exit_status;
 
-	pid = ft_fork();
+	pid = ft_fork_wrapper(NULL, 0);
 	if (!pid)
 		executor(tree->cmd, true);
 	waitpid(pid, &exit_status, 0);

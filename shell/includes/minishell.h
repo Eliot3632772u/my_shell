@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 11:06:51 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 08:39:46 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,6 +376,13 @@ int				execute_direct_path(char **cmd, t_env *env);
 int				check_expanded_length(t_token *file_tok, char **expanded);
 int				validate_expanded_token(t_token *file_tok, char **expanded);
 int				validate_expanded_args(t_token *file_tok, char **expanded);
+void			handle_child_redir(t_ast_redir *tree, int fd_to_dup);
+pid_t			ft_fork_wrapper(int *fds_to_close, int num_fds);
+int				ft_dup2_wrapper(int oldfd, int newfd);
+void			handle_nonforked_redir(t_ast_redir *tree);
+void			handle_forked_redir(t_ast_redir *tree);
+int				open_redir_file(t_ast_redir *tree, \
+	char *file_name, bool forked);
 
 // builtins
 int				ft_cd(char *arg, t_env *env);

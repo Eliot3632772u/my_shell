@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/10 11:00:25 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/11 09:25:59 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,67 +18,68 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include #-g -fsanitize=address
 
 OBJSDIR = objs/
 
-SRCS = src/main/main.c \
-src/lexer/lexer.c \
-src/lexer/lexer_helpers.c \
-src/lexer/lexer_helpers_2.c \
-src/lexer/lexer_helpers_3.c \
-src/lexer/token_lists.c \
+SRCS = src/main/minishell.c \
+src/main/prompt_handler.c \
+src/lexer/lexer_core.c \
+src/lexer/token_analyzer.c \
+src/lexer/token_validation.c \
+src/lexer/token_creation.c \
+src/lexer/token_manipulation.c \
 src/lexer/errors/error_msgs.c \
 src/lexer/exit_status/exit_status.c \
-src/parser/parser.c \
-src/parser/ast.c \
-src/parser/free_ast.c \
-src/parser/ast_helpers.c \
-src/parser/ast_helpers_2.c \
-src/parser/rdp.c \
-src/execution/executor.c \
-src/execution/executor_helpers.c \
-src/execution/executor_helpers_2.c \
-src/execution/executor_helpers_3.c \
-src/execution/executor_helpers_4.c \
-src/execution/executor_helpers_5.c \
-src/execution/executor_helpers_6.c \
-src/execution/executor_helpers_7.c \
-src/execution/executor_helpers_8.c \
-src/expander/expander.c \
-src/expander/expander_helpers.c \
-src/expander/expander_helpers_2.c \
-src/expander/expander_helpers_3.c \
-src/expander/expander_helpers_4.c \
-src/expander/expander_helpers_5.c \
-src/expander/str_lists.c \
-src/expander/str_lists_2.c \
-src/expander/str_lists_3.c \
-src/expander/str_lists_4.c \
-src/expander/wildcard.c \
-src/here-doc/heredoc.c \
-src/here-doc/heredoc_helpers.c \
-src/here-doc/heredoc_helpers_2.c \
-src/here-doc/heredoc_helpers_3.c \
-src/here-doc/heredoc_helpers_4.c \
-src/signals/signal_handler.c \
-src/builtin/checker.c \
-src/builtin/cd/ft_cd.c \
-src/builtin/cd/ft_cd_helpers.c \
-src/builtin/cd/ft_cd_helpers_2.c \
-src/builtin/echo/ft_echo.c \
-src/builtin/exit/ft_exit.c \
-src/builtin/export/ft_export.c \
-src/builtin/export/ft_export_helpers.c \
-src/builtin/export/ft_export_helpers_2.c \
-src/builtin/pwd/ft_pwd.c \
-src/builtin/unset/ft_unset.c \
-src/env/env.c \
-src/env/env_2.c \
-src/env/env_3.c \
-src/env/env_lists.c \
-src/builtin/env/ft_env.c \
-src/main/prompt.c
+src/parser/parser_core.c \
+src/parser/ast_builder.c \
+src/parser/ast_cleanup.c \
+src/parser/ast_node_operations.c \
+src/parser/ast_validation.c \
+src/parser/recursive_descent_parser.c \
+src/execution/executor_core.c \
+src/execution/command_executor.c \
+src/execution/pipeline_executor.c \
+src/execution/redirection_handler.c \
+src/execution/process_manager.c \
+src/execution/execution_utils.c \
+src/execution/pipe_operations.c \
+src/execution/file_operations.c \
+src/execution/environment_setup.c \
+src/execution/cleanup_operations.c \
+src/expander/expander_core.c \
+src/expander/variable_expansion.c \
+src/expander/path_expansion.c \
+src/expander/quote_handling.c \
+src/expander/expansion_utils.c \
+src/expander/wildcard_expansion.c \
+src/expander/string_manipulation.c \
+src/expander/string_utils.c \
+src/expander/string_lists.c \
+src/expander/string_operations.c \
+src/expander/pattern_matching.c \
+src/here-doc/heredoc_processor.c \
+src/here-doc/heredoc_io.c \
+src/here-doc/heredoc_signals.c \
+src/here-doc/heredoc_utils.c \
+src/here-doc/heredoc_cleanup.c \
+src/signals/signal_manager.c \
+src/builtin/builtin_dispatcher.c \
+src/builtin/cd/directory_change.c \
+src/builtin/cd/path_resolution.c \
+src/builtin/cd/directory_utils.c \
+src/builtin/echo/echo_handler.c \
+src/builtin/exit/exit_handler.c \
+src/builtin/export/export_handler.c \
+src/builtin/export/variable_operations.c \
+src/builtin/export/export_utils.c \
+src/builtin/pwd/pwd_handler.c \
+src/builtin/unset/unset_handler.c \
+src/builtin/env/env_display.c \
+src/env/env_core.c \
+src/env/env_variables.c \
+src/env/env_utils.c \
+src/env/env_list_operations.c
 
 OBJS = $(SRCS:%.c=$(OBJSDIR)%.o)
 
