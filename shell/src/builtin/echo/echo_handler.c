@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   echo_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:04:56 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/03 23:04:57 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 11:09:26 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ static void	print_args(int argc, char **args, int i)
 	while (i < argc - 1)
 	{
 		ft_putstr_fd(args[i], 1);
-		if (ft_strlen(args[i]))
-			ft_putstr_fd(" ", 1);
+		ft_putstr_fd(" ", 1);
 		i++;
 	}
 	ft_putstr_fd(args[i++], 1);

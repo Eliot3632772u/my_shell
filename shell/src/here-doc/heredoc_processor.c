@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   heredoc_processor.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 03:19:14 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 11:02:44 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*handle_heredoc(char *delim, t_heredoc_opts opts)
 		cleanup_heredoc_file(tmp_file);
 		return (NULL);
 	}
+	reset_stdin();
 	return (tmp_file);
 }
 
@@ -53,12 +54,12 @@ char	*ft_mktmp(void)
 	t_strbuilder	*sb;
 	char			*name;
 	int				fd;
-	pid_t			pid;
+	static int		counter = 0;
 
-	pid = getpid();
+	counter++;
 	sb = stringbuilder();
 	sb_append(sb, "/tmp/.Minishell_HEREDOC_");
-	sb_append_int(sb, pid);
+	sb_append_int(sb, counter);
 	name = ft_strdup(sb->str);
 	sb_free(sb);
 	fd = open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
@@ -100,7 +101,11 @@ int	process_heredoc_tree(t_ast_cmd *tree)
 
 int	ft_heredoc(t_ast_cmd *tree)
 {
+	bool	result;
+
 	if (!process_heredoc_tree(tree))
 		return (0);
-	return (g_last_signal != 420);
+	result = (g_last_signal != 420);
+	reset_stdin();
+	return (result);
 }

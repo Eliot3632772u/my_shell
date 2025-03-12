@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 08:39:46 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 10:59:39 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ void			handle_heredoc_signal(void);
 int				process_heredoc_tree(t_ast_cmd *tree);
 void			cleanup_heredoc_file(char *tmp_file);
 void			cleanup_all_heredoc_files(void);
+void			reset_stdin(void);
 
 // ast 
 typedef enum e_node_type

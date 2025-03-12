@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_helpers_2.c                                :+:      :+:    :+:   */
+/*   heredoc_signals.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:13:44 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 11:34:49 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 11:02:59 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,10 @@ char	*get_processed_delimiter(t_ast_redir *tree, t_str **s_ptr)
 	return (strip_quotes((*s_ptr)->str));
 }
 
-void	handle_heredoc_signal(void)
+void	reset_stdin(void)
 {
 	int	fd;
 
-	if (g_last_signal != 420)
-		return ;
 	fd = open("/dev/tty", O_RDONLY);
 	if (fd == -1)
 		return ;
@@ -57,14 +55,9 @@ void	handle_heredoc_signal(void)
 	close(fd);
 }
 
-void	update_token_after_heredoc(t_token *tok, \
-	t_ast_redir *tree, t_str *s_ptr)
+void	handle_heredoc_signal(void)
 {
-	tok->len = ft_strlen(tok->value);
-	tree->direction = INPUT;
-	free_tok_lst(tok->nospace_next);
-	tok->nospace_next = NULL;
-	free(s_ptr->str);
-	free(s_ptr);
-	tok->to_expand = false;
+	if (g_last_signal != 420)
+		return ;
+	reset_stdin();
 }

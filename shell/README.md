@@ -6,7 +6,6 @@
 - [Minishell Overview](#overview)
 - [Component Documentation](#component-documentation)
   - [Builtin Commands](src/builtin/README.md)
-  - [Environment Management](src/env/README.md)
   - [Execution System](src/execution/README.md)
   - [Expander Module](src/expander/README.md)
   - [Here-Document Handler](src/here-doc/README.md)
@@ -113,15 +112,16 @@ graph TD
 ### Directory Structure
 ```
 src/
-├── lexer/      - Tokenization and lexical analysis
-├── parser/     - Command parsing and AST generation
-├── expander/   - Variable and wildcard expansion
-├── execution/  - Command execution and process management
-├── env/        - Environment variable handling
-├── builtin/    - Built-in command implementation
-├── signals/    - Signal handling and management
-├── here-doc/   - Here-document implementation
-└── main/       - Shell initialization and main loop
+├── lexer/           - Tokenization and lexical analysis
+│   ├── errors/     - Error message handling
+│   └── exit_status/ - Exit status management
+├── parser/          - Command parsing and AST generation
+├── expander/        - Variable and wildcard expansion
+├── execution/       - Command execution and process management
+├── builtin/         - Built-in command implementation
+├── signals/         - Signal handling and management
+├── here-doc/        - Here-document implementation
+└── main/           - Shell initialization and main loop
 ```
 
 ## Error Handling

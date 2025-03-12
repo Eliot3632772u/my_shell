@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_helpers_3.c                               :+:      :+:    :+:   */
+/*   redirection_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:16:40 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 03:52:58 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 23:31:39 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ void	exec_pipe(t_ast_binary *tree, bool forked)
 		handle_dups(tree->right, fd, STDIN_FILENO);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pids[0], &exit_status, 0);
 	waitpid(pids[1], &exit_status, 0);
+	waitpid(pids[0], NULL, 0);
 	termsig = WTERMSIG(exit_status);
 	if (WIFSIGNALED(exit_status) && termsig == SIGQUIT)
 		ft_printf("Quit (core dumped)\n");

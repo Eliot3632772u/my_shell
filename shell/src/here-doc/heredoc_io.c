@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_helpers.c                                  :+:      :+:    :+:   */
+/*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:07:05 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/05 07:16:37 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/12 00:05:00 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ void	process_and_write_line(char *line, int fd, t_heredoc_opts opts)
 bool	handle_heredoc_line(char *line, char *delim, \
 	int fd, t_heredoc_opts opts)
 {
-	if (!delim || !*delim)
-		return (line[0] == '\0');
 	if (is_delimiter(line, delim, opts))
 		return (true);
 	process_and_write_line(line, fd, opts);

@@ -30,20 +30,27 @@ graph TD
 
 ```mermaid
 graph LR
-    A[heredoc.c] --> B[Core Logic]
+    A[Heredoc Module] --> B[heredoc_processor.c]
+    B --> C[Core Logic]
     
-    C[helpers] --> D[Basic Utils]
-    C --> E[Quote Process]
-    C --> F[File Handle]
-    C --> G[Cleanup]
+    A --> D[Support Modules]
+    D --> E[heredoc_utils.c]
+    D --> F[heredoc_io.c]
+    D --> G[heredoc_signals.c]
+    D --> H[heredoc_cleanup.c]
+    
+    E --> I[Basic Utilities]
+    F --> J[I/O Operations]
+    G --> K[Signal Management]
+    H --> L[Resource Cleanup]
 ```
 
 ### Main Components
-1. `heredoc_processor.c` - Core heredoc functionality
-2. `heredoc_utils.c` - Basic heredoc utilities
-3. `heredoc_io.c` - Input/output handling
-4. `heredoc_signals.c` - Signal handling
-5. `heredoc_cleanup.c` - Cleanup and file management
+1. `heredoc_processor.c` - Core heredoc functionality and main processing loop
+2. `heredoc_utils.c` - Utility functions and helper operations
+3. `heredoc_io.c` - File I/O and input/output stream management
+4. `heredoc_signals.c` - Signal handling and interrupt management
+5. `heredoc_cleanup.c` - Resource cleanup and temporary file management
 
 ## Processing Pipeline
 

@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 01:07:52 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 03:38:03 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/11 23:36:30 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	print_err(char *preced, int msg_code)
 	if (msg_code == 0)
 		perror(sb->str);
 	else
-		ft_putstr_fd(sb->str, 2);
+		write(2, sb->str, ft_strlen(sb->str));
 	sb_free(sb);
 	return (msg_code);
 }
