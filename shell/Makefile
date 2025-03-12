@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/12 00:51:36 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/12 08:14:07 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include # -g -fsanitize=address
 
 OBJSDIR = objs/
 
@@ -46,7 +46,8 @@ src/execution/execution_utils.c \
 src/execution/pipe_operations.c \
 src/execution/file_operations.c \
 src/execution/environment_setup.c \
-src/execution/cleanup_operations.c \
+src/execution/redirection_processor.c \
+src/execution/wrapped_functions.c \
 src/expander/expander_core.c \
 src/expander/variable_expansion.c \
 src/expander/path_expansion.c \

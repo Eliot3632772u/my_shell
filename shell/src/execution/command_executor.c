@@ -1,29 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_helpers.c                                 :+:      :+:    :+:   */
+/*   command_executor.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:12:45 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 08:52:48 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/12 08:06:19 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-pid_t	ft_fork(void)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		print_err("fork", 0);
-		exit(1);
-	}
-	return (pid);
-}
 
 char	*find_path(t_env *envp)
 {
