@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 10:59:39 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/12 00:50:57 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,11 @@ void			sort_str_list(t_str **lst);
 bool			expand_environment_variable(t_chunk_info *info, size_t len);
 char			**handle_argv_cases(t_str *argv_lst, t_str *args);
 char			**handle_empty_str_case(void);
+t_str			*process_command(t_token *cmd_token);
+void			add_to_args_list(t_str **args, t_str *new_list);
+void			handle_wildcard_argument(t_str *arg_list, t_str **args);
+void			process_single_argument(t_token *arg_token, t_str **args);
+t_str			*process_arguments(t_token *args_token);
 
 // attributs
 enum

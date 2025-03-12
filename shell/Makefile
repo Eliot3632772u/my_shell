@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/11 10:51:06 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/12 00:51:36 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ src/expander/variable_expansion.c \
 src/expander/path_expansion.c \
 src/expander/quote_handling.c \
 src/expander/expansion_utils.c \
+src/expander/expansion_utils_2.c \
 src/expander/wildcard_expansion.c \
 src/expander/string_manipulation.c \
 src/expander/string_utils.c \
