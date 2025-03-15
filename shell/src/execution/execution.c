@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_helpers.c                                :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:50:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/13 12:53:06 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 16:58:26 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	prepare_execution(char ***argv, t_ast_exec *exe)
+bool	prepare_execution(char ***argv, t_ast *exe)
 {
 	*argv = expand_args(exe->argv_tok);
 	if (!*argv || !(*argv)[0])
@@ -54,7 +54,7 @@ int	handle_builtin_redir(t_ast_redir *tree, int fd_to_dup)
 		return (0);
 	if (!setup_builtin_redirection(tree, fd_to_dup, &old_fd))
 		return (0);
-	executor(tree->cmd, 0);
+	// executor(tree->cmd, 0);
 	dup2(old_fd, tree->fd);
 	close(old_fd);
 	return (1);
@@ -76,7 +76,7 @@ int	setup_builtin_redirection(t_ast_redir *tree, int fd_to_dup,
 	return (1);
 }
 
-void	executor(t_ast_cmd *tree, bool forked)
+void	executor(t_ast *tree, bool forked)
 {
 	if (!tree)
 	{
@@ -85,15 +85,13 @@ void	executor(t_ast_cmd *tree, bool forked)
 		return ;
 	}
 	if (tree->type == P_AND)
-		exec_and((t_ast_binary *)tree, forked);
+		exec_and(tree, forked);
 	else if (tree->type == P_OR)
-		exec_or((t_ast_binary *)tree, forked);
+		exec_or(tree, forked);
 	else if (tree->type == P_PIPE)
-		exec_pipe((t_ast_binary *)tree, forked);
+		exec_pipe(tree, forked);
 	else if (tree->type == P_EXEC)
-		exec_exe((t_ast_exec *)tree, forked);
-	else if (tree->type == P_REDIR)
-		exec_redir((t_ast_redir *)tree, forked);
+		exec_exe(tree, forked);
 	else if (tree->type == P_SUBSH)
-		exec_subsh((t_ast_subsh *)tree, forked);
+		exec_subsh(tree, forked);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_signals.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:51:55 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/14 13:03:07 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 17:02:20 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_heredoc_signal(void)
 	reset_stdin();
 }
 
-int	process_heredoc_input(int fd, char *delim, t_heredoc_opts opts)
+int	process_heredoc_input(int fd, char *delim)
 {
 	char	*line;
 
@@ -39,7 +39,7 @@ int	process_heredoc_input(int fd, char *delim, t_heredoc_opts opts)
 		line = readline("> ");
 		if (!line || g_last_signal == 420)
 			return (g_last_signal == 420);
-		if (handle_heredoc_line(line, delim, fd, opts))
+		if (handle_heredoc_line(line, delim, fd))
 		{
 			free(line);
 			return (0);

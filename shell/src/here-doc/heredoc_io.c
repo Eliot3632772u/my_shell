@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:47:45 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/14 12:49:01 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 17:01:31 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,42 +29,18 @@ char	*strip_leading_tabs(char *line)
 	return (ft_strdup(line + count_leading_tabs(line)));
 }
 
-bool	is_delimiter(char *line, char *delim, t_heredoc_opts opts)
+bool	is_delimiter(char *line, char *delim)
 {
-	char	*processed;
-	bool	result;
-
-	if (opts.strip_tabs)
-	{
-		processed = strip_leading_tabs(line);
-		result = (ft_strlen(processed) == ft_strlen(delim)
-				&& !ft_strncmp(delim, processed, ft_strlen(delim)));
-		free(processed);
-		return (result);
-	}
 	return (ft_strlen(line) == ft_strlen(delim)
 		&& !ft_strncmp(delim, line, ft_strlen(delim)));
 }
 
-void	process_and_write_line(char *line, int fd, t_heredoc_opts opts)
-{
-	char	*processed_line;
-	char	*expanded_line;
-
-	if (opts.strip_tabs)
-		processed_line = strip_leading_tabs(line);
-	else
-		processed_line = ft_strdup(line);
-	expanded_line = expand_env(processed_line, false, !opts.expandable);
-	ft_putendl_fd(expanded_line, fd);
-	free(expanded_line);
-}
-
 bool	handle_heredoc_line(char *line, char *delim, \
-	int fd, t_heredoc_opts opts)
+	int fd)
 {
-	if (is_delimiter(line, delim, opts))
+	if (is_delimiter(line, delim))
 		return (true);
-	process_and_write_line(line, fd, opts);
+	ft_putendl_fd(line, fd);
+	free(line);
 	return (false);
 }

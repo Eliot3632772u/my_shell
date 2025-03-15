@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_and_logic_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:58:14 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/13 13:06:49 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 16:55:44 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	handle_dups(t_ast_cmd *sub_tree, int *fd, int fd_num)
+void	handle_dups(t_ast *sub_tree, int *fd, int fd_num)
 {
 	reset_default_sig_handlers();
 	signal(SIGQUIT, SIG_DFL);
@@ -24,7 +24,7 @@ void	handle_dups(t_ast_cmd *sub_tree, int *fd, int fd_num)
 	exit(get_exit_status());
 }
 
-void	exec_pipe(t_ast_binary *tree, bool forked)
+void	exec_pipe(t_ast *tree, bool forked)
 {
 	int		fd[2];
 	pid_t	pids[2];
@@ -53,32 +53,36 @@ void	exec_pipe(t_ast_binary *tree, bool forked)
 		exit(get_exit_status());
 }
 
-void	exec_or(t_ast_binary *tree, bool forked)
+void	exec_or(t_ast *tree, bool forked)
 {
-	executor((t_ast_cmd *)tree->left, false);
+	executor(tree->left, false);
 	if (get_exit_status())
-		executor((t_ast_cmd *)tree->right, false);
+		executor(tree->right, false);
 	if (forked)
 		exit(get_exit_status());
 }
 
-void	exec_and(t_ast_binary *tree, bool forked)
+void	exec_and(t_ast *tree, bool forked)
 {
-	executor((t_ast_cmd *)tree->left, false);
+	executor(tree->left, false);
 	if (!get_exit_status())
-		executor((t_ast_cmd *)tree->right, false);
+		executor(tree->right, false);
 	if (forked)
 		exit(get_exit_status());
 }
 
-void	exec_subsh(t_ast_subsh *tree, bool forked)
+void	exec_subsh(t_ast *tree, bool forked)
 {
 	pid_t	pid;
 	int		exit_status;
 
 	pid = ft_fork_wrapper(NULL, 0);
 	if (!pid)
-		executor(tree->cmd, true);
+	{
+		if (exec_redc(tree->redc, SET))
+			return ((void)(exec_redc(tree->redc, RESET)));
+		executor(tree->left, true);
+	}
 	waitpid(pid, &exit_status, 0);
 	set_exit_status(WEXITSTATUS(exit_status));
 	if (forked)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser_core.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:52:02 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/06 20:31:31 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 17:34:11 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,5 @@ bool	parser(t_token *tokens, t_ast_cmd **tree)
 		return (free_tok_lst(tokens), false);
 	}
 	free_tok_lst(tokens);
-	return (ft_heredoc(*tree));
+	return (true);
 }

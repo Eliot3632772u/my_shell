@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 10:48:40 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 18:04:02 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_token
 	bool			to_expand;
 	struct s_token	*nospace_next;
 	struct s_token	*next;
+	struct s_token	*prev;
 }			t_token;
 
 typedef struct s_heredoc_opts
@@ -112,10 +113,8 @@ void			unclosed_error(char err);
 void			syntax_error(char *err);
 int				print_err(char *preced, int msg_code);
 void			free_tok_lst(t_token *tok);
-char			*handle_heredoc(char *delim, t_heredoc_opts opts);
+char			*handle_heredoc(char *delim);
 char			*ft_mktmp(void);
-int				ft_heredoc(t_ast_cmd *tree);
-int				patch_token(t_ast_redir *tree);
 bool			is_expandable(t_token *tok);
 t_token			*ft_toklast(t_token *lst);
 void			ft_tokadd_back(t_token **lst, t_token *new_tok);
@@ -123,17 +122,16 @@ void			ft_tokiter(t_token *lst, void (*f)(void *));
 void			add_to_sublist(t_token **list, t_token *new_tok);
 bool			add_token(t_token **tokens, t_token *token, bool is_space);
 bool			handle_heredoc_line(char *line, char *delim, \
-	int fd, t_heredoc_opts opts);
+	int fd);
 int				init_heredoc(char *delim, char **tmp_file, int *fd);
 char			*strip_leading_tabs(char *line);
 bool			is_expandable(t_token *tok);
-bool			is_delimiter(char *line, char *delim, t_heredoc_opts opts);
-void			process_and_write_line(char *line, int fd, t_heredoc_opts opts);
+bool			is_delimiter(char *line, char *delim);
+void			process_and_write_line(char *line, int fd);
 size_t			count_leading_tabs(char *line);
 bool			is_empty_quoted_string(char *str);
 char			*strip_quotes(char *str);
 void			handle_heredoc_signal(void);
-int				process_heredoc_tree(t_ast_cmd *tree);
 void			cleanup_heredoc_file(char *tmp_file);
 void			cleanup_all_heredoc_files(void);
 void			reset_stdin(void);
@@ -182,6 +180,91 @@ typedef struct s_ast_subsh
 	t_node_type	type;
 	t_ast_cmd	*cmd;
 }				t_ast_subsh;
+
+// ---------------------------------------------------------------- 
+typedef struct          s_redirect
+{
+    t_token_type        type;           /* < , > , >> , << */
+    t_token             *file_tok; /* tokens that will be the file name or delemeter */
+	int					mode;
+	int					expand;
+    struct s_redirect   *next;
+    struct s_redirect   *prev;
+}                       t_redirect;
+
+typedef struct      s_ast 
+{
+    t_node_type      type;  // Node type (e.g., CMD, PIPE, etc.) 
+    t_token         *argv_tok; // tokens to be arguments      
+    t_redirect      *redc; // Linked list of redirections
+    struct s_ast    *left;    // Left subtree
+    struct s_ast    *right;   // Right subtree
+}                   t_ast;
+
+
+/* Lexer2 */
+
+void    lexer2(char *command_line, t_token **tokens);
+void    handle_special(char **command_line, t_token **tokens, int *concate);
+void    tok_str(char **command, t_token **tokens, int *concate);
+void    handle_quotes(char **command, t_token **tokens, int *concate);
+void    and_tok(char **command, t_token **tokens);
+void    paren_tok(char **command, t_token **tokens);
+void    pipe_tok(char **command, t_token **tokens);
+void    out_tok(char **command, t_token **tokens);
+void    input_tok(char **command, t_token **tokens);
+t_token_type    check_type(char quote);
+void 	check_concate(char **command, int *concate);
+int	special_char(char c);
+int	is_wild_special(char **input);
+int	check_expand_status(char **input);
+int	is_delem(char **input);
+t_token_type    check_type(char quote);
+void check_concate(char **command, int *concate);
+void    input_tok(char **command, t_token **tokens);
+void    out_tok(char **command, t_token **tokens);
+void    pipe_tok(char **command, t_token **tokens);
+void    paren_tok(char **command, t_token **tokens);
+/* Parser2 */
+
+t_ast		*parser2(t_token **tok);
+t_ast		*unexpec_tok(t_token **tok, t_ast *ast);
+t_ast		*parse_logical(t_token **tok, int *err);
+t_ast		*parse_pipe2(t_token **tok, int *err);
+t_ast		*parse_redi(t_token **tok, int *err);
+t_ast		*parse_cmd2(t_token **tok, int *err);
+t_ast		*parse_sub(t_token **tok, int *err);
+void		free_redi(t_redirect *red);
+t_ast		*free_ast2(t_ast *ast);
+t_ast		*new_cmd(t_token *token);
+void		add_arg(t_token **argv_tok, t_token **tok);
+t_redirect	*new_redic(t_token_type type);
+t_token		*get_file_tokens(t_token **tok);
+int			add_redic(t_redirect **redic, t_token **tok);
+int			get_redic_mode(t_token *redic);
+t_ast		*new_ast(t_node_type type);
+void		free_tok_node(t_token **tok);
+int			check_logical(t_token_type type);
+int			check_redir(t_token_type type);
+int			check_cmd(t_token_type type);
+int			check_word(t_token_type type);
+t_ast	*parse_sub(t_token **tok, int *err);
+t_ast	*parse_cmd2(t_token **tok, int *err);
+
+/* REDIRECTIONS */
+
+int exec_redc(t_redirect *redc, int mode);
+int expand_redc_file(t_redirect *redc, char **file);
+
+
+int		ft_heredoc(t_ast *tree);
+int		patch_token(t_redirect *redc);
+int		process_heredoc_tree(t_ast *tree);
+void 	save_fd(int flag);
+int 	proc_heredoc_file(int fd, char *file);
+int 	exec_heredoc(t_redirect *redc, char **file);
+int 	open_dup_wrap(t_redirect *redc,char *file, int STD_FD);
+// ---------------------------------------------------------------- 
 
 bool			parser(t_token *tokens, t_ast_cmd **tree);
 t_ast_cmd		*parse_cmd(t_token **current);
@@ -242,9 +325,9 @@ typedef struct s_split_args
 	char			split_char;
 }					t_split_args;
 
-void			update_token_after_heredoc(t_token *tok, t_ast_redir *tree, \
+void			update_token_after_heredoc(t_token *tok, t_redirect *redc, \
 	t_str *s_ptr);
-char			*get_processed_delimiter(t_ast_redir *tree, t_str **s_ptr);
+char			*get_processed_delimiter(t_redirect*redc, t_str **s_ptr);
 t_str			*expand_wild_cards(t_str *argv_lst);
 void			wild_card(t_str **lst, t_str *expr);
 bool			wild_match(char *str, char *expr);
@@ -288,7 +371,7 @@ void			add_to_args_list(t_str **args, t_str *new_list);
 void			handle_wildcard_argument(t_str *arg_list, t_str **args);
 void			process_single_argument(t_token *arg_token, t_str **args);
 t_str			*process_arguments(t_token *args_token);
-int				process_heredoc_input(int fd, char *delim, t_heredoc_opts opts);
+int				process_heredoc_input(int fd, char *delim);
 
 // attributs
 enum
@@ -355,7 +438,7 @@ int				try_exec_env(char **cmd, t_env *env, char *full_path, \
 int				check_dir(char **cmd);
 int				try_local_path(char **cmd, t_env *env);
 int				execute_from_paths(char **cmd, t_env *env, char *path_var);
-void			executor(t_ast_cmd *tree, bool forked);
+void			executor(t_ast *tree, bool forked);
 void			free_list(char **list);
 pid_t			ft_fork(void);
 char			*find_path(t_env *envp);
@@ -365,14 +448,14 @@ bool			check_if_executable(char **cmd, char *exec, char **paths, \
 	t_env *env);
 bool			check_absolute_path(char **cmd, t_env *env);
 char			*check_file_tok(t_token *file_tok);
-void			handle_dups(t_ast_cmd *sub_tree, int *fd, int fd_num);
-void			exec_pipe(t_ast_binary *tree, bool forked);
-void			exec_or(t_ast_binary *tree, bool forked);
-void			exec_and(t_ast_binary *tree, bool forked);
+void			handle_dups(t_ast *sub_tree, int *fd, int fd_num);
+void			exec_pipe(t_ast *tree, bool forked);
+void			exec_or(t_ast *tree, bool forked);
+void			exec_and(t_ast *tree, bool forked);
 void			exit_if_forked(bool forked);
 void			exec_redir(t_ast_redir *tree, bool forked);
-void			exec_exe(t_ast_exec *exe, bool forked);
-void			exec_subsh(t_ast_subsh *tree, bool forked);
+void			exec_exe(t_ast *exe, bool forked);
+void			exec_subsh(t_ast *tree, bool forked);
 void			wait_and_exit_status(int pid);
 void			try_path_execution(char **cmd, char *try_path, t_env *env);
 int				try_direct_path(char **cmd, t_env *env);
@@ -397,9 +480,9 @@ int				open_redir_file(t_ast_redir *tree, \
 int				setup_builtin_redirection(t_ast_redir *tree, int fd_to_dup, \
 	int *old_fd);
 int				handle_builtin_redir(t_ast_redir *tree, int fd_to_dup);
-bool			prepare_execution(char ***argv, t_ast_exec *exe);
+bool			prepare_execution(char ***argv, t_ast *exe);
 bool			handle_builtins(char **argv, bool forked);
-bool			sanitize_argv(char ***argv, t_ast_exec *exe);
+bool			sanitize_argv(char ***argv, t_ast *exe);
 int				execute_direct_cmd(char **cmd, t_env *env);
 
 // builtins

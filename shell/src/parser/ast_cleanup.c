@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_ast.c                                         :+:      :+:    :+:   */
+/*   ast_cleanup.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:47:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 00:47:44 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 18:05:18 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,32 @@ void	free_redir(t_ast_cmd *sub_sh, t_ast_redir *redir_lst, t_token *exe_lst)
 	free_ast(sub_sh);
 	free_ast((t_ast_cmd *)redir_lst);
 	free_tok_lst(exe_lst);
+}
+
+t_ast	*free_ast2(t_ast *ast)
+{
+	if (!ast)
+		return (NULL);
+	free_ast2(ast->left);
+	free_ast2(ast->right);
+	free_redi(ast->redc);
+	ast->redc = NULL;
+	free_tok_lst(ast->argv_tok);
+	ast->argv_tok = NULL;
+	free(ast);
+	ast = NULL;
+	return (NULL);
+}
+
+void	free_redi(t_redirect *red)
+{
+	t_redirect	*tmp;
+
+	while (red)
+	{
+		tmp = red->next;
+		free_tok_lst(red->file_tok);
+		free(red);
+		red = tmp;
+	}
 }

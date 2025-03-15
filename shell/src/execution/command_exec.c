@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:44:13 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/14 12:08:42 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 17:38:07 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,17 +106,20 @@ int	execute_direct_path(char **cmd, t_env *env)
 	return (0);
 }
 
-void	exec_exe(t_ast_exec *exe, bool forked)
+void	exec_exe(t_ast *exe, bool forked)
 {
 	char	**argv;
 	pid_t	pid;
 	t_env	*envp;
 
+	// set_exit_status(0);
+	if (exec_redc(exe->redc, SET))
+		return ((void)(exec_redc(exe->redc, RESET)));
 	if (!prepare_execution(&argv, exe))
-		return ;
+		return ((void)(exec_redc(exe->redc, RESET)));
 	envp = get_envp(NULL);
 	if (handle_builtins(argv, forked))
-		return ;
+		return ((void)(exec_redc(exe->redc, RESET)));
 	if (!forked)
 		pid = ft_fork();
 	if (forked || !pid)
@@ -126,6 +129,7 @@ void	exec_exe(t_ast_exec *exe, bool forked)
 		exit(get_exit_status());
 	}
 	wait_and_exit_status(pid);
+	exec_redc(exe->redc, RESET);
 	free_list(argv);
 	exit_if_forked(forked);
 }

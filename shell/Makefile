@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
+#    By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/15 10:48:01 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/15 18:09:39 by irabhi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,15 @@ SRCS = src/main/minishell.c \
 src/main/prompt_handler.c \
 src/lexer/lexer_core.c \
 src/lexer/token_analyzer.c \
+src/lexer/lexer2.c \
+src/lexer/lexer2_utils.c \
+src/parser/parser2.c \
+src/parser/parser2_utils.c \
+src/execution/exec_redc.c \
+src/execution/exec_redc_utils.c\
+src/lexer/lexer2_utils2.c\
+src/parser/parser2_utils2.c\
+src/parser/parser2_checks.c\
 src/lexer/token_validation.c \
 src/lexer/token_creation.c \
 src/lexer/token_manipulation.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg_processing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:46:57 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/13 13:10:49 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 16:52:40 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	shift_argv(char ***argv)
 	(*argv)[i] = NULL;
 }
 
-bool	sanitize_argv(char ***argv, t_ast_exec *exe)
+bool	sanitize_argv(char ***argv, t_ast *exe)
 {
 	char	*first_arg;
 	t_token	*tok;

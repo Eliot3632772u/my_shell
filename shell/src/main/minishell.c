@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/13 10:24:32 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 17:14:01 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,18 @@ void	setup(char **envp, struct termios *attrs, ...)
 bool	run(char *command_line)
 {
 	t_token		*tokens;
-	t_ast_cmd	*ast;
+	t_ast	*ast;
 
+	ast = NULL;
+	tokens = NULL;
 	if (!command_line)
 	{
 		ft_putendl_fd("exit", 1);
 		return (free(command_line), true);
 	}
-	lexer(command_line, &tokens);
-	if (parser(tokens, &ast))
+	lexer2(command_line, &tokens);
+	ast = parser2(&tokens);
+	if (ast)
 	{
 		if (g_last_signal != 420 && ft_heredoc(ast))
 			executor(ast, false);
@@ -95,7 +98,7 @@ bool	run(char *command_line)
 	{
 		add_history(command_line);
 	}
-	return (free_ast(ast), free(command_line), false);
+	return (free_ast2(ast), free(command_line), false);
 }
 
 int	main(int _, char **__, char **envp)

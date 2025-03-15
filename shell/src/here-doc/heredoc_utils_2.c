@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 13:02:32 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/14 13:03:41 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 17:09:22 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ char	*strip_quotes(char *str)
 	return (ft_strdup(str));
 }
 
-char	*get_processed_delimiter(t_ast_redir *tree, t_str **s_ptr)
+char	*get_processed_delimiter(t_redirect *redc, t_str **s_ptr)
 {
-	expand_nosp_arg(tree->file_tok, s_ptr, 1);
+	expand_nosp_arg(redc->file_tok, s_ptr, 1);
 	return (strip_quotes((*s_ptr)->str));
 }
