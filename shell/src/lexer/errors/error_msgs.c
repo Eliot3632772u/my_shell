@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 01:07:52 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 23:36:30 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/13 11:05:14 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,8 @@ void	syntax_error(char *err)
 	write(2, "'\n", 2);
 }
 
-int	print_err(char *preced, int msg_code)
+static void	handle_err_messages(t_strbuilder *sb, int msg_code)
 {
-	t_strbuilder	*sb;
-
-	sb = stringbuilder();
-	sb_append(sb_append(sb, "Minishell: "), preced);
 	if (msg_code == -1)
 		(sb_append(sb, ": command not found\n"), set_exit_status(127));
 	else if (msg_code == -69)
@@ -56,6 +52,17 @@ int	print_err(char *preced, int msg_code)
 		(sb_append(sb, ": No such file or directory\n"), set_exit_status(127));
 	else if (msg_code == -6)
 		(sb_append(sb, ": numeric argument required\n"), set_exit_status(255));
+	else if (msg_code == -7)
+		(sb_append(sb, ": Permission denied\n"), set_exit_status(126));
+}
+
+int	print_err(char *preced, int msg_code)
+{
+	t_strbuilder	*sb;
+
+	sb = stringbuilder();
+	sb_append(sb_append(sb, "Minishell: "), preced);
+	handle_err_messages(sb, msg_code);
 	if (msg_code == 0)
 		perror(sb->str);
 	else

@@ -5,44 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/04 11:13:44 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 11:02:59 by yrafai           ###   ########.fr       */
+/*   Created: 2025/03/14 12:51:55 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/14 13:03:07 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-bool	is_empty_quoted_string(char *str)
-{
-	return (str && str[0] && str[1] && !str[2]
-		&& ((str[0] == '"' && str[1] == '"')
-			|| (str[0] == '\'' && str[1] == '\'')));
-}
-
-char	*strip_quotes(char *str)
-{
-	int		len;
-	char	*result;
-
-	if (!str || !*str)
-		return (ft_strdup(""));
-	if (is_empty_quoted_string(str))
-		return (ft_strdup(""));
-	len = ft_strlen(str);
-	if (len >= 2 && (str[0] == '"' || str[0] == '\'')
-		&& str[0] == str[len - 1])
-	{
-		result = ft_substr(str, 1, len - 2);
-		return (result);
-	}
-	return (ft_strdup(str));
-}
-
-char	*get_processed_delimiter(t_ast_redir *tree, t_str **s_ptr)
-{
-	expand_nosp_arg(tree->file_tok, s_ptr, 1);
-	return (strip_quotes((*s_ptr)->str));
-}
 
 void	reset_stdin(void)
 {
@@ -60,4 +28,36 @@ void	handle_heredoc_signal(void)
 	if (g_last_signal != 420)
 		return ;
 	reset_stdin();
+}
+
+int	process_heredoc_input(int fd, char *delim, t_heredoc_opts opts)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || g_last_signal == 420)
+			return (g_last_signal == 420);
+		if (handle_heredoc_line(line, delim, fd, opts))
+		{
+			free(line);
+			return (0);
+		}
+	}
+}
+
+void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	set_exit_status(130);
+	g_last_signal = 420;
+	rl_free_line_state();
+	rl_cleanup_after_signal();
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	close(STDIN_FILENO);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

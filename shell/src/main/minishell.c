@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/12 08:30:04 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/13 10:24:32 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,6 @@ int	main(int _, char **__, char **envp)
 
 	if (_ > 1)
 		return (printf("Not valid Arguments\n"), 127);
-	if (!__[0] || (ft_strncmp(__[0], "./", 2) != 0
-			&& ft_strncmp(__[0], "/", 1) != 0))
-		return (print_err(__[0], -1), 127);
 	setup(envp, attrs, _, __);
 	while (true)
 	{

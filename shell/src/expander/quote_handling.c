@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_helpers_3.c                               :+:      :+:    :+:   */
+/*   quote_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 07:21:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 03:22:39 by yrafai           ###   ########.fr       */
+/*   Created: 2025/03/15 10:21:13 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/15 10:22:04 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,31 +32,6 @@ char	*expand_tilde(char *str)
 	return (result);
 }
 
-char	*expand(t_token *tok, bool ignore_env)
-{
-	char	*str;
-
-	if (is_standalone_dollar_star(tok->value))
-		return (NULL);
-	if (tok->type == WORD && is_dollar_quoted_str(tok->value))
-		return (handle_dollar_quoted(tok->value));
-	if (tok->type == DQSTR)
-		str = ft_strtrim(tok->value, "\"");
-	else if (tok->type == STR)
-		str = ft_strtrim(tok->value, "'");
-	else
-		str = ft_strdup(tok->value);
-	if (!str)
-		return (NULL);
-	if (tok->type != DQSTR && tok->type != STR)
-		str = expand_tilde(str);
-	if (ft_strcmp(str, "$?") == 0)
-		tok->to_expand = true;
-	if (!tok->to_expand || ignore_env)
-		return (str);
-	return (expand_env(str, tok->type == DQSTR, ignore_env));
-}
-
 void	should_split_token(t_split_args *args, bool is_first_token,
 	bool is_export_val)
 {
@@ -65,10 +40,15 @@ void	should_split_token(t_split_args *args, bool is_first_token,
 	(void)is_first_token;
 	(void)is_export_val;
 	should_split = (args->sub_tok->type == WORD
-			&& args->sub_tok->to_expand && ft_strchr(args->to_join, ' '));
+			&& args->sub_tok->to_expand
+			&& (ft_strchr(args->to_join, ' ')
+				|| ft_strchr(args->to_join, '\t')));
 	if (should_split)
 	{
-		args->split_char = ' ';
+		if (ft_strchr(args->to_join, '\t'))
+			args->split_char = '\t';
+		else
+			args->split_char = ' ';
 		handle_split_args(args);
 	}
 	else if (ft_strchr(args->to_join, HIDDEN_SEPARATOR))
@@ -121,4 +101,29 @@ bool	handle_chunk(t_chunk_info *info)
 			return (false);
 	}
 	return (true);
+}
+
+char	*expand(t_token *tok, bool ignore_env)
+{
+	char	*str;
+
+	if (is_standalone_dollar_star(tok->value))
+		return (NULL);
+	if (tok->type == WORD && is_dollar_quoted_str(tok->value))
+		return (handle_dollar_quoted(tok->value));
+	if (tok->type == DQSTR)
+		str = ft_strtrim(tok->value, "\"");
+	else if (tok->type == STR)
+		str = ft_strtrim(tok->value, "'");
+	else
+		str = ft_strdup(tok->value);
+	if (!str)
+		return (NULL);
+	if (tok->type != DQSTR && tok->type != STR)
+		str = expand_tilde(str);
+	if (ft_strcmp(str, "$?") == 0)
+		tok->to_expand = true;
+	if (!tok->to_expand || ignore_env)
+		return (str);
+	return (expand_env(str, tok->type == DQSTR, ignore_env));
 }

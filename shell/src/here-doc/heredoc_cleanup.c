@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 10:39:51 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 11:03:16 by yrafai           ###   ########.fr       */
+/*   Created: 2025/03/14 12:54:52 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/14 12:55:59 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	process_heredoc_file(char *file_name, t_strbuilder *sb, \
+void	process_heredoc_file(char *file_name, t_strbuilder *sb, \
 	char **full_path)
 {
 	*full_path = NULL;
@@ -38,7 +38,7 @@ void	cleanup_heredoc_file(char *tmp_file)
 	}
 }
 
-static void	process_heredoc_entries(DIR *dir)
+void	process_heredoc_entries(DIR *dir)
 {
 	struct dirent	*entry;
 	char			*full_path;

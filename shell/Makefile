@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/12 08:14:07 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/15 10:48:01 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include # -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=address
 
 OBJSDIR = objs/
 
@@ -37,51 +37,49 @@ src/parser/ast_cleanup.c \
 src/parser/ast_node_operations.c \
 src/parser/ast_validation.c \
 src/parser/recursive_descent_parser.c \
-src/execution/executor_core.c \
-src/execution/command_executor.c \
-src/execution/pipeline_executor.c \
-src/execution/redirection_handler.c \
-src/execution/process_manager.c \
-src/execution/execution_utils.c \
-src/execution/pipe_operations.c \
-src/execution/file_operations.c \
-src/execution/environment_setup.c \
-src/execution/redirection_processor.c \
-src/execution/wrapped_functions.c \
-src/expander/expander_core.c \
-src/expander/variable_expansion.c \
-src/expander/path_expansion.c \
-src/expander/quote_handling.c \
+src/execution/arg_processing.c \
+src/execution/dir_handling.c \
+src/execution/command_exec.c \
+src/execution/error_handling.c \
+src/execution/execution.c \
+src/execution/file_execution.c \
+src/execution/path_utils.c \
+src/execution/pipe_and_logic_exec.c \
+src/execution/process_management.c \
+src/execution/redir_handling.c \
+src/expander/argv_handling.c \
+src/expander/command_processing.c \
+src/expander/env_expansion.c \
+src/expander/env_var_helpers.c \
 src/expander/expansion_utils.c \
-src/expander/expansion_utils_2.c \
+src/expander/quote_handling.c \
+src/expander/split_utils.c \
+src/expander/str_list_sorting.c \
+src/expander/str_list_utils.c \
+src/expander/str_utils_helpers.c \
 src/expander/wildcard_expansion.c \
-src/expander/string_manipulation.c \
-src/expander/string_utils.c \
-src/expander/string_lists.c \
-src/expander/string_operations.c \
-src/expander/pattern_matching.c \
-src/here-doc/heredoc_processor.c \
+src/here-doc/heredoc_core.c \
 src/here-doc/heredoc_io.c \
 src/here-doc/heredoc_signals.c \
 src/here-doc/heredoc_utils.c \
+src/here-doc/heredoc_utils_2.c \
 src/here-doc/heredoc_cleanup.c \
 src/signals/signal_manager.c \
 src/builtin/builtin_dispatcher.c \
-src/builtin/cd/directory_change.c \
+src/builtin/cd/ft_cd.c \
+src/builtin/cd/ft_cd_utils.c \
 src/builtin/cd/path_resolution.c \
-src/builtin/cd/directory_utils.c \
-src/builtin/echo/echo_handler.c \
-src/builtin/exit/exit_handler.c \
-src/builtin/export/export_handler.c \
-src/builtin/export/variable_operations.c \
-src/builtin/export/export_utils.c \
-src/builtin/pwd/pwd_handler.c \
-src/builtin/unset/unset_handler.c \
-src/builtin/env/env_display.c \
-src/env/env_core.c \
-src/env/env_variables.c \
-src/env/env_utils.c \
-src/env/env_list_operations.c
+src/builtin/echo/ft_echo.c \
+src/builtin/exit/ft_exit.c \
+src/builtin/export/ft_export.c \
+src/builtin/export/ft_export_utils.c \
+src/builtin/pwd/ft_pwd.c \
+src/builtin/unset/ft_unset.c \
+src/builtin/env/ft_env.c \
+src/environment/env_core.c \
+src/environment/env_lists.c \
+src/environment/env_variables.c \
+src/environment/env_utils.c \
 
 OBJS = $(SRCS:%.c=$(OBJSDIR)%.o)
 
@@ -112,7 +110,7 @@ $(OBJSDIR):
 	@mkdir -p $(OBJSDIR)/src/builtin/pwd
 	@mkdir -p $(OBJSDIR)/src/builtin/unset
 	@mkdir -p $(OBJSDIR)/src/builtin/env
-	@mkdir -p $(OBJSDIR)/src/env
+	@mkdir -p $(OBJSDIR)/src/environment
 
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "Building minishell..."

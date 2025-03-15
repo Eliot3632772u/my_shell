@@ -1,0 +1,109 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_core.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/14 12:42:31 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/14 12:45:23 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+
+int	process_heredoc_tree(t_ast_cmd *tree)
+{
+	int	type;
+
+	if (!tree)
+		return (1);
+	type = tree->type;
+	if (type == P_AND || type == P_OR || type == P_PIPE)
+	{
+		if (!process_heredoc_tree(((t_ast_binary *)tree)->left))
+			return (0);
+		return (process_heredoc_tree(((t_ast_binary *)tree)->right));
+	}
+	else if (tree->type == P_SUBSH)
+		return (process_heredoc_tree(((t_ast_subsh *)tree)->cmd));
+	else if (tree->type == P_REDIR)
+	{
+		if (((t_ast_redir *)tree)->direction == HEREDOC
+			|| ((t_ast_redir *)tree)->direction == HEREDOC_TAB)
+			if (!patch_token((t_ast_redir *)tree))
+				return (0);
+		return (process_heredoc_tree(((t_ast_redir *)tree)->cmd));
+	}
+	return (1);
+}
+
+char	*handle_heredoc(char *delim, t_heredoc_opts opts)
+{
+	char	*tmp_file;
+	int		fd;
+	int		interrupted;
+
+	if (!init_heredoc(delim, &tmp_file, &fd))
+		return (NULL);
+	signal(SIGINT, heredoc_sigint_handler);
+	interrupted = process_heredoc_input(fd, delim, opts);
+	close(fd);
+	if (interrupted)
+	{
+		cleanup_heredoc_file(tmp_file);
+		return (NULL);
+	}
+	reset_stdin();
+	return (tmp_file);
+}
+
+char	*ft_mktmp(void)
+{
+	t_strbuilder	*sb;
+	char			*name;
+	int				fd;
+	static int		counter = 0;
+
+	counter++;
+	sb = stringbuilder();
+	sb_append(sb, "/tmp/.Minishell_HEREDOC_");
+	sb_append_int(sb, counter);
+	name = ft_strdup(sb->str);
+	sb_free(sb);
+	fd = open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
+	if (fd != -1)
+	{
+		unlink(name);
+		close(fd);
+		return (name);
+	}
+	free(name);
+	return (NULL);
+}
+
+int	init_heredoc(char *delim, char **tmp_file, int *fd)
+{
+	if (!delim)
+		return (0);
+	*tmp_file = ft_mktmp();
+	*fd = open(*tmp_file, O_RDWR | O_CREAT | O_EXCL, 0640);
+	if (*fd < 0)
+	{
+		print_err(*tmp_file, 0);
+		set_exit_status(1);
+		return (0);
+	}
+	return (1);
+}
+
+int	ft_heredoc(t_ast_cmd *tree)
+{
+	bool	result;
+
+	if (!process_heredoc_tree(tree))
+		return (0);
+	result = (g_last_signal != 420);
+	reset_stdin();
+	return (result);
+}

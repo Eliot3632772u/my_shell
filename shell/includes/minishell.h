@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/12 00:50:57 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/15 10:48:40 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,7 @@ char			*get_processed_delimiter(t_ast_redir *tree, t_str **s_ptr);
 t_str			*expand_wild_cards(t_str *argv_lst);
 void			wild_card(t_str **lst, t_str *expr);
 bool			wild_match(char *str, char *expr);
+char			**handle_wildcard_expansion(t_str *argv_lst, t_str *args);
 char			**expand_args(t_token *tok_lst);
 void			expand_nosp_arg(t_token *sub_tok, t_str **lst, bool ignore_env);
 char			*expand(t_token *tok, bool ignore_env);
@@ -287,6 +288,7 @@ void			add_to_args_list(t_str **args, t_str *new_list);
 void			handle_wildcard_argument(t_str *arg_list, t_str **args);
 void			process_single_argument(t_token *arg_token, t_str **args);
 t_str			*process_arguments(t_token *args_token);
+int				process_heredoc_input(int fd, char *delim, t_heredoc_opts opts);
 
 // attributs
 enum
@@ -348,8 +350,11 @@ void			install_default_sig_handlers(void);
 
 // execution
 
-int				try_direct_path(char **cmd, t_env *env);
+int				try_exec_env(char **cmd, t_env *env, char *full_path, \
+	char **paths);
 int				check_dir(char **cmd);
+int				try_local_path(char **cmd, t_env *env);
+int				execute_from_paths(char **cmd, t_env *env, char *path_var);
 void			executor(t_ast_cmd *tree, bool forked);
 void			free_list(char **list);
 pid_t			ft_fork(void);
@@ -389,9 +394,16 @@ void			handle_nonforked_redir(t_ast_redir *tree);
 void			handle_forked_redir(t_ast_redir *tree);
 int				open_redir_file(t_ast_redir *tree, \
 	char *file_name, bool forked);
+int				setup_builtin_redirection(t_ast_redir *tree, int fd_to_dup, \
+	int *old_fd);
+int				handle_builtin_redir(t_ast_redir *tree, int fd_to_dup);
+bool			prepare_execution(char ***argv, t_ast_exec *exe);
+bool			handle_builtins(char **argv, bool forked);
+bool			sanitize_argv(char ***argv, t_ast_exec *exe);
+int				execute_direct_cmd(char **cmd, t_env *env);
 
 // builtins
-int				ft_cd(char *arg, t_env *env);
+int				ft_cd(char *arg, t_env *env, int use_dash_dash);;
 char			*join_path_with_dir(char *curr_pwd, char *dir);
 char			*construct_manual_path(char *dir, char *curr_pwd);
 char			*handle_fallback_case(char *dir, char *curr_pwd);

@@ -5,56 +5,72 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 08:25:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/12 00:49:40 by yrafai           ###   ########.fr       */
+/*   Created: 2025/03/15 10:31:15 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/15 10:38:36 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	expand_environment_variable(t_chunk_info *info, size_t len)
+char	**handle_wildcard_expansion(t_str *argv_lst, t_str *args)
 {
-	t_env_var	env;
-	char		*expanded;
-
-	env.chunk = *(info->chunk);
-	env.ptr = info->ptr;
-	env.len = len;
-	env.in_quote = info->in_quote;
-	env.offset = info->offset;
-	expanded = handle_env_var(&env);
-	*(info->chunk) = expanded;
-	if (!*(info->chunk))
-		return (false);
-	if (!info->in_quote && info->ptr[len] == '\0' && expanded
-		&& (ft_strchr(*(info->chunk), ' ') || ft_strchr(*(info->chunk), '\t')))
-	{
-		sb_append(info->sb, *(info->chunk));
-		free(*(info->chunk));
-		*(info->chunk) = NULL;
-		return (false);
-	}
-	return (true);
-}
-
-char	**expand_args(t_token *tok_lst)
-{
-	t_str	*argv_lst;
-	t_str	*args;
+	t_str	*final_lst;
 	char	**result;
 
-	if (!tok_lst)
-		return (NULL);
-	argv_lst = process_command(tok_lst);
-	args = process_arguments(tok_lst->next);
-	result = NULL;
-	if (argv_lst)
-		result = handle_argv_cases(argv_lst, args);
-	else if (args)
-		result = consume_argv(args);
-	else if (tok_lst->type == DQSTR || tok_lst->type == STR)
-		result = handle_empty_str_case();
-	if (!result && args)
+	final_lst = expand_wild_cards(argv_lst);
+	if (!final_lst)
+	{
 		free_str_lst(args);
+		return (NULL);
+	}
+	ft_strlast(final_lst)->next = args;
+	result = consume_argv(final_lst);
 	return (result);
+}
+
+unsigned int	get_chunk_len(char *ptr, char *sp)
+{
+	unsigned int	len;
+
+	len = 0;
+	if (!ft_strchr(sp, *ptr))
+	{
+		while (ptr[len] && !ft_strchr(sp, ptr[len]))
+			len++;
+	}
+	else
+	{
+		len++;
+		if (ptr[1] == '?' || ptr[1] == '*' || ptr[1] == '$')
+			return (len + 1);
+		if (ptr[1] && ft_isdigit(ptr[1]))
+			return (len + 1);
+		while (ft_isalnum(ptr[len]) || ptr[len] == '_')
+			len++;
+	}
+	return (len);
+}
+
+void	ghost_char(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ' || str[i] == '\t')
+			str[i] = (char)HIDDEN_SEPARATOR;
+		i++;
+	}
+}
+
+bool	is_standalone_dollar_star(const char *str)
+{
+	return (str[0] == '$' && str[1] == '*' && str[2] == '\0');
+}
+
+char	*handle_exit_status_2(char *chunk)
+{
+	free(chunk);
+	return (ft_itoa(get_exit_status()));
 }

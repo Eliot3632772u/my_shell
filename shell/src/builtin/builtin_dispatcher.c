@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   checker.c                                          :+:      :+:    :+:   */
+/*   builtin_dispatcher.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:06:01 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/10 11:06:40 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/13 04:07:58 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,50 @@ int	handle_exit_status(int used, int res)
 	return (used);
 }
 
+static char	*join_cd_args(char **args)
+{
+	char	*result;
+	char	*temp;
+
+	if (!args || !args[0])
+		return (NULL);
+	if (ft_strcmp(args[0], "--") == 0)
+	{
+		if (!args[1])
+			return (NULL);
+		return (ft_strdup(args[1]));
+	}
+	if (!args[1])
+		return (ft_strdup(args[0]));
+	result = ft_strdup(args[0]);
+	if (!result)
+		return (NULL);
+	temp = ft_strjoin(result, " ");
+	free(result);
+	return (temp);
+}
+
+static int	handle_cd(char **args)
+{
+	char	*cd_arg;
+	int		result;
+	int		use_dash_dash;
+
+	use_dash_dash = 0;
+	if (args && args[0] && ft_strcmp(args[0], "--") == 0)
+		use_dash_dash = 1;
+	cd_arg = join_cd_args(args);
+	result = ft_cd(cd_arg, get_envp(NULL), use_dash_dash);
+	free(cd_arg);
+	return (result);
+}
+
 static int	execute_builtin(int argc, char *command, char **args)
 {
 	if (!ft_strcmp(command, "echo"))
 		return (ft_echo(argc, args));
 	if (!ft_strcmp(command, "cd"))
-	{
-		if (argc > 1)
-		{
-			ft_putendl_fd("cd: too many arguments", 2);
-			return (1);
-		}
-		return (ft_cd(*args, get_envp(NULL)));
-	}
+		return (handle_cd(args));
 	if (!ft_strcmp(command, "pwd"))
 		return (ft_pwd());
 	if (!ft_strcmp(command, "export"))
