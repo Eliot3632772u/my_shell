@@ -6,7 +6,7 @@
 /*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:58:14 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 16:55:44 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 15:02:45 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	exec_subsh(t_ast *tree, bool forked)
 	if (!pid)
 	{
 		if (exec_redc(tree->redc, SET))
-			return ((void)(exec_redc(tree->redc, RESET)));
+			exit(get_exit_status());
 		executor(tree->left, true);
 	}
 	waitpid(pid, &exit_status, 0);

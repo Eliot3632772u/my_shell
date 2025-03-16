@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redc_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:49:02 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/16 08:42:56 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 14:59:27 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char	*read_and_expand_lines(int fd)
 		}
 		line = get_next_line(fd);
 	}
-	return (result);
+	return (ft_strdup(""));
 }
 
 int	proc_heredoc_file(int fd, char *file)

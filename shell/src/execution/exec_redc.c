@@ -6,7 +6,7 @@
 /*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:49:12 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/16 11:42:58 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 15:01:27 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	handle_redc(t_redirect *redc)
 	{
 		if (open_file(current) == -1)
 		{
+			set_exit_status(1);
 			error_occurred = 1;
 			break ;
 		}

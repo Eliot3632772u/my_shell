@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:00:21 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/16 08:18:06 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 14:41:40 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,16 @@ t_ast	*parse_logical(t_token **tok, int *err)
 
 t_ast	*unexpec_tok(t_token **tok, t_ast *ast)
 {
-	set_exit_status(2);
+	set_exit_status(258);
 	ft_putstr_fd("Minishell: syntax error near unexpected token `", 2);
 	if (*tok)
 		ft_putstr_fd((*tok)->value, 2);
 	else
 		ft_putstr_fd("\\n", 2);
 	write(2, "'\n", 2);
+	if (ast)
+		ft_heredoc(ast);
+	cleanup_all_heredoc_files();
 	free_ast2(ast);
 	free_tok_lst(*tok);
 	*tok = NULL;
