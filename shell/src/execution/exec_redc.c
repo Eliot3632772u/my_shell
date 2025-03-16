@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:49:12 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/16 08:12:37 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 11:42:58 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,13 @@ void	handle_redc(t_redirect *redc)
 
 int	exec_redc(t_redirect *redc, int mode)
 {
-	if (!redc || get_exit_status())
+	if (!redc)
 		return (0);
 	if (mode == SET)
+	{
+		set_exit_status(0);
 		handle_redc(redc);
+	}
 	else if (mode == RESET)
 		save_fd(RESET);
 	return (get_exit_status() == 1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redc_utils_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:42:32 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 08:43:11 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 11:07:59 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	open_file_with_error_handling(t_redirect *redc, char *file)
 	{
 		write(2, "Minishell: ", 11);
 		write(2, file, ft_strlen(file));
-		perror("");
+		perror(" ");
 		if (redc->type != HEREDOC)
 			free(file);
 		set_exit_status(1);
