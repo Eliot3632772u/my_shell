@@ -56,24 +56,23 @@ char	*read_and_expand_lines(int fd)
 	char	*tmp;
 	char	*result;
 	char	*line;
+	char	*old_result;
 
 	result = NULL;
 	line = get_next_line(fd);
 	while (line)
 	{
 		tmp = expand_env(line, false, 0);
-		line = result;
+		old_result = result;
 		result = ft_strjoin(result, tmp);
-		if (line)
-			free(line);
+		free(old_result);
 		free(tmp);
 		if (result == NULL)
-		{
-			free(line);
 			return (NULL);
-		}
 		line = get_next_line(fd);
 	}
+	if (result)
+		return (result);
 	return (ft_strdup(""));
 }
 
