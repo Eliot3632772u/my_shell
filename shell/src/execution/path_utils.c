@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:40:57 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/13 13:11:52 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:01:34 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,14 @@ int	try_local_path(char **cmd, t_env *env)
 	local_cmd = ft_strjoin("./", cmd[0]);
 	if (!local_cmd)
 		return (-1);
+	if (access(cmd[0], F_OK) == 0)
+	{
+		if (access(cmd[0], X_OK) == 0)
+			return (execute_direct_cmd(cmd, env));
+		set_exit_status(126);
+		print_err(cmd[0], -7);
+		exit(126);
+	}
 	if (stat(cmd[0], &st) == 0 && access(cmd[0], X_OK) == 0)
 	{
 		envp = consume_env(env);
