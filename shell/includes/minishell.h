@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 18:04:02 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 07:20:14 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@
 
 # define GET_EXIT 0xdeadbeef
 # define HIDDEN_SEPARATOR 132
-# define DEFAULT_PATH "/usr/local/sbin:/usr/local/\
+# define DEFAULT_PATH "/usr/local/sbin:/usr/local/ \
 bin:/usr/sbin:/usr/bin:/sbin:/bin"
-# define SHLVL_WARN "minishell: warning: shell level\
- (1000) too high, resetting to 1"
+# define SHLVL_WARN "minishell: warning: shell level \
+(1000) too high, resetting to 1"
 
 # ifndef ECHOCTL
 #  define ECHOCTL 0x00000040
@@ -45,8 +45,8 @@ bin:/usr/sbin:/usr/bin:/sbin:/bin"
 # endif
 
 // Forward declarations
-typedef struct s_cmd			t_ast_cmd;
-typedef struct s_ast_redir		t_ast_redir;
+typedef struct s_cmd	t_ast_cmd;
+typedef struct s_ast_redir	t_ast_redir;
 
 # define COLOR_CYAN "\001\033[1;36m\002"
 # define COLOR_RED "\001\033[1;31m\002"
@@ -55,86 +55,80 @@ typedef struct s_ast_redir		t_ast_redir;
 # define COLOR_RESET "\001\033[0m\002"
 
 // Prompt function
-char			*get_prompt(void);
+char *get_prompt(void);
 
 // lexer
+typedef enum e_token_type {
+    WORD = 0,
+    STR,
+    DQSTR,
+    OUTPUT,
+    APPEND,
+    INPUT,
+    HEREDOC,
+    HEREDOC_TAB,
+    LPREN,
+    RPREN,
+    PIPE,
+    OR,
+    AND,
+    WHITE_SPACE,
+    NEW_LINE
+} t_token_type;
 
-typedef enum e_token_type
-{
-	WORD = 0,
-	STR,
-	DQSTR,
-	OUTPUT,
-	APPEND,
-	INPUT,
-	HEREDOC,
-	HEREDOC_TAB,
-	LPREN,
-	RPREN,
-	PIPE,
-	OR,
-	AND,
-	WHITE_SPACE,
-	NEW_LINE
-}		t_token_type;
+typedef struct s_token {
+    t_token_type type;
+    char *value;
+    int len;
+    bool to_expand;
+    struct s_token *nospace_next;
+    struct s_token *next;
+    struct s_token *prev;
+} t_token;
 
-typedef struct s_token
-{
-	t_token_type	type;
-	char			*value;
-	int				len;
-	bool			to_expand;
-	struct s_token	*nospace_next;
-	struct s_token	*next;
-	struct s_token	*prev;
-}			t_token;
+typedef struct s_heredoc_opts {
+    bool expandable;
+    bool strip_tabs;
+} t_heredoc_opts;
 
-typedef struct s_heredoc_opts
-{
-	bool	expandable;
-	bool	strip_tabs;
-}				t_heredoc_opts;
-
-bool			lexer(char *command_line, t_token **tokens);
-bool			check_token(t_token *this_tok, char *cmd_line, \
-	int index_space[2], t_token **tokens);
-void			get_token(char *where, t_token *tok);
-t_token			*new_token(t_token_type type, char *value, int len);
-t_token_type	token_type(char *str);
-int				count_with_func(char *str, bool (*test_func)(char));
-int				token_len(t_token_type type, char *str);
-bool			check_expanding(char *str, t_token_type type);
-bool			valid_env_char(char c);
-int				get_exit_status(void);
-void			set_exit_status(unsigned int status);
-int				exit_status(unsigned int action);
-void			tok_error(char err);
-void			unclosed_error(char err);
-void			syntax_error(char *err);
-int				print_err(char *preced, int msg_code);
-void			free_tok_lst(t_token *tok);
-char			*handle_heredoc(char *delim);
-char			*ft_mktmp(void);
-bool			is_expandable(t_token *tok);
-t_token			*ft_toklast(t_token *lst);
-void			ft_tokadd_back(t_token **lst, t_token *new_tok);
-void			ft_tokiter(t_token *lst, void (*f)(void *));
-void			add_to_sublist(t_token **list, t_token *new_tok);
-bool			add_token(t_token **tokens, t_token *token, bool is_space);
-bool			handle_heredoc_line(char *line, char *delim, \
-	int fd);
-int				init_heredoc(char *delim, char **tmp_file, int *fd);
-char			*strip_leading_tabs(char *line);
-bool			is_expandable(t_token *tok);
-bool			is_delimiter(char *line, char *delim);
-void			process_and_write_line(char *line, int fd);
-size_t			count_leading_tabs(char *line);
-bool			is_empty_quoted_string(char *str);
-char			*strip_quotes(char *str);
-void			handle_heredoc_signal(void);
-void			cleanup_heredoc_file(char *tmp_file);
-void			cleanup_all_heredoc_files(void);
-void			reset_stdin(void);
+bool lexer(char *command_line, t_token **tokens);
+bool check_token(t_token *this_tok, char *cmd_line, int index_space[2], t_token **tokens);
+void get_token(char *where, t_token *tok);
+t_token *new_token(t_token_type type, char *value, int len);
+t_token_type token_type(char *str);
+int count_with_func(char *str, bool (*test_func)(char));
+int token_len(t_token_type type, char *str);
+bool check_expanding(char *str, t_token_type type);
+bool valid_env_char(char c);
+int get_exit_status(void);
+void set_exit_status(unsigned int status);
+int exit_status(unsigned int action);
+void tok_error(char err);
+void unclosed_error(char err);
+void syntax_error(char *err);
+int print_err(char *preced, int msg_code);
+void free_tok_lst(t_token *tok);
+char *handle_heredoc(char *delim, t_token_type type);
+char *ft_mktmp(void);
+bool is_expandable(t_token *tok);
+t_token *ft_toklast(t_token *lst);
+void ft_tokadd_back(t_token **lst, t_token *new_tok);
+void ft_tokiter(t_token *lst, void (*f)(void *));
+void add_to_sublist(t_token **list, t_token *new_tok);
+bool add_token(t_token **tokens, t_token *token, bool is_space);
+bool handle_heredoc_line(char *line, char *delim, t_token_type type, int fd);
+int init_heredoc(char *delim, char **tmp_file, int *fd);
+char *strip_leading_tabs(char *line);
+bool is_expandable(t_token *tok);
+bool is_delimiter(char *line, char *delim, t_token_type type);
+void process_and_write_line(char *line, int fd);
+size_t count_leading_tabs(char *line);
+bool is_empty_quoted_string(char *str);
+char *strip_quotes(char *str);
+void handle_heredoc_signal(void);
+void cleanup_heredoc_file(char *tmp_file);
+void cleanup_all_heredoc_files(void);
+void reset_stdin(void);
 
 // ast 
 typedef enum e_node_type
@@ -371,7 +365,7 @@ void			add_to_args_list(t_str **args, t_str *new_list);
 void			handle_wildcard_argument(t_str *arg_list, t_str **args);
 void			process_single_argument(t_token *arg_token, t_str **args);
 t_str			*process_arguments(t_token *args_token);
-int				process_heredoc_input(int fd, char *delim);
+int process_heredoc_input(int fd, char *delim, t_token_type type);
 
 // attributs
 enum

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_signals.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:51:55 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 17:02:20 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 07:06:41 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,6 @@ void	handle_heredoc_signal(void)
 	if (g_last_signal != 420)
 		return ;
 	reset_stdin();
-}
-
-int	process_heredoc_input(int fd, char *delim)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || g_last_signal == 420)
-			return (g_last_signal == 420);
-		if (handle_heredoc_line(line, delim, fd))
-		{
-			free(line);
-			return (0);
-		}
-	}
 }
 
 void	heredoc_sigint_handler(int sig)

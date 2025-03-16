@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer2_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:57:06 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/15 17:57:07 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 06:57:45 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ void    input_tok(char **command, t_token **tokens)
     *command = (*command) + len;
     if (value == NULL)
         return ;
-    add_token(tokens, new_token(INPUT + (len - 1), value, len), true);
+    if (len == 3)
+        add_token(tokens, new_token(HEREDOC_TAB, value, len), true);
+    else
+        add_token(tokens, new_token(INPUT + (len - 1), value, len), true);
 }
 
 void    out_tok(char **command, t_token **tokens)

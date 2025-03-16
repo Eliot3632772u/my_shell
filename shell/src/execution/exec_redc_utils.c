@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redc_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:49:02 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/15 17:51:02 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 07:23:40 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,15 @@ int proc_heredoc_file(int fd, char *file)
             free(line);
         free(tmp);
         if (result == NULL)
+        {
+            free(line);
             return (1);
+        }
         line = get_next_line(fd);
     }
-    return(proc_herdoc_file2(fd, file, result));
+    int ret = proc_herdoc_file2(fd, file, result);
+    free(result);
+    return (ret);
 }
 
 int exec_heredoc(t_redirect *redc, char **file)
@@ -94,16 +99,26 @@ int open_dup_wrap(t_redirect *redc,char *file, int STD_FD)
 
     errno = 0;
     fd = open(file, redc->mode, 0644);
-    if (redc->type != HEREDOC)
-        free(file);
     if (fd == -1)
     {
         if (errno == ENOENT)
-            return (write(2, "Minishell: ", 11), write(2, file,\
-             ft_strlen(file)), perror(""), set_exit_status(1), 1);
+        {
+            write(2, "Minishell: ", 11);
+            write(2, file, ft_strlen(file));
+            perror("");
+            if (redc->type != HEREDOC)
+                free(file);
+            return (set_exit_status(1), 1);
+        }
     }
     if (dup2(fd, STD_FD) == -1)
+    {
+        if (redc->type != HEREDOC)
+            free(file);
         return (perror("Minishell: dup2"), set_exit_status(1), close(fd), 1);
+    }
     close(fd);
+    if (redc->type != HEREDOC)
+        free(file);
     return (0);
 }
