@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:00:21 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/15 18:00:22 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:18:06 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ t_ast	*parse_redi(t_token **tok, int *err)
 		return (ast);
 	while (*tok && check_redir((*tok)->type))
 	{
-		if (!(*tok)->next || !check_word((*tok)->next->type)/* || \
-		ast->type == P_SUBSH take of the check for subshell if handled in exec*/)
+		if (!(*tok)->next || !check_word((*tok)->next->type))
 		{
 			if (ast->type != P_SUBSH)
 				free_tok_node(tok);
@@ -62,7 +61,7 @@ t_ast	*parse_pipe2(t_token **tok, int *err)
 	}
 	return (ast);
 }
-	
+
 t_ast	*parse_logical(t_token **tok, int *err)
 {
 	t_ast		*ast;
@@ -99,7 +98,7 @@ t_ast	*unexpec_tok(t_token **tok, t_ast *ast)
 		ft_putstr_fd((*tok)->value, 2);
 	else
 		ft_putstr_fd("\\n", 2);
-    write(2, "'\n", 2);
+	write(2, "'\n", 2);
 	free_ast2(ast);
 	free_tok_lst(*tok);
 	*tok = NULL;
@@ -114,7 +113,7 @@ t_ast	*parser2(t_token **tok)
 	err = 0;
 	if (!(*tok))
 		return (NULL);
-	ast = parse_logical(tok , &err);
+	ast = parse_logical(tok, &err);
 	if ((*tok) || err)
 		return (unexpec_tok(tok, ast));
 	return (ast);

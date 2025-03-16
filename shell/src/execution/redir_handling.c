@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:53:41 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 16:57:31 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:13:13 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	handle_child_redir(t_ast_redir *tree, int fd_to_dup)
 	}
 	if (fd_to_dup != tree->fd)
 		close(fd_to_dup);
-	// executor(tree->cmd, true);
 	exit(get_exit_status());
 }
 

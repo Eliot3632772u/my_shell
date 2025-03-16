@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser2_utils2.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/16 08:15:44 by yrafai            #+#    #+#             */
+/*   Updated: 2025/03/16 08:16:00 by yrafai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 t_ast	*parse_sub(t_token **tok, int *err)
@@ -7,7 +19,7 @@ t_ast	*parse_sub(t_token **tok, int *err)
 	subshell = NULL;
 	free_tok_node(tok);
 	if (!(*tok) || check_cmd((*tok)->type))
-        return (NULL);
+		return (NULL);
 	if ((*tok))
 	{
 		subshell = new_ast(P_SUBSH);
@@ -25,7 +37,6 @@ t_ast	*parse_cmd2(t_token **tok, int *err)
 {
 	t_token	*tmp;
 	t_ast	*ast;
-	
 
 	if ((*tok) && (*tok)->type == LPREN)
 		return (parse_sub(tok, err));
@@ -56,7 +67,7 @@ t_ast	*new_ast(t_node_type type)
 
 	new = malloc(sizeof(t_ast));
 	if (!new)
-        return (NULL);
+		return (NULL);
 	new->type = type;
 	new->redc = NULL;
 	new->argv_tok = NULL;

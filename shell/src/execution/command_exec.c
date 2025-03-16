@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:44:13 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 17:38:07 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:13:29 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ void	exec_exe(t_ast *exe, bool forked)
 	pid_t	pid;
 	t_env	*envp;
 
-	// set_exit_status(0);
 	if (exec_redc(exe->redc, SET))
 		return ((void)(exec_redc(exe->redc, RESET)));
 	if (!prepare_execution(&argv, exe))

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser2_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 18:02:07 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/15 18:06:31 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:15:34 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 
 int	add_redic(t_redirect **redic, t_token **tok)
 {
@@ -33,7 +32,7 @@ int	add_redic(t_redirect **redic, t_token **tok)
 	tmp->next = new_redic((*tok)->type);
 	if (!tmp->next)
 		return (1);
-    tmp->next->prev = tmp;
+	tmp->next->prev = tmp;
 	tmp->next->mode = get_redic_mode(*tok);
 	free_tok_node(tok);
 	tmp->next->file_tok = get_file_tokens(tok);
@@ -60,7 +59,7 @@ t_redirect	*new_redic(t_token_type type)
 
 	new = malloc(sizeof(t_redirect));
 	if (!new)
-        return (NULL);
+		return (NULL);
 	new->type = type;
 	new->file_tok = NULL;
 	new->next = NULL;
@@ -99,10 +98,7 @@ t_ast	*new_cmd(t_token *token)
 
 	tmp = malloc(sizeof(t_ast));
 	if (!tmp)
-	{
-		// maybe set status code 
 		return (NULL);
-	}
 	tmp->left = NULL;
 	tmp->right = NULL;
 	tmp->redc = NULL;

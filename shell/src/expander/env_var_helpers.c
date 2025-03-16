@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 10:29:45 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 10:31:48 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:18:34 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,3 @@ char	*handle_double_dollar(char *chunk, char *ptr, size_t *offset)
 		*offset = count;
 	return (result);
 }
-

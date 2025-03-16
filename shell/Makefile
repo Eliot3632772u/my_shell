@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+         #
+#    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/15 18:09:39 by irabhi           ###   ########.fr        #
+#    Updated: 2025/03/16 08:48:46 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,15 +23,18 @@ CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=ad
 OBJSDIR = objs/
 
 SRCS = src/main/minishell.c \
+src/main/minishell_helpers.c \
 src/main/prompt_handler.c \
 src/lexer/lexer_core.c \
 src/lexer/token_analyzer.c \
 src/lexer/lexer2.c \
 src/lexer/lexer2_utils.c \
+src/lexer/lexer2_utils3.c \
 src/parser/parser2.c \
 src/parser/parser2_utils.c \
 src/execution/exec_redc.c \
 src/execution/exec_redc_utils.c\
+src/execution/exec_redc_utils_2.c\
 src/lexer/lexer2_utils2.c\
 src/parser/parser2_utils2.c\
 src/parser/parser2_checks.c\

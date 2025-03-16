@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer2_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:57:15 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/15 17:57:16 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:17:02 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ int	special_char(char c)
 	return (0);
 }
 
-t_token_type    check_type(char quote)
+t_token_type	check_type(char quote)
 {
-    if (quote == '\'')
-        return (STR);
-    return (DQSTR);
+	if (quote == '\'')
+		return (STR);
+	return (DQSTR);
 }

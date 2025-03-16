@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 07:20:14 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:51:14 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bin:/usr/sbin:/usr/bin:/sbin:/bin"
 # endif
 
 // Forward declarations
-typedef struct s_cmd	t_ast_cmd;
+typedef struct s_cmd		t_ast_cmd;
 typedef struct s_ast_redir	t_ast_redir;
 
 # define COLOR_CYAN "\001\033[1;36m\002"
@@ -55,80 +55,84 @@ typedef struct s_ast_redir	t_ast_redir;
 # define COLOR_RESET "\001\033[0m\002"
 
 // Prompt function
-char *get_prompt(void);
 
 // lexer
-typedef enum e_token_type {
-    WORD = 0,
-    STR,
-    DQSTR,
-    OUTPUT,
-    APPEND,
-    INPUT,
-    HEREDOC,
-    HEREDOC_TAB,
-    LPREN,
-    RPREN,
-    PIPE,
-    OR,
-    AND,
-    WHITE_SPACE,
-    NEW_LINE
-} t_token_type;
+typedef enum e_token_type
+{
+	WORD = 0,
+	STR,
+	DQSTR,
+	OUTPUT,
+	APPEND,
+	INPUT,
+	HEREDOC,
+	HEREDOC_TAB,
+	LPREN,
+	RPREN,
+	PIPE,
+	OR,
+	AND,
+	WHITE_SPACE,
+	NEW_LINE
+}			t_token_type;
 
-typedef struct s_token {
-    t_token_type type;
-    char *value;
-    int len;
-    bool to_expand;
-    struct s_token *nospace_next;
-    struct s_token *next;
-    struct s_token *prev;
-} t_token;
+typedef struct s_token
+{
+	t_token_type	type;
+	char			*value;
+	int				len;
+	bool			to_expand;
+	struct s_token	*nospace_next;
+	struct s_token	*next;
+	struct s_token	*prev;
+}			t_token;
 
-typedef struct s_heredoc_opts {
-    bool expandable;
-    bool strip_tabs;
-} t_heredoc_opts;
+typedef struct s_heredoc_opts
+{
+	bool		expandable;
+	bool		strip_tabs;
+}			t_heredoc_opts;
 
-bool lexer(char *command_line, t_token **tokens);
-bool check_token(t_token *this_tok, char *cmd_line, int index_space[2], t_token **tokens);
-void get_token(char *where, t_token *tok);
-t_token *new_token(t_token_type type, char *value, int len);
-t_token_type token_type(char *str);
-int count_with_func(char *str, bool (*test_func)(char));
-int token_len(t_token_type type, char *str);
-bool check_expanding(char *str, t_token_type type);
-bool valid_env_char(char c);
-int get_exit_status(void);
-void set_exit_status(unsigned int status);
-int exit_status(unsigned int action);
-void tok_error(char err);
-void unclosed_error(char err);
-void syntax_error(char *err);
-int print_err(char *preced, int msg_code);
-void free_tok_lst(t_token *tok);
-char *handle_heredoc(char *delim, t_token_type type);
-char *ft_mktmp(void);
-bool is_expandable(t_token *tok);
-t_token *ft_toklast(t_token *lst);
-void ft_tokadd_back(t_token **lst, t_token *new_tok);
-void ft_tokiter(t_token *lst, void (*f)(void *));
-void add_to_sublist(t_token **list, t_token *new_tok);
-bool add_token(t_token **tokens, t_token *token, bool is_space);
-bool handle_heredoc_line(char *line, char *delim, t_token_type type, int fd);
-int init_heredoc(char *delim, char **tmp_file, int *fd);
-char *strip_leading_tabs(char *line);
-bool is_expandable(t_token *tok);
-bool is_delimiter(char *line, char *delim, t_token_type type);
-void process_and_write_line(char *line, int fd);
-size_t count_leading_tabs(char *line);
-bool is_empty_quoted_string(char *str);
-char *strip_quotes(char *str);
-void handle_heredoc_signal(void);
-void cleanup_heredoc_file(char *tmp_file);
-void cleanup_all_heredoc_files(void);
-void reset_stdin(void);
+bool			lexer(char *command_line, t_token **tokens);
+bool			check_token(t_token *this_tok, char *cmd_line, \
+	int index_space[2], t_token **tokens);
+void			get_token(char *where, t_token *tok);
+t_token			*new_token(t_token_type type, char *value, int len);
+t_token_type	token_type(char *str);
+int				count_with_func(char *str, bool (*test_func)(char));
+int				token_len(t_token_type type, char *str);
+int				get_exit_status(void);
+int				exit_status(unsigned int action);
+bool			check_expanding(char *str, t_token_type type);
+bool			valid_env_char(char c);
+void			set_exit_status(unsigned int status);
+void			tok_error(char err);
+void			unclosed_error(char err);
+void			syntax_error(char *err);
+int				print_err(char *preced, int msg_code);
+void			free_tok_lst(t_token *tok);
+char			*handle_heredoc(char *delim, t_token_type type);
+char			*ft_mktmp(void);
+bool			is_expandable(t_token *tok);
+t_token			*ft_toklast(t_token *lst);
+void			ft_tokadd_back(t_token **lst, t_token *new_tok);
+void			ft_tokiter(t_token *lst, void (*f)(void *));
+void			add_to_sublist(t_token **list, t_token *new_tok);
+bool			add_token(t_token **tokens, t_token *token, bool is_space);
+bool			handle_heredoc_line(char *line, char *delim, \
+	t_token_type type, int fd);
+int				init_heredoc(char *delim, char **tmp_file, int *fd);
+char			*strip_leading_tabs(char *line);
+bool			is_expandable(t_token *tok);
+bool			is_delimiter(char *line, char *delim, t_token_type type);
+void			process_and_write_line(char *line, int fd);
+size_t			count_leading_tabs(char *line);
+bool			is_empty_quoted_string(char *str);
+char			*strip_quotes(char *str);
+void			handle_heredoc_signal(void);
+void			cleanup_heredoc_file(char *tmp_file);
+void			cleanup_all_heredoc_files(void);
+void			reset_stdin(void);
 
 // ast 
 typedef enum e_node_type
@@ -176,88 +180,86 @@ typedef struct s_ast_subsh
 }				t_ast_subsh;
 
 // ---------------------------------------------------------------- 
-typedef struct          s_redirect
+typedef struct s_redirect
 {
-    t_token_type        type;           /* < , > , >> , << */
-    t_token             *file_tok; /* tokens that will be the file name or delemeter */
+	t_token_type		type;
+	t_token				*file_tok;
 	int					mode;
 	int					expand;
-    struct s_redirect   *next;
-    struct s_redirect   *prev;
-}                       t_redirect;
+	struct s_redirect	*next;
+	struct s_redirect	*prev;
+}				t_redirect;
 
-typedef struct      s_ast 
+typedef struct s_ast
 {
-    t_node_type      type;  // Node type (e.g., CMD, PIPE, etc.) 
-    t_token         *argv_tok; // tokens to be arguments      
-    t_redirect      *redc; // Linked list of redirections
-    struct s_ast    *left;    // Left subtree
-    struct s_ast    *right;   // Right subtree
-}                   t_ast;
-
+	t_node_type		type;
+	t_token			*argv_tok;
+	t_redirect		*redc;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}				t_ast;
 
 /* Lexer2 */
 
-void    lexer2(char *command_line, t_token **tokens);
-void    handle_special(char **command_line, t_token **tokens, int *concate);
-void    tok_str(char **command, t_token **tokens, int *concate);
-void    handle_quotes(char **command, t_token **tokens, int *concate);
-void    and_tok(char **command, t_token **tokens);
-void    paren_tok(char **command, t_token **tokens);
-void    pipe_tok(char **command, t_token **tokens);
-void    out_tok(char **command, t_token **tokens);
-void    input_tok(char **command, t_token **tokens);
-t_token_type    check_type(char quote);
-void 	check_concate(char **command, int *concate);
-int	special_char(char c);
-int	is_wild_special(char **input);
-int	check_expand_status(char **input);
-int	is_delem(char **input);
-t_token_type    check_type(char quote);
-void check_concate(char **command, int *concate);
-void    input_tok(char **command, t_token **tokens);
-void    out_tok(char **command, t_token **tokens);
-void    pipe_tok(char **command, t_token **tokens);
-void    paren_tok(char **command, t_token **tokens);
+void			lexer2(char *command_line, t_token **tokens);
+void			handle_special(char **command_line, t_token **tokens, \
+	int *concate);
+void			tok_str(char **command, t_token **tokens, int *concate);
+void			handle_quotes(char **command, t_token **tokens, int *concate);
+void			and_tok(char **command, t_token **tokens);
+void			paren_tok(char **command, t_token **tokens);
+void			pipe_tok(char **command, t_token **tokens);
+void			out_tok(char **command, t_token **tokens);
+void			input_tok(char **command, t_token **tokens);
+t_token_type	check_type(char quote);
+void			check_concate(char **command, int *concate);
+int				special_char(char c);
+int				is_wild_special(char **input);
+int				check_expand_status(char **input);
+int				is_delem(char **input);
+t_token_type	check_type(char quote);
+void			check_concate(char **command, int *concate);
+void			input_tok(char **command, t_token **tokens);
+void			out_tok(char **command, t_token **tokens);
+void			pipe_tok(char **command, t_token **tokens);
+void			paren_tok(char **command, t_token **tokens);
 /* Parser2 */
 
-t_ast		*parser2(t_token **tok);
-t_ast		*unexpec_tok(t_token **tok, t_ast *ast);
-t_ast		*parse_logical(t_token **tok, int *err);
-t_ast		*parse_pipe2(t_token **tok, int *err);
-t_ast		*parse_redi(t_token **tok, int *err);
-t_ast		*parse_cmd2(t_token **tok, int *err);
-t_ast		*parse_sub(t_token **tok, int *err);
-void		free_redi(t_redirect *red);
-t_ast		*free_ast2(t_ast *ast);
-t_ast		*new_cmd(t_token *token);
-void		add_arg(t_token **argv_tok, t_token **tok);
-t_redirect	*new_redic(t_token_type type);
-t_token		*get_file_tokens(t_token **tok);
-int			add_redic(t_redirect **redic, t_token **tok);
-int			get_redic_mode(t_token *redic);
-t_ast		*new_ast(t_node_type type);
-void		free_tok_node(t_token **tok);
-int			check_logical(t_token_type type);
-int			check_redir(t_token_type type);
-int			check_cmd(t_token_type type);
-int			check_word(t_token_type type);
-t_ast	*parse_sub(t_token **tok, int *err);
-t_ast	*parse_cmd2(t_token **tok, int *err);
+t_ast			*parser2(t_token **tok);
+t_ast			*unexpec_tok(t_token **tok, t_ast *ast);
+t_ast			*parse_logical(t_token **tok, int *err);
+t_ast			*parse_pipe2(t_token **tok, int *err);
+t_ast			*parse_redi(t_token **tok, int *err);
+t_ast			*parse_cmd2(t_token **tok, int *err);
+t_ast			*parse_sub(t_token **tok, int *err);
+void			free_redi(t_redirect *red);
+t_ast			*free_ast2(t_ast *ast);
+t_ast			*new_cmd(t_token *token);
+void			add_arg(t_token **argv_tok, t_token **tok);
+t_redirect		*new_redic(t_token_type type);
+t_token			*get_file_tokens(t_token **tok);
+int				add_redic(t_redirect **redic, t_token **tok);
+int				get_redic_mode(t_token *redic);
+t_ast			*new_ast(t_node_type type);
+void			free_tok_node(t_token **tok);
+int				check_logical(t_token_type type);
+int				check_redir(t_token_type type);
+int				check_cmd(t_token_type type);
+int				check_word(t_token_type type);
+t_ast			*parse_sub(t_token **tok, int *err);
+t_ast			*parse_cmd2(t_token **tok, int *err);
 
 /* REDIRECTIONS */
 
-int exec_redc(t_redirect *redc, int mode);
-int expand_redc_file(t_redirect *redc, char **file);
-
-
-int		ft_heredoc(t_ast *tree);
-int		patch_token(t_redirect *redc);
-int		process_heredoc_tree(t_ast *tree);
-void 	save_fd(int flag);
-int 	proc_heredoc_file(int fd, char *file);
-int 	exec_heredoc(t_redirect *redc, char **file);
-int 	open_dup_wrap(t_redirect *redc,char *file, int STD_FD);
+int				exec_redc(t_redirect *redc, int mode);
+int				expand_redc_file(t_redirect *redc, char **file);
+int				ft_heredoc(t_ast *tree);
+int				patch_token(t_redirect *redc);
+int				process_heredoc_tree(t_ast *tree);
+void			save_fd(int flag);
+int				proc_heredoc_file(int fd, char *file);
+int				exec_heredoc(t_redirect *redc, char **file);
+int				open_dup_wrap(t_redirect *redc, char *file, int STD_FD);
 // ---------------------------------------------------------------- 
 
 bool			parser(t_token *tokens, t_ast_cmd **tree);
@@ -365,7 +367,7 @@ void			add_to_args_list(t_str **args, t_str *new_list);
 void			handle_wildcard_argument(t_str *arg_list, t_str **args);
 void			process_single_argument(t_token *arg_token, t_str **args);
 t_str			*process_arguments(t_token *args_token);
-int process_heredoc_input(int fd, char *delim, t_token_type type);
+int				process_heredoc_input(int fd, char *delim, t_token_type type);
 
 // attributs
 enum
@@ -410,8 +412,8 @@ void			handle_shlvl(void);
 
 // signals
 
-extern int						g_exit_status;
-extern int						g_last_signal;
+extern int					g_exit_status;
+extern int					g_last_signal;
 
 enum
 {
@@ -520,10 +522,15 @@ int				ft_unset(int argc, char **args, t_env **env);
 void			del_from_env(t_env **env, char *key);
 
 // prompt
+char			*get_prompt(void);
 char			*get_formatted_path(void);
 char			*build_prompt_start(void);
 void			get_system_info(char *username, char *hostname);
 void			get_hostname(char *hostname);
 void			get_username(char *username);
+void			setup(char **envp, struct termios *attrs, ...);
+void			tty_attr(struct termios *attrs, int action);
+bool			run(char *command_line);
+bool			process_command_2(char *command_line);
 
 #endif

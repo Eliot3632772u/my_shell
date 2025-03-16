@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:50:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 16:58:26 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 08:12:52 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	handle_builtin_redir(t_ast_redir *tree, int fd_to_dup)
 		return (0);
 	if (!setup_builtin_redirection(tree, fd_to_dup, &old_fd))
 		return (0);
-	// executor(tree->cmd, 0);
 	dup2(old_fd, tree->fd);
 	close(old_fd);
 	return (1);
