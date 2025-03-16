@@ -6,7 +6,7 @@
 /*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:49:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 12:56:13 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 21:43:59 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char	*ft_mktmp(void)
 	int				fd;
 	static int		counter;
 
-	counter = 0;
 	counter++;
 	sb = stringbuilder();
 	sb_append(sb, "/tmp/.Minishell_HEREDOC_");
