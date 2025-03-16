@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_helpers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 08:51:27 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 12:57:01 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ bool	process_command_2(char *command_line)
 
 	tokens = NULL;
 	lexer2(command_line, &tokens);
+	set_up_token_prev(tokens);
 	ast = parser2(&tokens);
 	if (ast)
 	{

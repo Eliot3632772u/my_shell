@@ -6,29 +6,11 @@
 /*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:42:31 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 11:32:18 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 12:55:54 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-int	heredoc_limit(int mode)
-{
-	static int	limit = 0;
-	int			tmp;
-
-	if (mode == SET)
-	{
-		limit++;
-	}
-	else
-	{
-		tmp = limit;
-		limit = 0;
-		return (tmp);
-	}
-	return (-1);
-}
 
 int	process_heredoc_tree(t_ast *tree)
 {
@@ -103,30 +85,10 @@ int	init_heredoc(char *delim, char **tmp_file, int *fd)
 	return (1);
 }
 
-void	heredoc_limit_check(t_ast *ast)
-{
-	t_redirect	*redc;
-
-	if (ast == NULL)
-		return ;
-	heredoc_limit_check(ast->left);
-	heredoc_limit_check(ast->right);
-	if(ast->redc)
-	{
-		redc = ast->redc;
-		while (redc)
-		{
-			if (redc->type == HEREDOC)
-				heredoc_limit(SET);
-			redc = redc->next;
-		}
-	}
-}
-
 int	ft_heredoc(t_ast *tree)
 {
 	bool	result;
-	
+
 	heredoc_limit_check(tree);
 	if (heredoc_limit(RESET) > 16)
 	{

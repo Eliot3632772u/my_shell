@@ -6,7 +6,7 @@
 /*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 11:15:38 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 12:56:24 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,7 @@ void			input_tok(char **command, t_token **tokens);
 void			out_tok(char **command, t_token **tokens);
 void			pipe_tok(char **command, t_token **tokens);
 void			paren_tok(char **command, t_token **tokens);
+void			set_up_token_prev(t_token *tokens);
 /* Parser2 */
 
 t_ast			*parser2(t_token **tok);
@@ -260,6 +261,8 @@ void			save_fd(int flag);
 int				proc_heredoc_file(int fd, char *file);
 int				exec_heredoc(t_redirect *redc, char **file);
 int				open_dup_wrap(t_redirect *redc, char *file, int STD_FD);
+void			heredoc_limit_check(t_ast *ast);
+int				heredoc_limit(int mode);
 // ---------------------------------------------------------------- 
 
 bool			parser(t_token *tokens, t_ast_cmd **tree);

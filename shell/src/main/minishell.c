@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:48:23 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 08:48:27 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 12:56:50 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	set_up_token_prev(t_token *tokens)
+{
+	t_token		*prev;
+
+	if (tokens == NULL)
+		return ;
+	prev = NULL;
+	while (tokens)
+	{
+		tokens->prev = prev;
+		prev = tokens;
+		tokens = tokens->next;
+	}
+}
 
 int	main(int _, char **__, char **envp)
 {

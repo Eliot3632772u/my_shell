@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:49:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 08:07:15 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/16 12:56:13 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,22 @@ char	*ft_mktmp(void)
 	}
 	free(name);
 	return (NULL);
+}
+
+int	heredoc_limit(int mode)
+{
+	static int	limit = 0;
+	int			tmp;
+
+	if (mode == SET)
+	{
+		limit++;
+	}
+	else
+	{
+		tmp = limit;
+		limit = 0;
+		return (tmp);
+	}
+	return (-1);
 }

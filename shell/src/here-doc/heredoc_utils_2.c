@@ -6,7 +6,7 @@
 /*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 13:02:32 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 17:09:22 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/16 12:54:57 by irabhi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,24 @@ char	*get_processed_delimiter(t_redirect *redc, t_str **s_ptr)
 {
 	expand_nosp_arg(redc->file_tok, s_ptr, 1);
 	return (strip_quotes((*s_ptr)->str));
+}
+
+void	heredoc_limit_check(t_ast *ast)
+{
+	t_redirect	*redc;
+
+	if (ast == NULL)
+		return ;
+	heredoc_limit_check(ast->left);
+	heredoc_limit_check(ast->right);
+	if (ast->redc)
+	{
+		redc = ast->redc;
+		while (redc)
+		{
+			if (redc->type == HEREDOC)
+				heredoc_limit(SET);
+			redc = redc->next;
+		}
+	}
 }
