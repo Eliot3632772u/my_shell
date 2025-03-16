@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+         #
+#    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/16 14:38:58 by irabhi           ###   ########.fr        #
+#    Updated: 2025/03/16 17:28:33 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include # -g -fsanitize=address
 
 OBJSDIR = objs/
 
@@ -77,6 +77,7 @@ src/here-doc/heredoc_utils.c \
 src/here-doc/heredoc_utils_2.c \
 src/here-doc/heredoc_cleanup.c \
 src/signals/signal_manager.c \
+src/signals/signal_manager_2.c \
 src/builtin/builtin_dispatcher.c \
 src/builtin/cd/ft_cd.c \
 src/builtin/cd/ft_cd_utils.c \
