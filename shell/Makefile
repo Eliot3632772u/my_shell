@@ -18,7 +18,7 @@ endif
 
 LIB = -L $(RL_PATH)/lib -lreadline
 
-CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include # -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I includes -I$(RL_PATH)/include -g -fsanitize=address
 
 OBJSDIR = objs/
 

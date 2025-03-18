@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 10:24:58 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/15 10:25:33 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/18 20:49:43 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,11 @@ void	process_single_argument(t_token *arg_token, t_str **args)
 	expand_nosp_arg(arg_token, &arg_list, 0);
 	if (!arg_list)
 		return ;
+	if (arg_token->type == WORD && arg_list->str[0] == '\0')
+	{
+		free_str_lst(arg_list);
+		return ;
+	}
 	if (arg_list->wild_card)
 		handle_wildcard_argument(arg_list, args);
 	else

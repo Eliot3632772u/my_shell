@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redc_utils_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:42:32 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 11:07:59 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/18 20:38:49 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	open_file_with_error_handling(t_redirect *redc, char *file)
 
 	errno = 0;
 	fd = open(file, redc->mode, 0644);
-	if (fd == -1 && errno == ENOENT)
+	if (fd == -1)
 	{
 		write(2, "Minishell: ", 11);
 		write(2, file, ft_strlen(file));
