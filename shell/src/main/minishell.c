@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:48:23 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 16:44:24 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/20 20:49:57 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@ int	main(int _, char **__, char **envp)
 
 	if (_ > 1)
 		return (printf("Not valid Arguments\n"), 127);
+	if (!isatty(STDIN_FILENO))
+	{
+		write(2, "minishell: cannot run in non-interactive mode\n", 47);
+		exit(1);
+	}
 	setup(envp, attrs, _, __);
 	while (true)
 	{

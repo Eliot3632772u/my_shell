@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 14:18:38 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/19 14:57:03 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 
 # define GET_EXIT 0xdeadbeef
 # define HIDDEN_SEPARATOR 132
-# define DEFAULT_PATH "/usr/local/sbin:/usr/local/ \
+# define DEFAULT_PATH "/usr/local/sbin:/usr/local/\
 bin:/usr/sbin:/usr/bin:/sbin:/bin"
 # define SHLVL_WARN "minishell: warning: shell level \
 (1000) too high, resetting to 1"

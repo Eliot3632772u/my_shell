@@ -3,14 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:49:12 by irabhi            #+#    #+#             */
-/*   Updated: 2025/03/16 15:01:27 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/20 20:52:23 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+static int	heredoc_handling(t_redirect *redc)
+{
+	char	*file;
+	int		fd;
+
+	if (exec_heredoc(redc, &file))
+		return (-1);
+	redc->file_tok->value = file;
+	fd = open(file, O_RDONLY);
+	if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
+	{
+		if (fd != -1)
+			close(fd);
+		perror("Minishell: dup2");
+		set_exit_status(1);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
 
 int	open_file(t_redirect *redc)
 {
@@ -18,12 +39,9 @@ int	open_file(t_redirect *redc)
 	int		std_fd;
 
 	std_fd = STDIN_FILENO;
-	if (redc->type == HEREDOC)
-	{
-		if (exec_heredoc(redc, &file))
-			return (-1);
-	}
-	else if (expand_redc_file(redc, &file))
+	if (redc->type == HEREDOC || redc->type == HEREDOC_TAB)
+		return (heredoc_handling(redc));
+	if (expand_redc_file(redc, &file))
 		return (-1);
 	if (redc->type == APPEND || redc->type == OUTPUT)
 		std_fd = STDOUT_FILENO;

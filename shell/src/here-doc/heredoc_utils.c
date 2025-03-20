@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:49:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 12:56:13 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/18 23:30:52 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char	*ft_mktmp(void)
 	int				fd;
 	static int		counter;
 
-	counter = 0;
 	counter++;
 	sb = stringbuilder();
 	sb_append(sb, "/tmp/.Minishell_HEREDOC_");
