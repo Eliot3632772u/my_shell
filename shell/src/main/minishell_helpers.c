@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_helpers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:07:26 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 14:18:08 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/20 21:56:08 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,26 +32,18 @@ char	*get_prompt(void)
 	return (prompt);
 }
 
-void	tty_attr(struct termios *attrs, int action)
+void	set_up_token_prev(t_token *tokens)
 {
-	if (action == ATTR_GET)
+	t_token		*prev;
+
+	if (tokens == NULL)
+		return ;
+	prev = NULL;
+	while (tokens)
 	{
-		tcgetattr(STDIN_FILENO, &attrs[0]);
-		tcgetattr(STDOUT_FILENO, &attrs[1]);
-		tcgetattr(STDERR_FILENO, &attrs[2]);
-	}
-	else if (action == ATTR_SET)
-	{
-		tcsetattr(STDIN_FILENO, TCSANOW, &attrs[0]);
-		tcsetattr(STDOUT_FILENO, TCSANOW, &attrs[1]);
-		tcsetattr(STDERR_FILENO, TCSANOW, &attrs[2]);
-	}
-	else if (action == ATTR_CHG)
-	{
-		attrs[0].c_lflag &= ~ECHOCTL;
-		attrs[1].c_lflag &= ~ECHOCTL;
-		attrs[2].c_lflag &= ~ECHOCTL;
-		tty_attr(attrs, ATTR_SET);
+		tokens->prev = prev;
+		prev = tokens;
+		tokens = tokens->next;
 	}
 }
 
@@ -61,6 +53,11 @@ void	setup(char **envp, struct termios *attrs, ...)
 
 	create_env(envp);
 	tmp = getcwd(NULL, 0);
+	if (!tmp)
+	{
+		perror("getcwd failed");
+		exit(EXIT_FAILURE);
+	}
 	rl_catch_signals = false;
 	pwd(tmp);
 	free(tmp);

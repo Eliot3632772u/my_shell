@@ -6,24 +6,32 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:48:23 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/20 20:49:57 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/20 21:06:11 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	set_up_token_prev(t_token *tokens)
+void	tty_attr(struct termios *attrs, int action)
 {
-	t_token		*prev;
-
-	if (tokens == NULL)
-		return ;
-	prev = NULL;
-	while (tokens)
+	if (action == ATTR_GET)
 	{
-		tokens->prev = prev;
-		prev = tokens;
-		tokens = tokens->next;
+		tcgetattr(STDIN_FILENO, &attrs[0]);
+		tcgetattr(STDOUT_FILENO, &attrs[1]);
+		tcgetattr(STDERR_FILENO, &attrs[2]);
+	}
+	else if (action == ATTR_SET)
+	{
+		tcsetattr(STDIN_FILENO, TCSANOW, &attrs[0]);
+		tcsetattr(STDOUT_FILENO, TCSANOW, &attrs[1]);
+		tcsetattr(STDERR_FILENO, TCSANOW, &attrs[2]);
+	}
+	else if (action == ATTR_CHG)
+	{
+		attrs[0].c_lflag &= ~ECHOCTL;
+		attrs[1].c_lflag &= ~ECHOCTL;
+		attrs[2].c_lflag &= ~ECHOCTL;
+		tty_attr(attrs, ATTR_SET);
 	}
 }
 
