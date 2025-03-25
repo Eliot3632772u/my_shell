@@ -6,7 +6,7 @@
 #    By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/06 13:37:58 by yrafai            #+#    #+#              #
-#    Updated: 2025/03/16 17:28:33 by yrafai           ###   ########.fr        #
+#    Updated: 2025/03/25 02:50:53 by yrafai           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,6 +75,7 @@ src/here-doc/heredoc_io.c \
 src/here-doc/heredoc_signals.c \
 src/here-doc/heredoc_utils.c \
 src/here-doc/heredoc_utils_2.c \
+src/here-doc/heredoc_utils_3.c \
 src/here-doc/heredoc_cleanup.c \
 src/signals/signal_manager.c \
 src/signals/signal_manager_2.c \
@@ -100,9 +101,9 @@ LIBFT = libft/libft.a
 
 all: $(OBJSDIR) $(LIBFT) $(NAME)
 
-$(LIBFT):
+$(LIBFT): libft/libft.h
 	@echo "Building libft..."
-	@make -C libft
+	@make -C libft 
 
 $(OBJSDIR):
 	@mkdir -p $(OBJSDIR)
@@ -129,7 +130,7 @@ $(NAME): $(OBJS) $(LIBFT)
 	@echo "Building minishell..."
 	@$(CC) $(OBJS) $(CFLAGS) -o $(NAME) -L libft -lft $(LIB)
 
-$(OBJSDIR)%.o: %.c
+$(OBJSDIR)%.o: %.c includes/minishell.h
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 

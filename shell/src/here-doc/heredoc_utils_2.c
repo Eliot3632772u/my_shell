@@ -3,79 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irabhi <irabhi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 13:02:32 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 12:54:57 by irabhi           ###   ########.fr       */
+/*   Updated: 2025/03/25 02:57:03 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	is_expandable(t_token *tok)
+size_t	count_leading_tabs(char *line)
 {
-	t_token	*ptr;
+	size_t	i;
 
-	if (!tok)
-		return (true);
-	ptr = tok;
-	while (ptr)
+	i = 0;
+	if (!line || !*line)
+		return (0);
+	while (line[i] && line[i] == '\t')
+		i++;
+	return (i);
+}
+
+static size_t	count_leading_dollars(char *str)
+{
+	size_t	count;
+
+	count = 0;
+	while (str && *str == '$')
 	{
-		if (ptr->type == STR || ptr->type == DQSTR)
-			return (false);
-		ptr = ptr->nospace_next;
+		count++;
+		str++;
 	}
-	return (true);
+	return (count);
 }
 
-bool	is_empty_quoted_string(char *str)
+static bool	has_quotes(char *str)
 {
-	return (str && str[0] && str[1] && !str[2]
-		&& ((str[0] == '"' && str[1] == '"')
-			|| (str[0] == '\'' && str[1] == '\'')));
-}
+	size_t	len;
 
-char	*strip_quotes(char *str)
-{
-	int		len;
-	char	*result;
-
-	if (!str || !*str)
-		return (ft_strdup(""));
-	if (is_empty_quoted_string(str))
-		return (ft_strdup(""));
+	if (!str)
+		return (false);
 	len = ft_strlen(str);
-	if (len >= 2 && (str[0] == '"' || str[0] == '\'')
-		&& str[0] == str[len - 1])
-	{
-		result = ft_substr(str, 1, len - 2);
-		return (result);
-	}
-	return (ft_strdup(str));
+	if (len < 2)
+		return (false);
+	return ((str[0] == '"' && str[len - 1] == '"')
+		|| (str[0] == '\'' && str[len - 1] == '\''));
 }
 
-char	*get_processed_delimiter(t_redirect *redc, t_str **s_ptr)
+static char	*prepare_quoted_part(char *quoted_part, size_t *dollar_count)
 {
-	expand_nosp_arg(redc->file_tok, s_ptr, 1);
-	return (strip_quotes((*s_ptr)->str));
+	char	*stripped_quoted;
+
+	if (has_quotes(quoted_part))
+	{
+		stripped_quoted = strip_quotes(quoted_part);
+		if (*dollar_count % 2 != 0)
+			(*dollar_count)--;
+	}
+	else
+		stripped_quoted = ft_strdup(quoted_part);
+	return (stripped_quoted);
 }
 
-void	heredoc_limit_check(t_ast *ast)
+char	*process_delimiter_with_dollars(char *str)
 {
-	t_redirect	*redc;
+	size_t	dollar_count;
+	char	*quoted_part;
+	char	*stripped_quoted;
+	char	*result;
+	char	*temp;
 
-	if (ast == NULL)
-		return ;
-	heredoc_limit_check(ast->left);
-	heredoc_limit_check(ast->right);
-	if (ast->redc)
+	if (!str)
+		return (NULL);
+	dollar_count = count_leading_dollars(str);
+	quoted_part = str + dollar_count;
+	stripped_quoted = prepare_quoted_part(quoted_part, &dollar_count);
+	if (!stripped_quoted)
+		return (NULL);
+	temp = malloc(dollar_count + 1);
+	if (!temp)
 	{
-		redc = ast->redc;
-		while (redc)
-		{
-			if (redc->type == HEREDOC)
-				heredoc_limit(SET);
-			redc = redc->next;
-		}
+		free(stripped_quoted);
+		return (NULL);
 	}
+	ft_memset(temp, '$', dollar_count);
+	temp[dollar_count] = '\0';
+	result = ft_strjoin(temp, stripped_quoted);
+	free(temp);
+	free(stripped_quoted);
+	return (result);
 }

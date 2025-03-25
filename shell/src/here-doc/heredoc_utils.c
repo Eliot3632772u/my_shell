@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:49:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/18 23:30:52 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 01:03:31 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	patch_token(t_redirect *redc)
 	tok = redc->file_tok;
 	free(tok->value);
 	redc->expand = is_expandable(redc->file_tok);
-	tok->value = handle_heredoc(unquoted, redc->type);
+	tok->value = handle_heredoc(unquoted, redc->type, redc->expand);
 	free(unquoted);
 	if (!tok->value)
 	{

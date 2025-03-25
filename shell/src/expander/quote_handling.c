@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 10:21:13 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/18 20:45:53 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/24 21:37:28 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,9 @@ char	*expand(t_token *tok, bool ignore_env)
 		return (NULL);
 	if (tok->type == WORD && is_dollar_quoted_str(tok->value))
 		return (handle_dollar_quoted(tok->value));
-	if (tok->type == DQSTR)
+	if (tok->type == DQSTR && !ignore_env)
 		str = ft_strtrim(tok->value, "\"");
-	else if (tok->type == STR)
+	else if (tok->type == STR && !ignore_env)
 		str = ft_strtrim(tok->value, "'");
 	else
 		str = ft_strdup(tok->value);

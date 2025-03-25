@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:57:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 17:34:42 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 01:24:42 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	handle_nested_shell(void)
 
 static void	handle_parent_shell(void)
 {
-	write(1, "^C\n", 3);
+	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();

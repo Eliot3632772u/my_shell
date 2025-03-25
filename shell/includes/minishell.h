@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/19 14:57:03 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 03:00:49 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <dirent.h>
 # include <fcntl.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -93,6 +92,15 @@ typedef struct s_heredoc_opts
 	bool		strip_tabs;
 }			t_heredoc_opts;
 
+typedef struct s_heredoc_data
+{
+	char			*line;
+	char			*delim;
+	t_token_type	type;
+	int				fd;
+	bool			expand;
+}			t_heredoc_data;
+
 bool			lexer(char *command_line, t_token **tokens);
 bool			check_token(t_token *this_tok, char *cmd_line, \
 	int index_space[2], t_token **tokens);
@@ -111,7 +119,7 @@ void			unclosed_error(char err);
 void			syntax_error(char *err);
 int				print_err(char *preced, int msg_code);
 void			free_tok_lst(t_token *tok);
-char			*handle_heredoc(char *delim, t_token_type type);
+char			*handle_heredoc(char *delim, t_token_type type, bool expand);
 char			*ft_mktmp(void);
 bool			is_expandable(t_token *tok);
 t_token			*ft_toklast(t_token *lst);
@@ -119,8 +127,7 @@ void			ft_tokadd_back(t_token **lst, t_token *new_tok);
 void			ft_tokiter(t_token *lst, void (*f)(void *));
 void			add_to_sublist(t_token **list, t_token *new_tok);
 bool			add_token(t_token **tokens, t_token *token, bool is_space);
-bool			handle_heredoc_line(char *line, char *delim, \
-	t_token_type type, int fd);
+bool			handle_heredoc_line(t_heredoc_data *data);
 int				init_heredoc(char *delim, char **tmp_file, int *fd);
 char			*strip_leading_tabs(char *line);
 bool			is_expandable(t_token *tok);
@@ -370,7 +377,8 @@ void			add_to_args_list(t_str **args, t_str *new_list);
 void			handle_wildcard_argument(t_str *arg_list, t_str **args);
 void			process_single_argument(t_token *arg_token, t_str **args);
 t_str			*process_arguments(t_token *args_token);
-int				process_heredoc_input(int fd, char *delim, t_token_type type);
+int				process_heredoc_input(t_heredoc_data *data);
+char			*process_delimiter_with_dollars(char *str);
 
 // attributs
 enum

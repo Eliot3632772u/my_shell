@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 12:42:31 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/20 20:55:41 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 02:59:44 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ int	process_heredoc_tree(t_ast *tree)
 	return (1);
 }
 
-int	process_heredoc_input(int fd, char *delim, t_token_type type)
+int	process_heredoc_input(t_heredoc_data *data)
 {
-	char	*line;
 	bool	done;
+	char	*line;
 
 	done = false;
 	while (!done && g_last_signal != 420)
@@ -45,21 +45,24 @@ int	process_heredoc_input(int fd, char *delim, t_token_type type)
 		line = readline("> ");
 		if (!line)
 			break ;
-		done = handle_heredoc_line(line, delim, type, fd);
+		data->line = line;
+		done = handle_heredoc_line(data);
 	}
 	return (g_last_signal == 420);
 }
 
-char	*handle_heredoc(char *delim, t_token_type type)
+char	*handle_heredoc(char *delim, t_token_type type, bool expand)
 {
-	char	*tmp_file;
-	int		fd;
-	int		interrupted;
+	char			*tmp_file;
+	int				fd;
+	int				interrupted;
+	t_heredoc_data	data;
 
 	if (!init_heredoc(delim, &tmp_file, &fd))
 		return (NULL);
 	signal(SIGINT, heredoc_sigint_handler);
-	interrupted = process_heredoc_input(fd, delim, type);
+	data = (t_heredoc_data){NULL, delim, type, fd, expand};
+	interrupted = process_heredoc_input(&data);
 	close(fd);
 	if (interrupted)
 	{
