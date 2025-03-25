@@ -6,11 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:02:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/12 00:42:10 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:19:51 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 static int	ft_islower(int c)
 {

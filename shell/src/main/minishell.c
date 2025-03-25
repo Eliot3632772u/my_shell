@@ -6,11 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:48:23 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/20 21:06:11 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:21:02 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	tty_attr(struct termios *attrs, int action)
 {

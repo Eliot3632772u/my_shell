@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 21:51:25 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/17 21:51:28 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:24:36 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {

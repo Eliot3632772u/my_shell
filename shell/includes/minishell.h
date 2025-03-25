@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:57:34 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/25 03:00:49 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:17:24 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <stdio.h>
 # include <errno.h>
-# include "../libft/libft.h"
+# include "libft.h"
 # include <dirent.h>
 # include <fcntl.h>
 # include <stdbool.h>

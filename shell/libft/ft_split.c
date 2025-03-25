@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 17:50:40 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/04 23:04:49 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:23:22 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 static int	ft_count_words(char const *s, char c)
 {

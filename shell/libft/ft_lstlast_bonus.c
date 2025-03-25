@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 22:15:13 by yrafai            #+#    #+#             */
-/*   Updated: 2024/11/17 22:15:15 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:24:44 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 t_list	*ft_lstlast(t_list *lst)
 {

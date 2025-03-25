@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error_msg.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 05:59:09 by yrafai            #+#    #+#             */
-/*   Updated: 2025/01/07 05:59:21 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:24:08 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	ft_error_msg(void)
 {

@@ -6,11 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:02:40 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 00:02:41 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:24:58 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	*ft_malloc(unsigned long size)
 {

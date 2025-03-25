@@ -6,11 +6,20 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 10:26:41 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/25 01:34:07 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 07:48:40 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+char	*handle_env_var(t_env_var *env)
+{
+	if (env->len >= 2 && env->ptr[1] == '$')
+		return (handle_double_dollar(env->chunk, env->ptr, env->offset));
+	if (env->len == 2 && env->ptr[1] == '?')
+		return (handle_exit_status_2(env->chunk));
+	return (handle_regular_env_var(env));
+}
 
 char	**expand_args(t_token *tok_lst)
 {

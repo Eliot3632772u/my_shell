@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strappend.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 16:05:43 by yrafai            #+#    #+#             */
-/*   Updated: 2024/12/27 16:05:58 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:25:35 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 char	*ft_strappend(char **s1, const char *s2)
 {

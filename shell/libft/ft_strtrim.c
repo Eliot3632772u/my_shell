@@ -6,11 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 20:21:37 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/11 08:43:24 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:26:22 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 char	*ft_strtrim(char const *s1, char const *set)
 {

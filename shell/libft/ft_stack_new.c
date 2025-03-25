@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_stack_new.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrafai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 09:32:31 by yrafai            #+#    #+#             */
-/*   Updated: 2025/01/12 09:32:39 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:25:29 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 t_list	*ft_stack_new(int content)
 {

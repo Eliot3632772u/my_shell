@@ -6,11 +6,11 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:02:22 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/04 00:02:26 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 10:24:21 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 bool	ft_isspace(char c)
 {
