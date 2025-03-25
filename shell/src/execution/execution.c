@@ -6,7 +6,7 @@
 /*   By: yrafai <yrafai@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:50:36 by yrafai            #+#    #+#             */
-/*   Updated: 2025/03/16 08:12:52 by yrafai           ###   ########.fr       */
+/*   Updated: 2025/03/25 03:47:12 by yrafai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ int	handle_builtin_redir(t_ast_redir *tree, int fd_to_dup)
 	cmd = ((t_ast_exec *)tree->cmd)->argv_tok->value;
 	if (!cmd)
 		return (0);
-	is_builtin = !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset");
+	if (!ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset"))
+		is_builtin = 1;
+	else
+		is_builtin = 0;
 	if (!is_builtin)
 		return (0);
 	if (!setup_builtin_redirection(tree, fd_to_dup, &old_fd))
